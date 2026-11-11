@@ -58,3 +58,6 @@ next-env.d.ts
 
 # local tooling
 /.claude/
+
+# vitest local output
+/.vitest/
