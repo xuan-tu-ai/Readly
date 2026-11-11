@@ -7,6 +7,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { requireUser } from "@/server/auth/dal";
 import { getActiveClass } from "@/server/services/classes";
 import { getRecommendations } from "@/server/services/quiz";
+import { getContinueReading } from "@/server/services/reading";
+import { WorkCover } from "@/components/works/work-cover";
 import { QuizCallToAction, RecommendationGrid } from "@/components/works/recommendations";
 
 export const metadata: Metadata = { title: "Trang chủ" };
@@ -21,9 +23,10 @@ export default function StudentHomePage() {
 
 async function StudentHome() {
   const user = await requireUser("STUDENT");
-  const [activeClass, recommendations] = await Promise.all([
+  const [activeClass, recommendations, continueReading] = await Promise.all([
     getActiveClass(user.id),
     getRecommendations(user.id, 4),
+    getContinueReading(user.id),
   ]);
 
   return (
@@ -32,6 +35,27 @@ async function StudentHome() {
         <h1 className="text-2xl font-semibold">Chào {user.name}!</h1>
         <p className="text-muted-foreground">Hôm nay bạn muốn đọc gì?</p>
       </div>
+
+      {continueReading ? (
+        <Card>
+          <CardContent className="grid grid-cols-[72px_1fr] items-center gap-4 sm:grid-cols-[72px_1fr_auto]">
+            <WorkCover title={continueReading.title} genre={continueReading.genre} coverUrl={continueReading.coverUrl} />
+            <div className="min-w-0">
+              <p className="text-sm text-muted-foreground">Đang đọc</p>
+              <p className="truncate font-medium">{continueReading.title}</p>
+              <p className="text-sm text-muted-foreground">
+                {continueReading.readSegments}/{continueReading.totalSegments} phân đoạn
+              </p>
+            </div>
+            <Link
+              href={`/student/read/${continueReading.slug}`}
+              className={buttonVariants({ className: "col-span-2 sm:col-span-1" })}
+            >
+              Tiếp tục đọc
+            </Link>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {activeClass ? (
         <Card>

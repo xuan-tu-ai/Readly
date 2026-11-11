@@ -128,3 +128,57 @@
     @apply font-sans;
   }
 }
+/* ───────────── Reader ───────────── */
+
+.reader-surface {
+  --reader-bg: #ffffff;
+  --reader-fg: #1f2328;
+  --reader-muted: #6b6f76;
+  background: var(--reader-bg);
+  color: var(--reader-fg);
+}
+.reader-surface[data-theme="SEPIA"] {
+  --reader-bg: #f6eedc;
+  --reader-fg: #4a3b2a;
+  --reader-muted: #7d6a52;
+}
+.reader-surface[data-theme="DARK"] {
+  --reader-bg: #1d1c1a;
+  --reader-fg: #e6e2da;
+  --reader-muted: #a39e94;
+}
+.reader-text {
+  font-family: var(--font-reading), Georgia, serif;
+}
+.reader-text p {
+  margin: 0 0 0.9em;
+}
+.reader-text em {
+  color: var(--reader-muted);
+}
+.reader-text ::selection {
+  background: oklch(0.8 0.08 250 / 0.45);
+}
+
+/*
+ * Highlights are painted with the CSS Custom Highlight API: no <mark> elements
+ * are inserted, so the text DOM (and its offsets) never changes.
+ */
+::highlight(hl-yellow) { background-color: oklch(0.93 0.14 95 / 0.75); }
+::highlight(hl-blue) { background-color: oklch(0.88 0.08 230 / 0.7); }
+::highlight(hl-pink) { background-color: oklch(0.88 0.09 5 / 0.7); }
+::highlight(hl-purple) { background-color: oklch(0.86 0.09 300 / 0.65); }
+::highlight(hl-pending) { background-color: oklch(0.8 0.08 250 / 0.45); }
+::highlight(hl-active) { text-decoration: underline 2px; text-underline-offset: 3px; }
+
+.reader-surface[data-theme="DARK"] ::highlight(hl-yellow) { background-color: oklch(0.55 0.12 95 / 0.55); }
+.reader-surface[data-theme="DARK"] ::highlight(hl-blue) { background-color: oklch(0.5 0.1 230 / 0.6); }
+.reader-surface[data-theme="DARK"] ::highlight(hl-pink) { background-color: oklch(0.5 0.12 5 / 0.6); }
+.reader-surface[data-theme="DARK"] ::highlight(hl-purple) { background-color: oklch(0.5 0.12 300 / 0.6); }
+
+:root {
+  --hl-yellow: oklch(0.85 0.16 95);
+  --hl-blue: oklch(0.75 0.12 230);
+  --hl-pink: oklch(0.75 0.14 5);
+  --hl-purple: oklch(0.7 0.14 300);
+}

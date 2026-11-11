@@ -5,11 +5,12 @@ import { Suspense } from "react";
 import { BookOpen, ChevronLeft, Clock, Gauge, Layers } from "lucide-react";
 import { PageSkeleton } from "@/components/app-shell";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { WorkCover } from "@/components/works/work-cover";
 import { GENRE_LABEL, difficultyLabel, formatMinutes } from "@/lib/catalog";
 import { requireUser } from "@/server/auth/dal";
 import { getVisibleWorkBySlug } from "@/server/services/works";
+import { getWorkProgress } from "@/server/services/reading";
 
 export const metadata: Metadata = { title: "Tác phẩm" };
 
@@ -22,11 +23,12 @@ export default function WorkDetailPage({ params }: PageProps<"/student/works/[sl
 }
 
 async function WorkDetail({ params }: Pick<PageProps<"/student/works/[slug]">, "params">) {
-  await requireUser("STUDENT");
+  const user = await requireUser("STUDENT");
   const { slug } = await params;
   const work = await getVisibleWorkBySlug(slug);
   if (!work) notFound();
   const comingSoon = work.status === "COMING_SOON";
+  const progress = comingSoon ? null : await getWorkProgress(user.id, work.id);
 
   return (
     <article className="grid gap-6">
@@ -57,14 +59,24 @@ async function WorkDetail({ params }: Pick<PageProps<"/student/works/[slug]">, "
             {work.segmentCount > 0 ? <Meta icon={Layers} label="Số phân đoạn" value={String(work.segmentCount)} /> : null}
           </dl>
           <div className="pt-2">
-            {/* The reader itself arrives with the reading page. */}
-            <Button disabled size="lg">
-              <BookOpen aria-hidden />
-              {comingSoon ? "Tác phẩm sắp có" : "Bắt đầu đọc"}
-            </Button>
-            {!comingSoon ? (
-              <p className="mt-2 text-sm text-muted-foreground">Trang đọc đang được hoàn thiện.</p>
-            ) : null}
+            {comingSoon || !progress || progress.total === 0 ? (
+              <Button disabled size="lg">
+                <BookOpen aria-hidden />
+                Tác phẩm sắp có
+              </Button>
+            ) : (
+              <>
+                <Link href={`/student/read/${work.slug}`} className={buttonVariants({ size: "lg" })}>
+                  <BookOpen aria-hidden />
+                  {progress.started ? "Tiếp tục đọc" : "Bắt đầu đọc"}
+                </Link>
+                {progress.started ? (
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Đã đọc {progress.read}/{progress.total} phân đoạn
+                  </p>
+                ) : null}
+              </>
+            )}
           </div>
         </div>
       </div>

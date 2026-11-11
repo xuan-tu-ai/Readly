@@ -1,6 +1,7 @@
 // Readly – data model.
 // Phase 1: accounts, sessions, classes, class membership, reading settings.
 // Phase 2: works, tags, segments, interest quiz results.
+// Phase 3: reading progress, segment reads, reading time, highlights.
 
 generator client {
   provider = "prisma-client"
@@ -42,6 +43,10 @@ model User {
   classesTaught Class[]
   settings      UserSettings?
   quizResults   QuizResult[]
+  progress      ReadingProgress[]
+  segmentReads  SegmentRead[]
+  readingTimes  ReadingTime[]
+  highlights    Highlight[]
 }
 
 /// Database session. `id` is the SHA-256 hash of the cookie token,
@@ -112,26 +117,28 @@ enum TagKind {
 }
 
 model Work {
-  id          String     @id @default(cuid())
-  slug        String     @unique
-  title       String
-  author      String
-  authorBio   String
-  genre       Genre
-  summary     String
+  id         String     @id @default(cuid())
+  slug       String     @unique
+  title      String
+  author     String
+  authorBio  String
+  genre      Genre
+  summary    String
   /// 1 = Dễ, 2 = Vừa, 3 = Khó
-  difficulty  Int
-  estMinutes  Int
-  status      WorkStatus @default(DRAFT)
+  difficulty Int
+  estMinutes Int
+  status     WorkStatus @default(DRAFT)
   /// Optional cover image; a generated placeholder cover is shown when null.
-  coverUrl    String?
+  coverUrl   String?
   /// Lower-case, diacritic-free "title author" for accent-insensitive search.
-  searchText  String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  searchText String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
-  tags     WorkTag[]
-  segments Segment[]
+  tags       WorkTag[]
+  segments   Segment[]
+  progress   ReadingProgress[]
+  highlights Highlight[]
 
   @@index([status, genre])
 }
@@ -168,7 +175,11 @@ model Segment {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
-  work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
+  work         Work              @relation(fields: [workId], references: [id], onDelete: Cascade)
+  progress     ReadingProgress[]
+  reads        SegmentRead[]
+  readingTimes ReadingTime[]
+  highlights   Highlight[]
 
   @@index([workId, order])
 }
@@ -184,6 +195,87 @@ model QuizResult {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+}
+
+// ───────────────────────── Reading (phase 3) ─────────────────────────
+
+/// Where the student is in a work; synced across devices.
+model ReadingProgress {
+  userId          String
+  workId          String
+  segmentId       String?
+  /// 0..1 – how far into `segmentId` the top of the viewport was.
+  segmentFraction Float    @default(0)
+  startedAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  work    Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  segment Segment? @relation(fields: [segmentId], references: [id], onDelete: SetNull)
+
+  @@id([userId, workId])
+  @@index([userId, updatedAt])
+}
+
+/// A segment counts as read once its end has been on screen.
+model SegmentRead {
+  userId    String
+  segmentId String
+  readAt    DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  segment Segment @relation(fields: [segmentId], references: [id], onDelete: Cascade)
+
+  @@id([userId, segmentId])
+  @@index([segmentId])
+}
+
+/// Active reading time per segment per Vietnam calendar day (teacher-only metric).
+model ReadingTime {
+  userId    String
+  segmentId String
+  /// Calendar day in Asia/Ho_Chi_Minh, stored as UTC midnight of that date.
+  day       DateTime @db.Date
+  seconds   Int      @default(0)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  segment Segment @relation(fields: [segmentId], references: [id], onDelete: Cascade)
+
+  @@id([userId, segmentId, day])
+  @@index([segmentId])
+}
+
+enum HighlightColor {
+  YELLOW // ấn tượng
+  BLUE // thắc mắc
+  PINK // cảm xúc
+  PURPLE // nghệ thuật
+}
+
+/// Offsets index into the segment's plain-text model (see src/lib/reading/text-model.ts).
+/// quote/prefix/suffix let us re-anchor the highlight if the text is edited later.
+model Highlight {
+  id        String         @id @default(cuid())
+  userId    String
+  workId    String
+  segmentId String
+  start     Int
+  end       Int
+  quote     String
+  prefix    String
+  suffix    String
+  color     HighlightColor @default(YELLOW)
+  note      String?
+  isPrivate Boolean        @default(false)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  work    Work    @relation(fields: [workId], references: [id], onDelete: Cascade)
+  segment Segment @relation(fields: [segmentId], references: [id], onDelete: Cascade)
+
+  @@index([userId, workId])
+  @@index([segmentId])
 }
 
 model UserSettings {
