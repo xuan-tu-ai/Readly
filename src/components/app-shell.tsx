@@ -11,6 +11,7 @@ import { BottomNav, SideNav, type NavItem } from "./nav-links";
 const NAV: Record<Role, NavItem[]> = {
   STUDENT: [
     { href: "/student", label: "Trang chủ", icon: "home" },
+    { href: "/student/library", label: "Thư viện", icon: "library" },
     { href: "/student/class", label: "Lớp học", icon: "users" },
   ],
   TEACHER: [{ href: "/teacher", label: "Lớp học", icon: "users" }],

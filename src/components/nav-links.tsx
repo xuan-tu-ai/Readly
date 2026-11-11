@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
-import { Home, Shield, Users, type LucideIcon } from "lucide-react";
+import { Home, Library, Shield, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const ICONS = { home: Home, users: Users, shield: Shield } satisfies Record<string, LucideIcon>;
+const ICONS = { home: Home, library: Library, users: Users, shield: Shield } satisfies Record<string, LucideIcon>;
 
 export type NavItem = { href: string; label: string; icon: keyof typeof ICONS };
 

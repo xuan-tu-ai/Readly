@@ -1,0 +1,716 @@
+[
+  {
+    "slug": "tho-mau-01",
+    "title": "Bài thơ mẫu 01",
+    "author": "Tác giả ABC",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 1,
+    "estMinutes": 8,
+    "status": "PUBLISHED",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 01. Tác phẩm xoay quanh chủ đề gia đình, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "gia-dinh",
+      "thien-nhien",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "tho-mau-02",
+    "title": "Bài thơ mẫu 02",
+    "author": "Tác giả XYZ",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 2,
+    "estMinutes": 15,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 02. Tác phẩm xoay quanh chủ đề quê hương, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "que-huong",
+      "than-phan",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "tho-mau-03",
+    "title": "Bài thơ mẫu 03",
+    "author": "Tác giả MNP",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 3,
+    "estMinutes": 22,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 03. Tác phẩm xoay quanh chủ đề thiên nhiên, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "thien-nhien",
+      "que-huong",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "tho-mau-04",
+    "title": "Bài thơ mẫu 04",
+    "author": "Tác giả QRS",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 1,
+    "estMinutes": 11,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 04. Tác phẩm xoay quanh chủ đề chiến tranh & lịch sử, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "chien-tranh",
+      "tinh-yeu",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "tho-mau-05",
+    "title": "Bài thơ mẫu 05",
+    "author": "Tác giả UVW",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 2,
+    "estMinutes": 18,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 05. Tác phẩm xoay quanh chủ đề tình yêu, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "tinh-yeu",
+      "gia-dinh",
+      "suy-tu"
+    ]
+  },
+  {
+    "slug": "tho-mau-06",
+    "title": "Bài thơ mẫu 06",
+    "author": "Tác giả DEF",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 3,
+    "estMinutes": 25,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 06. Tác phẩm xoay quanh chủ đề thân phận con người, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "than-phan",
+      "chien-tranh",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "tho-mau-07",
+    "title": "Bài thơ mẫu 07",
+    "author": "Tác giả GHK",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 1,
+    "estMinutes": 14,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 07. Tác phẩm xoay quanh chủ đề xã hội & thời đại, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "xa-hoi",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "tho-mau-08",
+    "title": "Bài thơ mẫu 08",
+    "author": "Tác giả ABC",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 2,
+    "estMinutes": 21,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 08. Tác phẩm xoay quanh chủ đề gia đình, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "gia-dinh",
+      "thien-nhien",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "tho-mau-09",
+    "title": "Bài thơ mẫu 09",
+    "author": "Tác giả XYZ",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 3,
+    "estMinutes": 10,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 09. Tác phẩm xoay quanh chủ đề quê hương, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "que-huong",
+      "than-phan",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "tho-mau-10",
+    "title": "Bài thơ mẫu 10",
+    "author": "Tác giả MNP",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 1,
+    "estMinutes": 17,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 10. Tác phẩm xoay quanh chủ đề thiên nhiên, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "thien-nhien",
+      "que-huong",
+      "suy-tu"
+    ]
+  },
+  {
+    "slug": "tho-mau-11",
+    "title": "Bài thơ mẫu 11",
+    "author": "Tác giả QRS",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 2,
+    "estMinutes": 24,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 11. Tác phẩm xoay quanh chủ đề chiến tranh & lịch sử, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "chien-tranh",
+      "tinh-yeu",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "tho-mau-12",
+    "title": "Bài thơ mẫu 12",
+    "author": "Tác giả UVW",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "THO",
+    "difficulty": 3,
+    "estMinutes": 13,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài thơ mẫu 12. Tác phẩm xoay quanh chủ đề tình yêu, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "tinh-yeu",
+      "gia-dinh",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-01",
+    "title": "Truyện ngắn mẫu 01",
+    "author": "Tác giả DEF",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 1,
+    "estMinutes": 42,
+    "status": "PUBLISHED",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 01. Tác phẩm xoay quanh chủ đề thân phận con người, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "than-phan",
+      "chien-tranh",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-02",
+    "title": "Truyện ngắn mẫu 02",
+    "author": "Tác giả GHK",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 2,
+    "estMinutes": 49,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 02. Tác phẩm xoay quanh chủ đề xã hội & thời đại, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "xa-hoi",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-03",
+    "title": "Truyện ngắn mẫu 03",
+    "author": "Tác giả ABC",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 3,
+    "estMinutes": 25,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 03. Tác phẩm xoay quanh chủ đề gia đình, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "gia-dinh",
+      "thien-nhien",
+      "suy-tu"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-04",
+    "title": "Truyện ngắn mẫu 04",
+    "author": "Tác giả XYZ",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 1,
+    "estMinutes": 32,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 04. Tác phẩm xoay quanh chủ đề quê hương, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "que-huong",
+      "than-phan",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-05",
+    "title": "Truyện ngắn mẫu 05",
+    "author": "Tác giả MNP",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 2,
+    "estMinutes": 39,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 05. Tác phẩm xoay quanh chủ đề thiên nhiên, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "thien-nhien",
+      "que-huong",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-06",
+    "title": "Truyện ngắn mẫu 06",
+    "author": "Tác giả QRS",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 3,
+    "estMinutes": 46,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 06. Tác phẩm xoay quanh chủ đề chiến tranh & lịch sử, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "chien-tranh",
+      "tinh-yeu",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-07",
+    "title": "Truyện ngắn mẫu 07",
+    "author": "Tác giả UVW",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 1,
+    "estMinutes": 22,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 07. Tác phẩm xoay quanh chủ đề tình yêu, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "tinh-yeu",
+      "gia-dinh",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-08",
+    "title": "Truyện ngắn mẫu 08",
+    "author": "Tác giả DEF",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 2,
+    "estMinutes": 29,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 08. Tác phẩm xoay quanh chủ đề thân phận con người, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "than-phan",
+      "chien-tranh",
+      "suy-tu"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-09",
+    "title": "Truyện ngắn mẫu 09",
+    "author": "Tác giả GHK",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 3,
+    "estMinutes": 36,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 09. Tác phẩm xoay quanh chủ đề xã hội & thời đại, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "xa-hoi",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "truyen-ngan-mau-10",
+    "title": "Truyện ngắn mẫu 10",
+    "author": "Tác giả ABC",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TRUYEN_NGAN",
+    "difficulty": 1,
+    "estMinutes": 43,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho truyện ngắn mẫu 10. Tác phẩm xoay quanh chủ đề gia đình, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "gia-dinh",
+      "thien-nhien",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "tieu-thuyet-mau-01",
+    "title": "Tiểu thuyết (trích) mẫu 01",
+    "author": "Tác giả XYZ",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TIEU_THUYET",
+    "difficulty": 2,
+    "estMinutes": 92,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho tiểu thuyết (trích) mẫu 01. Tác phẩm xoay quanh chủ đề quê hương, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "que-huong",
+      "than-phan",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "tieu-thuyet-mau-02",
+    "title": "Tiểu thuyết (trích) mẫu 02",
+    "author": "Tác giả MNP",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TIEU_THUYET",
+    "difficulty": 3,
+    "estMinutes": 99,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho tiểu thuyết (trích) mẫu 02. Tác phẩm xoay quanh chủ đề thiên nhiên, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "thien-nhien",
+      "que-huong",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "tieu-thuyet-mau-03",
+    "title": "Tiểu thuyết (trích) mẫu 03",
+    "author": "Tác giả QRS",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TIEU_THUYET",
+    "difficulty": 1,
+    "estMinutes": 106,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho tiểu thuyết (trích) mẫu 03. Tác phẩm xoay quanh chủ đề chiến tranh & lịch sử, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "chien-tranh",
+      "tinh-yeu",
+      "suy-tu"
+    ]
+  },
+  {
+    "slug": "tieu-thuyet-mau-04",
+    "title": "Tiểu thuyết (trích) mẫu 04",
+    "author": "Tác giả UVW",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TIEU_THUYET",
+    "difficulty": 2,
+    "estMinutes": 113,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho tiểu thuyết (trích) mẫu 04. Tác phẩm xoay quanh chủ đề tình yêu, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "tinh-yeu",
+      "gia-dinh",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "tieu-thuyet-mau-05",
+    "title": "Tiểu thuyết (trích) mẫu 05",
+    "author": "Tác giả DEF",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "TIEU_THUYET",
+    "difficulty": 3,
+    "estMinutes": 120,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho tiểu thuyết (trích) mẫu 05. Tác phẩm xoay quanh chủ đề thân phận con người, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "than-phan",
+      "chien-tranh",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "kich-mau-01",
+    "title": "Vở kịch mẫu 01",
+    "author": "Tác giả GHK",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KICH",
+    "difficulty": 1,
+    "estMinutes": 66,
+    "status": "PUBLISHED",
+    "summary": "Tóm tắt giữ chỗ cho vở kịch mẫu 01. Tác phẩm xoay quanh chủ đề xã hội & thời đại, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "xa-hoi",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "kich-mau-02",
+    "title": "Vở kịch mẫu 02",
+    "author": "Tác giả ABC",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KICH",
+    "difficulty": 2,
+    "estMinutes": 73,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho vở kịch mẫu 02. Tác phẩm xoay quanh chủ đề gia đình, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "gia-dinh",
+      "thien-nhien",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "kich-mau-03",
+    "title": "Vở kịch mẫu 03",
+    "author": "Tác giả XYZ",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KICH",
+    "difficulty": 3,
+    "estMinutes": 80,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho vở kịch mẫu 03. Tác phẩm xoay quanh chủ đề quê hương, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "que-huong",
+      "than-phan",
+      "suy-tu"
+    ]
+  },
+  {
+    "slug": "kich-mau-04",
+    "title": "Vở kịch mẫu 04",
+    "author": "Tác giả MNP",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KICH",
+    "difficulty": 1,
+    "estMinutes": 36,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho vở kịch mẫu 04. Tác phẩm xoay quanh chủ đề thiên nhiên, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "thien-nhien",
+      "que-huong",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "kich-mau-05",
+    "title": "Vở kịch mẫu 05",
+    "author": "Tác giả QRS",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KICH",
+    "difficulty": 2,
+    "estMinutes": 43,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho vở kịch mẫu 05. Tác phẩm xoay quanh chủ đề chiến tranh & lịch sử, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "chien-tranh",
+      "tinh-yeu",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "kich-mau-06",
+    "title": "Vở kịch mẫu 06",
+    "author": "Tác giả UVW",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KICH",
+    "difficulty": 3,
+    "estMinutes": 50,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho vở kịch mẫu 06. Tác phẩm xoay quanh chủ đề tình yêu, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "tinh-yeu",
+      "gia-dinh",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "ki-mau-01",
+    "title": "Bút kí mẫu 01",
+    "author": "Tác giả DEF",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KI",
+    "difficulty": 1,
+    "estMinutes": 43,
+    "status": "PUBLISHED",
+    "summary": "Tóm tắt giữ chỗ cho bút kí mẫu 01. Tác phẩm xoay quanh chủ đề thân phận con người, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "than-phan",
+      "chien-tranh",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "ki-mau-02",
+    "title": "Bút kí mẫu 02",
+    "author": "Tác giả GHK",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KI",
+    "difficulty": 2,
+    "estMinutes": 24,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bút kí mẫu 02. Tác phẩm xoay quanh chủ đề xã hội & thời đại, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "xa-hoi",
+      "suy-tu"
+    ]
+  },
+  {
+    "slug": "ki-mau-03",
+    "title": "Bút kí mẫu 03",
+    "author": "Tác giả ABC",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KI",
+    "difficulty": 3,
+    "estMinutes": 31,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bút kí mẫu 03. Tác phẩm xoay quanh chủ đề gia đình, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "gia-dinh",
+      "thien-nhien",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "ki-mau-04",
+    "title": "Bút kí mẫu 04",
+    "author": "Tác giả XYZ",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KI",
+    "difficulty": 1,
+    "estMinutes": 38,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bút kí mẫu 04. Tác phẩm xoay quanh chủ đề quê hương, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "que-huong",
+      "than-phan",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "ki-mau-05",
+    "title": "Bút kí mẫu 05",
+    "author": "Tác giả MNP",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KI",
+    "difficulty": 2,
+    "estMinutes": 45,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bút kí mẫu 05. Tác phẩm xoay quanh chủ đề thiên nhiên, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "thien-nhien",
+      "que-huong",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "ki-mau-06",
+    "title": "Bút kí mẫu 06",
+    "author": "Tác giả QRS",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "KI",
+    "difficulty": 3,
+    "estMinutes": 26,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bút kí mẫu 06. Tác phẩm xoay quanh chủ đề chiến tranh & lịch sử, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "chien-tranh",
+      "tinh-yeu",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "nghi-luan-mau-01",
+    "title": "Bài nghị luận mẫu 01",
+    "author": "Tác giả UVW",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "NGHI_LUAN",
+    "difficulty": 1,
+    "estMinutes": 15,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài nghị luận mẫu 01. Tác phẩm xoay quanh chủ đề tình yêu, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "tinh-yeu",
+      "gia-dinh",
+      "suy-tu"
+    ]
+  },
+  {
+    "slug": "nghi-luan-mau-02",
+    "title": "Bài nghị luận mẫu 02",
+    "author": "Tác giả DEF",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "NGHI_LUAN",
+    "difficulty": 2,
+    "estMinutes": 22,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài nghị luận mẫu 02. Tác phẩm xoay quanh chủ đề thân phận con người, mang không khí bi tráng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "than-phan",
+      "chien-tranh",
+      "bi-trang"
+    ]
+  },
+  {
+    "slug": "nghi-luan-mau-03",
+    "title": "Bài nghị luận mẫu 03",
+    "author": "Tác giả GHK",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "NGHI_LUAN",
+    "difficulty": 3,
+    "estMinutes": 29,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài nghị luận mẫu 03. Tác phẩm xoay quanh chủ đề xã hội & thời đại, mang không khí hài hước. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "xa-hoi",
+      "hai-huoc"
+    ]
+  },
+  {
+    "slug": "nghi-luan-mau-04",
+    "title": "Bài nghị luận mẫu 04",
+    "author": "Tác giả ABC",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "NGHI_LUAN",
+    "difficulty": 1,
+    "estMinutes": 15,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài nghị luận mẫu 04. Tác phẩm xoay quanh chủ đề gia đình, mang không khí trữ tình. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "gia-dinh",
+      "thien-nhien",
+      "tru-tinh"
+    ]
+  },
+  {
+    "slug": "nghi-luan-mau-05",
+    "title": "Bài nghị luận mẫu 05",
+    "author": "Tác giả XYZ",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "NGHI_LUAN",
+    "difficulty": 2,
+    "estMinutes": 22,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài nghị luận mẫu 05. Tác phẩm xoay quanh chủ đề quê hương, mang không khí hào hùng. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "que-huong",
+      "than-phan",
+      "hao-hung"
+    ]
+  },
+  {
+    "slug": "nghi-luan-mau-06",
+    "title": "Bài nghị luận mẫu 06",
+    "author": "Tác giả MNP",
+    "authorBio": "Thông tin tác giả giữ chỗ. Sẽ thay bằng tiểu sử thật khi có danh sách chính thức.",
+    "genre": "NGHI_LUAN",
+    "difficulty": 3,
+    "estMinutes": 29,
+    "status": "COMING_SOON",
+    "summary": "Tóm tắt giữ chỗ cho bài nghị luận mẫu 06. Tác phẩm xoay quanh chủ đề thiên nhiên, mang không khí suy tư. Nội dung thật sẽ được cập nhật sau.",
+    "tags": [
+      "thien-nhien",
+      "que-huong",
+      "suy-tu"
+    ]
+  }
+]

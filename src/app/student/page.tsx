@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { buttonVariants } from "@/components/ui/button";
 import { requireUser } from "@/server/auth/dal";
 import { getActiveClass } from "@/server/services/classes";
+import { getRecommendations } from "@/server/services/quiz";
+import { QuizCallToAction, RecommendationGrid } from "@/components/works/recommendations";
 
 export const metadata: Metadata = { title: "Trang chủ" };
 
@@ -19,7 +21,10 @@ export default function StudentHomePage() {
 
 async function StudentHome() {
   const user = await requireUser("STUDENT");
-  const activeClass = await getActiveClass(user.id);
+  const [activeClass, recommendations] = await Promise.all([
+    getActiveClass(user.id),
+    getRecommendations(user.id, 4),
+  ]);
 
   return (
     <div className="grid gap-6">
@@ -54,14 +59,15 @@ async function StudentHome() {
         </Card>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Thư viện đang được chuẩn bị</CardTitle>
-          <CardDescription>
-            Thư viện 45 tác phẩm và bài test sở thích sẽ có ở giai đoạn tiếp theo.
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <section className="grid gap-3">
+        <div className="flex items-end justify-between gap-3">
+          <h2 className="text-lg font-semibold">Gợi ý cho bạn</h2>
+          <Link href="/student/library" className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+            Xem thư viện
+          </Link>
+        </div>
+        {recommendations ? <RecommendationGrid items={recommendations} /> : <QuizCallToAction />}
+      </section>
     </div>
   );
 }

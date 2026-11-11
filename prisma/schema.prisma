@@ -1,5 +1,6 @@
 // Readly – data model.
 // Phase 1: accounts, sessions, classes, class membership, reading settings.
+// Phase 2: works, tags, segments, interest quiz results.
 
 generator client {
   provider = "prisma-client"
@@ -40,6 +41,7 @@ model User {
   memberships   ClassMembership[]
   classesTaught Class[]
   settings      UserSettings?
+  quizResults   QuizResult[]
 }
 
 /// Database session. `id` is the SHA-256 hash of the cookie token,
@@ -85,6 +87,103 @@ model ClassMembership {
 
   @@index([classId, leftAt])
   @@index([studentId, leftAt])
+}
+
+// ───────────────────────── Content (phase 2) ─────────────────────────
+
+enum Genre {
+  THO // thơ
+  TRUYEN_NGAN // truyện ngắn
+  TIEU_THUYET // tiểu thuyết
+  KICH // kịch
+  KI // kí
+  NGHI_LUAN // nghị luận
+}
+
+enum WorkStatus {
+  DRAFT // only admins see it
+  PUBLISHED // readable
+  COMING_SOON // listed in the library with a "Sắp có" badge
+}
+
+enum TagKind {
+  THEME // chủ đề
+  MOOD // không khí
+}
+
+model Work {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  author      String
+  authorBio   String
+  genre       Genre
+  summary     String
+  /// 1 = Dễ, 2 = Vừa, 3 = Khó
+  difficulty  Int
+  estMinutes  Int
+  status      WorkStatus @default(DRAFT)
+  /// Optional cover image; a generated placeholder cover is shown when null.
+  coverUrl    String?
+  /// Lower-case, diacritic-free "title author" for accent-insensitive search.
+  searchText  String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  tags     WorkTag[]
+  segments Segment[]
+
+  @@index([status, genre])
+}
+
+model Tag {
+  id    String  @id @default(cuid())
+  slug  String  @unique
+  label String
+  kind  TagKind
+
+  works WorkTag[]
+}
+
+model WorkTag {
+  workId String
+  tagId  String
+
+  work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([workId, tagId])
+  @@index([tagId])
+}
+
+/// A meaningful reading unit chosen by the admin (stanza, scene, part…).
+model Segment {
+  id         String    @id @default(cuid())
+  workId     String
+  order      Int
+  title      String?
+  /// Sanitised HTML.
+  content    String
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([workId, order])
+}
+
+/// One submission of the interest quiz; the latest one drives recommendations.
+model QuizResult {
+  id        String   @id @default(cuid())
+  userId    String
+  /// { [questionId]: optionId }
+  answers   Json
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }
 
 model UserSettings {
