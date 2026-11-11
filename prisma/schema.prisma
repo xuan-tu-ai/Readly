@@ -1,0 +1,97 @@
+// Readly – data model.
+// Phase 1: accounts, sessions, classes, class membership, reading settings.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum ReadingTheme {
+  LIGHT
+  SEPIA
+  DARK
+}
+
+enum MembershipEndReason {
+  SWITCHED // student joined another class with a new code
+  REMOVED // teacher removed the student
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions      Session[]
+  memberships   ClassMembership[]
+  classesTaught Class[]
+  settings      UserSettings?
+}
+
+/// Database session. `id` is the SHA-256 hash of the cookie token,
+/// so a leaked database row cannot be replayed as a cookie.
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Class {
+  id         String   @id @default(cuid())
+  name       String
+  /// Join code students type when registering or switching class.
+  code       String   @unique
+  codeActive Boolean  @default(true)
+  teacherId  String
+  createdAt  DateTime @default(now())
+
+  teacher     User              @relation(fields: [teacherId], references: [id])
+  memberships ClassMembership[]
+
+  @@index([teacherId])
+}
+
+/// Membership history. A student has at most one active membership
+/// (leftAt IS NULL) – enforced by a partial unique index in the migration.
+model ClassMembership {
+  id        String               @id @default(cuid())
+  classId   String
+  studentId String
+  joinedAt  DateTime             @default(now())
+  leftAt    DateTime?
+  endReason MembershipEndReason?
+
+  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student User  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([classId, leftAt])
+  @@index([studentId, leftAt])
+}
+
+model UserSettings {
+  userId     String       @id
+  fontSize   Int          @default(18)
+  lineHeight Float        @default(1.7)
+  theme      ReadingTheme @default(LIGHT)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
