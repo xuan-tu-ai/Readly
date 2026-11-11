@@ -2,6 +2,7 @@
 // Phase 1: accounts, sessions, classes, class membership, reading settings.
 // Phase 2: works, tags, segments, interest quiz results.
 // Phase 3: reading progress, segment reads, reading time, highlights.
+// Phase 4: questions, answers (AI grading), work completion.
 
 generator client {
   provider = "prisma-client"
@@ -47,6 +48,8 @@ model User {
   segmentReads  SegmentRead[]
   readingTimes  ReadingTime[]
   highlights    Highlight[]
+  answers       Answer[]
+  completions   WorkCompletion[]
 }
 
 /// Database session. `id` is the SHA-256 hash of the cookie token,
@@ -128,6 +131,8 @@ model Work {
   difficulty Int
   estMinutes Int
   status     WorkStatus @default(DRAFT)
+  /// "Trước khi đọc" background card (author, context) – sanitised HTML.
+  background String?
   /// Optional cover image; a generated placeholder cover is shown when null.
   coverUrl   String?
   /// Lower-case, diacritic-free "title author" for accent-insensitive search.
@@ -135,10 +140,12 @@ model Work {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 
-  tags       WorkTag[]
-  segments   Segment[]
-  progress   ReadingProgress[]
-  highlights Highlight[]
+  tags        WorkTag[]
+  segments    Segment[]
+  progress    ReadingProgress[]
+  highlights  Highlight[]
+  questions   Question[]
+  completions WorkCompletion[]
 
   @@index([status, genre])
 }
@@ -180,6 +187,7 @@ model Segment {
   reads        SegmentRead[]
   readingTimes ReadingTime[]
   highlights   Highlight[]
+  questions    Question[]
 
   @@index([workId, order])
 }
@@ -276,6 +284,112 @@ model Highlight {
 
   @@index([userId, workId])
   @@index([segmentId])
+}
+
+// ───────────────────────── Questions & AI (phase 4) ─────────────────────────
+
+enum QuestionStage {
+  PRE // trước khi đọc
+  DURING // trong khi đọc (gắn với một phân đoạn)
+  POST // sau khi đọc
+}
+
+enum QuestionType {
+  PREDICTION // dự đoán mở – không chấm, AI so sánh sau khi đọc xong
+  MCQ // trắc nghiệm – chấm tự động
+  SHORT // tự luận ngắn – AI chấm theo rubric
+  ESSAY // đoạn cảm nhận – AI chấm theo rubric
+}
+
+/// Questions are authored ahead of time and fixed once published (no live generation).
+model Question {
+  id              String        @id @default(cuid())
+  workId          String
+  /// Required for DURING questions.
+  segmentId       String?
+  stage           QuestionStage
+  type            QuestionType
+  order           Int           @default(0)
+  prompt          String
+  required        Boolean       @default(true)
+  /// MCQ: [{ id, text }]
+  options         Json?
+  correctOptionId String?
+  /// MCQ: shown after answering.
+  explanation     String?
+  /// SHORT/ESSAY: { chuaDat, dat, sauSac } – what each level looks like.
+  rubric          Json?
+  /// SHORT/ESSAY: ideas a good answer covers.
+  keyPoints       String[]      @default([])
+  /// ESSAY: static outline shown to the student.
+  outline         String?
+  minWords        Int?
+  maxWords        Int?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  work    Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  segment Segment? @relation(fields: [segmentId], references: [id], onDelete: SetNull)
+  answers Answer[]
+
+  @@index([workId, stage, order])
+  @@index([segmentId])
+}
+
+enum AnswerStatus {
+  PENDING // waiting for AI feedback
+  GRADED
+  FAILED // AI gave up after retries – does not count as an attempt
+}
+
+enum AnswerLevel {
+  CHUA_DAT
+  DAT
+  SAU_SAC
+}
+
+/// One submission. `attempt` is the submission number; only GRADED rows
+/// count towards the 3-attempt limit.
+model Answer {
+  id           String       @id @default(cuid())
+  questionId   String
+  userId       String
+  attempt      Int
+  /// Text for open questions, option id for MCQ.
+  content      String
+  status       AnswerStatus
+  level        AnswerLevel?
+  isCorrect    Boolean?
+  strengths    String?
+  improvements String?
+  /// PREDICTION: AI comparison with the actual work, written after completion.
+  feedback     String?
+  /// Teacher controls (phase 6).
+  aiHidden     Boolean      @default(false)
+  teacherLevel AnswerLevel?
+  teacherNote  String?
+  submittedAt  DateTime     @default(now())
+  gradedAt     DateTime?
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, userId, attempt])
+  @@index([userId, submittedAt])
+  @@index([status])
+}
+
+/// Written once, when all segments are read and every required question is resolved.
+model WorkCompletion {
+  userId      String
+  workId      String
+  completedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@id([userId, workId])
+  @@index([workId])
 }
 
 model UserSettings {

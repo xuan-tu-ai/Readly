@@ -8,6 +8,8 @@ import { anchorFor, snapToWords } from "@/lib/reading/text";
 import { db } from "@/server/db";
 import { assertRole } from "@/server/authz";
 import { DomainError, notFound } from "@/server/errors";
+import { emit } from "@/server/events";
+import { getCompletionStatus, getQuestionsForReader, refreshCompletion } from "./questions";
 
 // ───────────────────────── Reader data ─────────────────────────
 
@@ -22,6 +24,7 @@ export async function getReader(actor: Actor, slug: string) {
       title: true,
       author: true,
       genre: true,
+      background: true,
       segments: {
         where: { archivedAt: null },
         orderBy: { order: "asc" },
@@ -32,7 +35,7 @@ export async function getReader(actor: Actor, slug: string) {
   if (!work) return null;
 
   const segmentIds = work.segments.map((s) => s.id);
-  const [progress, reads, highlights, settings] = await Promise.all([
+  const [progress, reads, highlights, settings, questions, completion] = await Promise.all([
     db.readingProgress.findUnique({
       where: { userId_workId: { userId: actor.id, workId: work.id } },
       select: { segmentId: true, segmentFraction: true },
@@ -43,15 +46,26 @@ export async function getReader(actor: Actor, slug: string) {
     }),
     listOwnHighlights(actor.id, work.id),
     getReadingSettings(actor.id),
+    getQuestionsForReader(actor.id, work.id),
+    getCompletionStatus(actor.id, work.id),
   ]);
 
   return {
-    work: { id: work.id, slug: work.slug, title: work.title, author: work.author, genre: work.genre },
+    work: {
+      id: work.id,
+      slug: work.slug,
+      title: work.title,
+      author: work.author,
+      genre: work.genre,
+      background: work.background ? sanitizeSegmentHtml(work.background) : null,
+    },
     segments: work.segments.map((s) => ({ ...s, content: sanitizeSegmentHtml(s.content) })),
     progress,
     readSegmentIds: reads.map((r) => r.segmentId),
     highlights,
     settings,
+    questions,
+    completion,
   };
 }
 
@@ -86,12 +100,19 @@ export async function markSegmentsRead(actor: Actor, segmentIds: string[]) {
   if (segmentIds.length === 0) return;
   const segments = await db.segment.findMany({
     where: { id: { in: segmentIds }, archivedAt: null, work: { status: "PUBLISHED" } },
-    select: { id: true },
+    select: { id: true, workId: true },
   });
-  await db.segmentRead.createMany({
+  const { count } = await db.segmentRead.createMany({
     data: segments.map((s) => ({ userId: actor.id, segmentId: s.id })),
     skipDuplicates: true,
   });
+  if (count === 0) return;
+  // Reading the last segment can complete the work.
+  for (const workId of new Set(segments.map((s) => s.workId))) {
+    const ids = segments.filter((s) => s.workId === workId).map((s) => s.id);
+    await emit({ type: "SegmentsRead", userId: actor.id, workId, segmentIds: ids });
+    await refreshCompletion(actor.id, workId);
+  }
 }
 
 /** Limits per request: the client flushes every ~30 s, so more than this is not real reading. */

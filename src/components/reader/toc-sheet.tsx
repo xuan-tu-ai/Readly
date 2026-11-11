@@ -11,11 +11,14 @@ export type TocSegment = { id: string; order: number; title: string | null };
 export function TocSheet({
   segments,
   readIds,
+  owedIds,
   currentId,
   onJump,
 }: {
   segments: TocSegment[];
   readIds: Set<string>;
+  /** Segments with a required question still open ("câu nợ"). */
+  owedIds: Set<string>;
   currentId: string | null;
   onJump: (segmentId: string) => void;
 }) {
@@ -54,7 +57,12 @@ export function TocSheet({
                 ) : (
                   <Circle className="size-4 shrink-0 text-muted-foreground" aria-label="Chưa đọc" />
                 )}
-                {s.title ?? `Phần ${s.order}`}
+                <span className="flex-1">{s.title ?? `Phần ${s.order}`}</span>
+                {owedIds.has(s.id) ? (
+                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+                    Còn câu hỏi
+                  </span>
+                ) : null}
               </button>
             );
           })}

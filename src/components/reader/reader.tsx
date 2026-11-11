@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { ChevronLeft } from "lucide-react";
+import { CheckCircle2, ChevronLeft } from "lucide-react";
 import type { HighlightColor } from "@/generated/prisma/enums";
 import {
   createHighlightAction,
@@ -13,9 +13,11 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import type { OwnHighlight, ReaderData } from "@/server/services/reading";
 import { ActiveToolbar, COLOR_OPTIONS, PendingToolbar } from "./highlight-toolbar";
+import { QuestionCard } from "./question-card";
 import { ReaderSettings, type ReaderSettingsValue } from "./reader-settings";
 import { TocSheet } from "./toc-sheet";
 import { highlightsSupported, useHighlighter } from "./use-highlighter";
+import { useQuestions } from "./use-questions";
 import { scrollToSegment, useReadingTracker } from "./use-reading-tracker";
 
 /** Segment HTML is rendered once and never re-rendered, so text offsets stay stable. */
@@ -39,6 +41,9 @@ export function Reader({ data }: { data: ReaderData }) {
     initialPosition,
     headerRef,
   });
+
+  // ── Questions ──
+  const { pre, post, bySegment, owedSegments, completion, submit } = useQuestions(data, readIds.size);
 
   // ── Settings (saved shortly after the last change) ──
   const [settings, setSettings] = useState<ReaderSettingsValue>(data.settings);
@@ -128,7 +133,12 @@ export function Reader({ data }: { data: ReaderData }) {
             <span className="text-xs text-muted-foreground tabular-nums">{percent}%</span>
           </div>
         </div>
-        <TocSheet segments={segments} readIds={readIds} currentId={currentId} onJump={jumpTo} />
+        {completion.completedAt ? (
+          <span className="hidden items-center gap-1 text-xs font-medium text-emerald-700 sm:flex dark:text-emerald-400">
+            <CheckCircle2 className="size-4" aria-hidden /> Đã hoàn thành
+          </span>
+        ) : null}
+        <TocSheet segments={segments} readIds={readIds} owedIds={owedSegments} currentId={currentId} onJump={jumpTo} />
         <ReaderSettings value={settings} onChange={setSettings} />
       </header>
 
@@ -141,6 +151,24 @@ export function Reader({ data }: { data: ReaderData }) {
         >
           <h1 className="mb-1 text-[1.6em] leading-tight font-semibold">{work.title}</h1>
           <p className="mb-8 text-[0.85em] opacity-70">{work.author}</p>
+
+          {work.background || pre.length > 0 ? (
+            <section aria-labelledby="pre-reading" className="mb-10 grid gap-3 font-sans text-base leading-normal">
+              <h2 id="pre-reading" className="text-sm font-semibold tracking-wide uppercase opacity-70">
+                Trước khi đọc
+              </h2>
+              {work.background ? (
+                <div
+                  className="rounded-xl border bg-card p-4 text-sm text-card-foreground [&_p]:mb-2 last:[&_p]:mb-0"
+                  dangerouslySetInnerHTML={{ __html: work.background }}
+                />
+              ) : null}
+              {pre.map((q) => (
+                <QuestionCard key={q.id} question={q} onSubmit={submit} />
+              ))}
+            </section>
+          ) : null}
+
           {segments.map((segment) => (
             <section key={segment.id} id={`seg-${segment.id}`} aria-label={segment.title ?? `Phần ${segment.order}`} className="scroll-mt-20 pb-6">
               {segment.title ? (
@@ -148,20 +176,44 @@ export function Reader({ data }: { data: ReaderData }) {
               ) : null}
               <SegmentText id={segment.id} html={segment.content} />
               <div data-end-of={segment.id} aria-hidden className="h-px" />
+              {bySegment.get(segment.id)?.length ? (
+                <div className="mt-4 grid gap-3 font-sans text-base leading-normal lg:hidden">
+                  {bySegment.get(segment.id)!.map((q) => (
+                    <QuestionCard key={q.id} question={q} onSubmit={submit} />
+                  ))}
+                </div>
+              ) : null}
             </section>
           ))}
-          <div className="mt-6 rounded-lg border border-dashed p-4 text-center text-[0.85em] opacity-80">
-            Bạn đã đến cuối tác phẩm.{" "}
-            <Link href="/student/library" className="underline underline-offset-4">
-              Về thư viện
-            </Link>
-          </div>
+
+          <section aria-labelledby="post-reading" className="mt-6 grid gap-3 font-sans text-base leading-normal">
+            <h2 id="post-reading" className="text-sm font-semibold tracking-wide uppercase opacity-70">
+              Sau khi đọc
+            </h2>
+            <CompletionBanner completion={completion} />
+            {post.map((q) => (
+              <QuestionCard key={q.id} question={q} onSubmit={submit} />
+            ))}
+            <p className="text-center text-sm opacity-80">
+              <Link href="/student/library" className="underline underline-offset-4">
+                Về thư viện
+              </Link>
+            </p>
+          </section>
         </article>
 
         <aside className="hidden lg:block">
-          <div className="sticky top-20 grid gap-3 rounded-xl border p-4">
+          <div className="sticky top-20 grid max-h-[calc(100dvh-6rem)] gap-3 overflow-y-auto rounded-xl border p-4">
             <p className="text-xs font-medium text-muted-foreground">Đang đọc</p>
             <p className="font-medium">{currentSegment?.title ?? work.title}</p>
+            {currentId && bySegment.get(currentId)?.length ? (
+              <div className="grid gap-3">
+                <p className="text-xs font-medium text-muted-foreground">Câu hỏi cho phần này</p>
+                {bySegment.get(currentId)!.map((q) => (
+                  <QuestionCard key={q.id} question={q} onSubmit={submit} />
+                ))}
+              </div>
+            ) : null}
             <p className="text-xs font-medium text-muted-foreground">Đoạn bạn đã tô sáng ở đây</p>
             {currentHighlights.length === 0 ? (
               <p className="text-sm text-muted-foreground">
@@ -205,5 +257,26 @@ export function Reader({ data }: { data: ReaderData }) {
         />
       ) : null}
     </div>
+  );
+}
+
+function CompletionBanner({ completion }: { completion: ReaderData["completion"] }) {
+  if (completion.completedAt) {
+    return (
+      <div className="flex items-center gap-3 rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-100">
+        <CheckCircle2 className="size-5 shrink-0" aria-hidden />
+        Bạn đã hoàn thành tác phẩm này. Xem lại dự đoán ban đầu ở phần “Trước khi đọc”.
+      </div>
+    );
+  }
+  const missingSegments = completion.totalSegments - completion.readSegments;
+  const parts = [
+    missingSegments > 0 ? `${missingSegments} phân đoạn chưa đọc` : null,
+    completion.owedQuestions > 0 ? `${completion.owedQuestions} câu hỏi bắt buộc chưa xong` : null,
+  ].filter(Boolean);
+  return (
+    <p className="rounded-xl border border-dashed p-4 text-sm opacity-90">
+      Để hoàn thành tác phẩm: {parts.length ? parts.join(", ") : "đang cập nhật…"}.
+    </p>
   );
 }
