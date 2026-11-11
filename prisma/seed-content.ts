@@ -11,6 +11,7 @@ import path from "node:path";
 import { z } from "zod";
 import type { PrismaClient } from "../src/generated/prisma/client";
 import { GENRES, workSearchText } from "../src/lib/catalog";
+import { sanitizeSegmentHtml } from "../src/lib/reading/sanitize";
 
 const tagSchema = z.object({
   slug: z.string(),
@@ -74,7 +75,7 @@ export function placeholderSegments(work: Pick<SeedWork, "title" | "genre">, cou
     return {
       order: n,
       title: work.genre === "THO" ? `Khổ ${n}` : work.genre === "KICH" ? `Cảnh ${n}` : `Phần ${n}`,
-      content: note + body,
+      content: sanitizeSegmentHtml(note + body),
     };
   });
 }
