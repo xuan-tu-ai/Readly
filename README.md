@@ -52,7 +52,8 @@ npm run build
 ## Cấu trúc
 
 ```
-prisma/              schema, migrations, seed
+content/             dữ liệu thư viện: tags.json, works.sample.json (hiện là DỮ LIỆU GIẢ – thay bằng danh sách thật, cùng định dạng)
+prisma/              schema, migrations, seed (seed-content.ts nạp content/*.json)
 src/app/             route theo vai: (auth) /login /register, /student, /teacher, /admin
 src/app/actions/     server actions (luôn kiểm tra phiên + quyền trước khi gọi service)
 src/server/auth/     phiên đăng nhập lưu DB, cookie, mật khẩu (argon2), DAL

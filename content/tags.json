@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "gia-dinh",
+    "label": "Gia đình",
+    "kind": "THEME"
+  },
+  {
+    "slug": "que-huong",
+    "label": "Quê hương",
+    "kind": "THEME"
+  },
+  {
+    "slug": "thien-nhien",
+    "label": "Thiên nhiên",
+    "kind": "THEME"
+  },
+  {
+    "slug": "chien-tranh",
+    "label": "Chiến tranh & lịch sử",
+    "kind": "THEME"
+  },
+  {
+    "slug": "tinh-yeu",
+    "label": "Tình yêu",
+    "kind": "THEME"
+  },
+  {
+    "slug": "than-phan",
+    "label": "Thân phận con người",
+    "kind": "THEME"
+  },
+  {
+    "slug": "xa-hoi",
+    "label": "Xã hội & thời đại",
+    "kind": "THEME"
+  },
+  {
+    "slug": "tru-tinh",
+    "label": "Trữ tình",
+    "kind": "MOOD"
+  },
+  {
+    "slug": "bi-trang",
+    "label": "Bi tráng",
+    "kind": "MOOD"
+  },
+  {
+    "slug": "hao-hung",
+    "label": "Hào hùng",
+    "kind": "MOOD"
+  },
+  {
+    "slug": "hai-huoc",
+    "label": "Hài hước",
+    "kind": "MOOD"
+  },
+  {
+    "slug": "suy-tu",
+    "label": "Suy tư",
+    "kind": "MOOD"
+  }
+]

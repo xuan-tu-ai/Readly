@@ -1,11 +1,13 @@
 /**
  * Idempotent seed. Creates the admin account (from env) and, when
- * SEED_DEMO=true, a demo teacher with class code DEMO12.
+ * SEED_DEMO=true, a demo teacher with class code DEMO12; then the sample
+ * library from content/*.json (see seed-content.ts).
  * Run: npm run db:seed
  */
 import "dotenv/config";
 import { createPrismaClient } from "../src/server/db";
 import { hashPassword } from "../src/server/auth/password";
+import { seedContent } from "./seed-content";
 
 const DEMO_TEACHER = {
   email: "giaovien@readly.local",
@@ -55,6 +57,11 @@ async function main() {
       });
       console.log(`✔ Giáo viên demo: ${DEMO_TEACHER.email} · lớp ${DEMO_CLASS.name} (mã ${DEMO_CLASS.code})`);
     }
+
+    const content = await seedContent(db);
+    console.log(
+      `✔ Nội dung mẫu: ${content.works} tác phẩm, ${content.tags} tag, ${content.segmentsCreated} phân đoạn mới`,
+    );
   } finally {
     await db.$disconnect();
   }
