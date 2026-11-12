@@ -124,7 +124,8 @@ Task:
 - Dashboard: biểu đồ tiến độ theo tác phẩm giao, HS chưa xong/quá hạn, chi tiết từng HS (tiến độ, thời gian đọc, câu trả lời, câu gắn cờ).
 - Câu trả lời gần đây: sửa mức (→ ledger), nhận xét GV, ẩn nhận xét AI, báo admin (`AiReport`).
 - Highlight nổi bật: heatmap theo tác phẩm + feed có ghi chú (bỏ riêng tư).
-- Bật/tắt BXH. Nhắc nhở thủ công (tạo thông báo — kênh gửi ở giai đoạn 7).
+- ~~Bật/tắt BXH~~ (đã làm sớm ở giai đoạn 5). Nhắc nhở thủ công (tạo thông báo — kênh gửi ở giai đoạn 7).
+- Thưởng +50 điểm khi hoàn thành trước hạn giao (`workEarlyBonus` đã có trong bảng điểm, chờ `Assignment`).
 - Xuất .xlsx (`exceljs`): sheet Chi tiết + Tổng hợp.
 
 **Xong khi:** unit test truy vấn tiến độ & quyền (GV lớp cũ mất quyền sau khi HS đổi lớp); file .xlsx mở được trong Excel, tiếng Việt đúng.

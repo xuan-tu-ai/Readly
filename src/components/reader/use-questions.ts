@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRewards } from "@/components/gamification/celebrations";
+import type { Celebrations } from "@/server/services/gamification";
 import { refreshQuestionsAction, submitAnswerAction } from "@/app/actions/questions";
 import { isResolved } from "@/lib/questions/rules";
 import type { ReaderData } from "@/server/services/reading";
@@ -16,13 +18,26 @@ export function useQuestions(data: ReaderData, readCount: number) {
   const [questions, setQuestions] = useState(data.questions);
   const [completion, setCompletion] = useState<Completion>(data.completion);
 
+  // Rewards: "+N điểm" when the total goes up, celebrations for badges / level-ups.
+  const { celebrate, toastPoints } = useRewards();
+  const points = useRef(data.points);
+  const reward = useCallback(
+    (total: number, celebrations: Celebrations) => {
+      if (total > points.current) toastPoints(total - points.current);
+      points.current = total;
+      celebrate(celebrations);
+    },
+    [celebrate, toastPoints],
+  );
+
   const refresh = useCallback(async () => {
     const result = await refreshQuestionsAction(data.work.id);
     if (result.ok) {
       setQuestions(result.data.questions);
       setCompletion(result.data.completion);
+      reward(result.data.points, result.data.celebrations);
     }
-  }, [data.work.id]);
+  }, [data.work.id, reward]);
 
   const submit = useCallback(
     async (questionId: string, content: string): Promise<string | null> => {
@@ -30,9 +45,10 @@ export function useQuestions(data: ReaderData, readCount: number) {
       if (!result.ok) return result.error;
       setQuestions((prev) => prev.map((q) => (q.id === questionId ? result.data.question : q)));
       setCompletion(result.data.completion);
+      reward(result.data.points, result.data.celebrations);
       return null;
     },
-    [data.work.id],
+    [data.work.id, reward],
   );
 
   const anyPending = questions.some((q) => q.state.status === "pending");

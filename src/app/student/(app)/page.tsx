@@ -3,6 +3,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BookOpenCheck, Clock3, Layers, School } from "lucide-react";
 import { PageSkeleton } from "@/components/app-shell";
+import { CatAvatar } from "@/components/art/avatars";
+import { BadgeArt } from "@/components/art/badge";
+import { StreakFlame } from "@/components/art/game-icons";
+import { LevelEmblem } from "@/components/art/level";
 import { Mascot, MascotSays } from "@/components/mascot/mascot";
 import { buttonVariants } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -11,6 +15,7 @@ import { WorkCover } from "@/components/works/work-cover";
 import { cn } from "@/lib/utils";
 import { requireUser } from "@/server/auth/dal";
 import { getActiveClass } from "@/server/services/classes";
+import { getClassLeaderboard, getPlayer, listBadges } from "@/server/services/gamification";
 import { getRecommendations } from "@/server/services/quiz";
 import { getContinueReading, getWeeklyStats } from "@/server/services/reading";
 
@@ -32,12 +37,16 @@ function firstName(name: string) {
 
 async function StudentHome() {
   const user = await requireUser("STUDENT");
-  const [activeClass, recommendations, continueReading, stats] = await Promise.all([
+  const [activeClass, recommendations, continueReading, stats, player, board, badges] = await Promise.all([
     getActiveClass(user.id),
     getRecommendations(user.id, 6),
     getContinueReading(user.id),
     getWeeklyStats(user.id),
+    getPlayer(user.id),
+    getClassLeaderboard(user.id, new Date(), 3),
+    listBadges(user.id),
   ]);
+  const recentBadges = badges.filter((b) => b.earned).slice(0, 3);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
@@ -126,6 +135,75 @@ async function StudentHome() {
       </div>
 
       <aside className="grid gap-5">
+        <section className="grid gap-4 rounded-2xl border-2 bg-card p-5">
+          <Link href="/student/achievements" className="flex items-center gap-4 rounded-xl hover:bg-muted/60">
+            <LevelEmblem level={player.level.level} size={64} label="" />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-extrabold tracking-wider text-muted-foreground uppercase">Cấp {player.level.level}</p>
+              <p className="font-heading text-xl font-semibold">{player.level.name}</p>
+              <ProgressBar
+                value={player.points - player.level.min}
+                max={(player.level.next ?? player.points) - player.level.min || 1}
+                label="Tiến độ lên cấp"
+                tone="bg-[#f7b72a]"
+                className="mt-1 h-2.5"
+              />
+            </div>
+          </Link>
+          <div className="flex items-center gap-3 rounded-xl bg-[#fff1e8] px-3 py-2.5">
+            <StreakFlame lit={player.streak.today} size={36} />
+            <p className="text-sm">
+              <span className="font-extrabold">{player.streak.current} ngày streak</span>
+              <br />
+              <span className="text-muted-foreground">
+                {player.streak.today ? "Hôm nay đã giữ lửa!" : "Đọc một phân đoạn để giữ lửa."}
+              </span>
+            </p>
+          </div>
+        </section>
+
+        {board.state === "ok" ? (
+          <section className="grid gap-3 rounded-2xl border-2 bg-card p-5">
+            <div className="flex items-center justify-between">
+              <h2 className="font-bold">Xếp hạng tuần</h2>
+              <Link href="/student/leaderboard" className="text-xs font-bold text-brand-blue uppercase hover:underline">
+                Xem tất cả
+              </Link>
+            </div>
+            <ol className="grid gap-1.5">
+              {[...board.top, ...(board.me && !board.top.some((r) => r.me) ? [board.me] : [])].map((row) => (
+                <li
+                  key={row.userId}
+                  className={cn("flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm", row.me && "bg-sidebar-accent")}
+                >
+                  <span className="w-5 text-center font-extrabold text-muted-foreground tabular-nums">{row.rank}</span>
+                  <CatAvatar avatar={row.avatar} size={28} label="" />
+                  <span className="min-w-0 flex-1 truncate font-semibold">{row.me ? "Bạn" : row.name}</span>
+                  <span className="font-extrabold text-[#c48508] tabular-nums">{row.points}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+
+        {recentBadges.length > 0 ? (
+          <section className="grid gap-3 rounded-2xl border-2 bg-card p-5">
+            <div className="flex items-center justify-between">
+              <h2 className="font-bold">Huy hiệu mới</h2>
+              <Link href="/student/achievements" className="text-xs font-bold text-brand-blue uppercase hover:underline">
+                Tất cả
+              </Link>
+            </div>
+            <ul className="flex justify-around">
+              {recentBadges.map((b) => (
+                <li key={b.id}>
+                  <BadgeArt emblem={b.emblem} tier={b.tier} size={60} label={b.name} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
         <section className="rounded-2xl border-2 bg-card p-5">
           <h2 className="mb-4 font-bold">Tuần này</h2>
           <div className="grid grid-cols-3 gap-2 text-center">

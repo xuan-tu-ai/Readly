@@ -19,8 +19,16 @@ export function on<T extends DomainEvent["type"]>(type: T, handler: Handler<T>) 
   handlers.set(type, list);
 }
 
-/** Runs handlers in registration order; a failing handler does not stop the others. */
+let subscribers: Promise<unknown> | null = null;
+
+/**
+ * Runs handlers in registration order; a failing handler does not stop the
+ * others. Subscribers are loaded on first use, so the web app, the worker and
+ * tests all get them without import-order tricks (and without a cycle).
+ */
 export async function emit(event: DomainEvent) {
+  subscribers ??= import("./subscribers");
+  await subscribers;
   for (const handler of handlers.get(event.type) ?? []) {
     try {
       await handler(event as never);

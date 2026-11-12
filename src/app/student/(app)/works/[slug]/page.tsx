@@ -8,11 +8,13 @@ import { MascotSays } from "@/components/mascot/mascot";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { MiniGameCard } from "@/components/gamification/mini-game-card";
 import { SegmentPath } from "@/components/works/segment-path";
 import { GENRE_COLOR, WorkCover } from "@/components/works/work-cover";
 import { GENRE_LABEL, difficultyLabel, formatMinutes } from "@/lib/catalog";
 import { requireUser } from "@/server/auth/dal";
 import { getCompletionStatus } from "@/server/services/questions";
+import { listWorkGames } from "@/server/services/minigames";
 import { getWorkPath } from "@/server/services/reading";
 import { getVisibleWorkBySlug } from "@/server/services/works";
 
@@ -32,9 +34,13 @@ async function WorkDetail({ params }: Pick<PageProps<"/student/works/[slug]">, "
   const work = await getVisibleWorkBySlug(slug);
   if (!work) notFound();
   const readable = work.status === "PUBLISHED" && work.segmentCount > 0;
-  const [path, completion] = readable
-    ? await Promise.all([getWorkPath(user.id, work.id), getCompletionStatus(user.id, work.id)])
-    : [[], null];
+  const [path, completion, games] = readable
+    ? await Promise.all([
+        getWorkPath(user.id, work.id),
+        getCompletionStatus(user.id, work.id),
+        listWorkGames(user.id, work.id),
+      ])
+    : [[], null, []];
   const readCount = path.filter((n) => n.read).length;
   const started = readCount > 0;
 
@@ -115,6 +121,19 @@ async function WorkDetail({ params }: Pick<PageProps<"/student/works/[slug]">, "
             <h2 className="font-heading text-2xl font-semibold">Về tác giả</h2>
             <p className="leading-relaxed text-muted-foreground">{work.authorBio}</p>
           </section>
+          {games.length > 0 ? (
+            <section className="grid gap-3">
+              <h2 className="font-heading text-2xl font-semibold">Mini game</h2>
+              <p className="text-sm text-muted-foreground">
+                Mỗi mini game mở khi bạn đọc tới phân đoạn của nó, nên không lo bị lộ nội dung phía sau.
+              </p>
+              <div className="grid gap-3">
+                {games.map((g) => (
+                  <MiniGameCard key={g.id} game={g} unlocked={g.unlocked} />
+                ))}
+              </div>
+            </section>
+          ) : null}
         </div>
 
         {readable ? (

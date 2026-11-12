@@ -61,6 +61,11 @@ model User {
   highlights    Highlight[]
   answers       Answer[]
   completions   WorkCompletion[]
+  pointEntries  PointEntry[]
+  streakDays    StreakDay[]
+  badges        UserBadge[]
+  gamePlays     MiniGamePlay[]
+  player        PlayerState?
 }
 
 /// Database session. `id` is the SHA-256 hash of the cookie token,
@@ -82,6 +87,8 @@ model Class {
   /// Join code students type when registering or switching class.
   code       String   @unique
   codeActive Boolean  @default(true)
+  /// Weekly class leaderboard (spec §8.2): on by default, the teacher can turn it off.
+  leaderboardEnabled Boolean @default(true)
   teacherId  String
   createdAt  DateTime @default(now())
 
@@ -157,6 +164,8 @@ model Work {
   highlights  Highlight[]
   questions   Question[]
   completions WorkCompletion[]
+  badges      BadgeDefinition[]
+  miniGames   MiniGame[]
 
   @@index([status, genre])
 }
@@ -199,6 +208,8 @@ model Segment {
   readingTimes ReadingTime[]
   highlights   Highlight[]
   questions    Question[]
+  /// Mini games that open once this segment has been read.
+  unlocksGames MiniGame[]
 
   @@index([workId, order])
 }
@@ -415,4 +426,158 @@ model UserSettings {
   pageMode   PageMode     @default(SCROLL)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ───────────────────────── Gamification (spec §8) ─────────────────────────
+
+enum PointReason {
+  MCQ
+  SHORT
+  ESSAY
+  WORK_COMPLETED
+  MINIGAME
+}
+
+/// Append-only point ledger. Every source of points has a key
+/// ("question:<id>", "work:<id>", "game:<id>"); awarding writes the difference
+/// between what the source is worth now and what the key already holds, so
+/// regrades, teacher overrides and new mini game records correct themselves.
+model PointEntry {
+  id        String      @id @default(cuid())
+  userId    String
+  key       String
+  reason    PointReason
+  /// Positive, or negative for a correction.
+  amount    Int
+  createdAt DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, key])
+  @@index([userId, createdAt])
+}
+
+/// Point table and level thresholds (one row, id = 1). Admin edits it in phase 8;
+/// changing it triggers a recalculation of every ledger.
+model GamificationConfig {
+  id              Int      @id @default(1)
+  mcqFirstTry     Int      @default(5)
+  shortDat        Int      @default(10)
+  shortSauSac     Int      @default(20)
+  essayDat        Int      @default(20)
+  essaySauSac     Int      @default(40)
+  workCompleted   Int      @default(100)
+  workEarlyBonus  Int      @default(50)
+  miniGameMax     Int      @default(30)
+  levelThresholds Int[]    @default([0, 300, 1000, 2500, 5000])
+  updatedAt       DateTime @updatedAt
+}
+
+/// A Vietnam calendar day with at least one meaningful interaction (spec §8.3).
+model StreakDay {
+  userId String
+  /// Calendar day in Asia/Ho_Chi_Minh, stored as UTC midnight of that date.
+  day    DateTime @db.Date
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, day])
+}
+
+/// Per-student state that is not derived from the ledger.
+model PlayerState {
+  userId          String @id
+  /// Highest level already celebrated, so a level-up is shown once.
+  celebratedLevel Int    @default(1)
+  /// Key from src/lib/art.ts (AVATARS); null = picked from the user id.
+  avatar          String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum BadgeRule {
+  /// Complete N works.
+  WORKS_COMPLETED
+  /// Complete works in N different genres.
+  GENRES_COMPLETED
+  /// Read N days in a row.
+  STREAK_DAYS
+  /// N answers rated Sâu sắc.
+  DEEP_ANSWERS
+  /// Complete one specific work.
+  WORK_COMPLETED
+}
+
+model BadgeDefinition {
+  id          String    @id @default(cuid())
+  /// Stable key for seeded badges; null for badges the admin creates.
+  key         String?   @unique
+  name        String
+  description String
+  rule        BadgeRule
+  threshold   Int?
+  workId      String?
+  /// Art keys from src/lib/art.ts (BADGE_EMBLEMS, BADGE_TIERS).
+  emblem      String
+  tier        String
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+
+  work   Work?       @relation(fields: [workId], references: [id], onDelete: Cascade)
+  awards UserBadge[]
+}
+
+model UserBadge {
+  userId    String
+  badgeId   String
+  awardedAt DateTime  @default(now())
+  /// Set once the student has seen the "new badge" celebration.
+  seenAt    DateTime?
+
+  user  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge BadgeDefinition @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, badgeId])
+  @@index([badgeId])
+}
+
+enum MiniGameType {
+  /// Ghép nhân vật – sự kiện
+  MATCH
+  /// Đoán chi tiết trong đoạn văn
+  DETAIL
+}
+
+model MiniGame {
+  id              String       @id @default(cuid())
+  workId          String
+  /// Opens only after the student has read this segment (no spoilers).
+  unlockSegmentId String
+  type            MiniGameType
+  title           String
+  /// Shape depends on `type`; see src/lib/minigames.ts.
+  data            Json
+  published       Boolean      @default(true)
+  order           Int          @default(0)
+  createdAt       DateTime     @default(now())
+
+  work          Work           @relation(fields: [workId], references: [id], onDelete: Cascade)
+  unlockSegment Segment        @relation(fields: [unlockSegmentId], references: [id], onDelete: Cascade)
+  plays         MiniGamePlay[]
+
+  @@index([workId])
+}
+
+model MiniGamePlay {
+  id       String   @id @default(cuid())
+  userId   String
+  gameId   String
+  correct  Int
+  total    Int
+  playedAt DateTime @default(now())
+
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game MiniGame @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([userId, gameId])
 }

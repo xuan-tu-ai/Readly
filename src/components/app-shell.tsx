@@ -3,7 +3,9 @@ import type { Role } from "@/generated/prisma/enums";
 import { ROLE_LABEL } from "@/lib/roles";
 import { getCurrentUser } from "@/server/auth/dal";
 import { logoutAction } from "@/app/actions/auth";
+import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PlayerChips, PlayerChipsSkeleton } from "./gamification/player-chips";
 import { Brand } from "./brand";
 import { BottomNav, SideNav, type NavItem } from "./nav-links";
 
@@ -11,6 +13,8 @@ const NAV: Record<Role, NavItem[]> = {
   STUDENT: [
     { href: "/student", label: "Trang chủ", icon: "home" },
     { href: "/student/library", label: "Thư viện", icon: "library" },
+    { href: "/student/leaderboard", label: "Xếp hạng", icon: "trophy" },
+    { href: "/student/achievements", label: "Thành tích", icon: "award" },
     { href: "/student/class", label: "Lớp học", icon: "users" },
   ],
   TEACHER: [{ href: "/teacher", label: "Lớp học", icon: "users" }],
@@ -42,12 +46,22 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between border-b-2 bg-background/90 px-3 py-2.5 backdrop-blur md:hidden">
-          <Brand className="[&_span]:text-xl [&_svg]:size-7" />
-          <Suspense fallback={null}>
-            <LogoutButton compact />
-          </Suspense>
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-2 border-b-2 bg-background/90 px-3 py-2 backdrop-blur md:hidden">
+          <Brand className={role === "STUDENT" ? "[&_span]:hidden min-[420px]:[&_span]:inline [&_span]:text-xl [&_svg]:size-7" : "[&_span]:text-xl [&_svg]:size-7"} />
+          {role === "STUDENT" ? (
+            <Suspense fallback={<PlayerChipsSkeleton />}>
+              <PlayerChips compact />
+            </Suspense>
+          ) : null}
+          <LogoutButton compact />
         </header>
+        {role === "STUDENT" ? (
+          <div className="sticky top-0 z-10 hidden justify-end border-b-2 bg-background/90 px-10 py-2 backdrop-blur md:flex">
+            <Suspense fallback={<PlayerChipsSkeleton />}>
+              <PlayerChips />
+            </Suspense>
+          </div>
+        ) : null}
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-28 md:px-10 md:py-10 md:pb-10">{children}</main>
       </div>
 
@@ -78,9 +92,15 @@ async function UserBlock() {
 function LogoutButton({ compact = false }: { compact?: boolean }) {
   return (
     <form action={logoutAction}>
-      <Button type="submit" variant={compact ? "ghost" : "outline"} size="sm" className="w-full">
-        Đăng xuất
-      </Button>
+      {compact ? (
+        <Button type="submit" variant="ghost" size="icon-sm" aria-label="Đăng xuất">
+          <LogOut />
+        </Button>
+      ) : (
+        <Button type="submit" variant="outline" size="sm" className="w-full">
+          Đăng xuất
+        </Button>
+      )}
     </form>
   );
 }
