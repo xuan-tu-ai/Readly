@@ -2,7 +2,7 @@
 
 Web đọc văn học lớp 12 có hướng dẫn đọc bằng AI: học sinh đọc theo từng phân đoạn, trả lời câu hỏi trước, trong và sau khi đọc, được AI nhận xét theo rubric và tích điểm, huy hiệu; giáo viên giao bài và theo dõi lớp; admin soạn nội dung. Đồ án kỹ thuật: mọi dữ liệu người dùng là dữ liệu mẫu.
 
-- **Bản chạy online:** _(điền sau khi deploy)_
+- **Bản chạy online:** https://readly-production-3cec7280.up.railway.app (Railway: web + worker + Postgres)
 - Mô tả sản phẩm: [docs/CONTEXT.md](docs/CONTEXT.md)
 - Spec: [.plans/readly-reading-platform-spec.md](.plans/readly-reading-platform-spec.md)
 - Kế hoạch triển khai: [.plans/readly-implementation-plan.md](.plans/readly-implementation-plan.md)

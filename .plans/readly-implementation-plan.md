@@ -191,6 +191,14 @@ Task:
 
 **Xong khi:** CI xanh; URL công khai mở được trên điện thoại; demo đủ các luồng chính từ README.
 
+**Ghi chú khi làm:**
+- Hồ sơ đọc ở `/student/profile` (mục "Hồ sơ" trên thanh điều hướng): avatar, cấp/điểm/streak, huy hiệu, lịch sử đọc, highlight lọc theo màu/tác phẩm (giữ cả highlight không còn trong văn bản).
+- 4 tác phẩm thuộc phạm vi công cộng có toàn văn trong `content/works/*.json` (Câu cá mùa thu, Thương vợ, Đây thôn Vĩ Dạ, Hai đứa trẻ); câu hỏi và mini game do AI (Token Harbor) soạn nháp, rà tay đối chiếu nguyên văn. 45 tác phẩm giữ chỗ vẫn giữ.
+- Seed demo dựa trên tác phẩm thật: 20 học sinh mẫu, 3 bài giao, thảo luận, 1 báo cáo AI; học sinh demo có sẵn lịch sử đầy đủ.
+- Chế độ tối toàn app (Theo máy / Sáng / Tối, lưu theo thiết bị); trình đọc giữ giao diện đọc riêng.
+- Deploy Railway: một image, `docker/start.sh` chọn web/worker theo `SERVICE_ROLE`; web migrate rồi chỉ seed khi DB trống. Không dùng `railway.json` (config-as-code của Railway ngừng hỗ trợ từ 01/12/2026).
+- Bỏ: Playwright E2E (theo quyết định của chủ đồ án).
+
 ---
 
 ## Rủi ro & cách xử lý
