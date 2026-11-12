@@ -176,11 +176,12 @@ function toPostView(p: PostRow, viewer: Actor) {
     type: p.type,
     body: p.body,
     quote:
-      p.segmentId && p.quote !== null && p.quoteStart !== null && p.quoteEnd !== null
+      p.quote !== null
         ? {
-            segmentId: p.segmentId,
-            start: p.quoteStart,
-            end: p.quoteEnd,
+            /** Null once the text was edited and the passage is gone: shown without a link. */
+            segmentId: p.segmentId && p.quoteStart !== null && p.quoteEnd !== null ? p.segmentId : null,
+            start: p.quoteStart ?? 0,
+            end: p.quoteEnd ?? 0,
             text: p.quote,
             segmentTitle: p.segment ? (p.segment.title ?? `Phần ${p.segment.order}`) : null,
           }

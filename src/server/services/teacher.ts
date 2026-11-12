@@ -462,7 +462,7 @@ export async function getClassHighlights(actor: Actor, classId: string, workId?:
         orderBy: { order: "asc" },
         select: { id: true, order: true, title: true, content: true },
       }),
-      db.highlight.findMany({ where: { ...visible, workId: selected.id }, select: { segmentId: true, start: true, end: true, userId: true } }),
+      db.highlight.findMany({ where: { ...visible, workId: selected.id, orphanedAt: null }, select: { segmentId: true, start: true, end: true, userId: true } }),
     ]);
     const heatSegments = segments.map((s) => {
       const text = htmlToText(s.content).replace(/\n+$/, "");

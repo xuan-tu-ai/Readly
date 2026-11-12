@@ -168,6 +168,13 @@ Task:
 **Xong khi:** unit test đề xuất phân đoạn (thơ, truyện, kịch mẫu) và neo lại highlight (sửa chính tả, chèn đoạn, xóa đoạn); import 1 file .docx thật thành tác phẩm đọc được.
 **Cắt nếu trễ:** AI soạn nháp mini game.
 
+**Ghi chú khi làm (đã xong, không cắt gì):**
+- Trình sửa tác phẩm có 4 tab: Thông tin · Văn bản · Câu hỏi · Mini game; thêm trang Điểm & huy hiệu và Báo cáo AI trong menu admin.
+- Nhập .docx: chia phân đoạn theo Heading, dòng trống (thơ 1 dòng, văn xuôi/kịch 2 dòng), dòng "Cảnh/Hồi/Lớp …" (kịch), dấu "* * *", và cắt theo độ dài nếu một phần quá 3.000 ký tự. Admin bấm "Cắt ở đây / Bỏ cắt" giữa hai đoạn và đặt tên trước khi lưu. Khổ thơ một-dòng-một-đoạn được gộp thành một đoạn có `<br>`.
+- Nhập lại / sửa văn bản giữ ID phân đoạn theo vị trí; phân đoạn có dữ liệu bị xóa thì lưu trữ. Neo lại highlight chạy ngay khi lưu (đủ nhanh, không cần hàng đợi): giữ nguyên → tìm trong cùng phân đoạn theo ngữ cảnh → khớp gần đúng giữa prefix/suffix (sửa chính tả) → tìm ở phân đoạn khác → không thấy thì `orphanedAt` (vẫn giữ cho hồ sơ đọc giai đoạn 9, không tô trên trang đọc). Trích dẫn trong thảo luận cũng được neo lại.
+- AI soạn nháp: bộ câu hỏi 3 giai đoạn, rubric + ý chính cho một câu, mini game (chỉ dùng văn bản đến phân đoạn mở khóa). Có câu trả lời mẫu cho `AI_PROVIDER=mock`.
+- Câu hỏi / mini game đã có học sinh dùng thì không xóa được (giữ điểm), chỉ bỏ bắt buộc / bỏ xuất bản; huy hiệu đã trao thì khóa điều kiện. Đổi bảng điểm sẽ tính lại sổ cái của mọi học sinh.
+
 ## Giai đoạn 9 – Hoàn thiện & bàn giao
 Task:
 - Trang chủ HS (tiếp tục đọc, bài giao + hạn, gợi ý, huy hiệu mới, streak, cấp độ); hồ sơ đọc (highlight lọc màu/tác phẩm, huy hiệu, lịch sử, điểm).

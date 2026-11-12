@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
-import { Award, BookOpenText, Home, Image as ImageIcon, Shield, Trophy, Users, type LucideIcon } from "lucide-react";
+import { Award, BookOpenText, Flag, Home, Image as ImageIcon, Shield, Trophy, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const ICONS = {
@@ -14,6 +14,7 @@ const ICONS = {
   image: { icon: ImageIcon, tone: "bg-brand-pink text-white" },
   trophy: { icon: Trophy, tone: "bg-[#f7b72a] text-white" },
   award: { icon: Award, tone: "bg-brand-purple text-white" },
+  flag: { icon: Flag, tone: "bg-brand-orange text-white" },
 } satisfies Record<string, { icon: LucideIcon; tone: string }>;
 
 export type NavItem = { href: string; label: string; icon: keyof typeof ICONS };
