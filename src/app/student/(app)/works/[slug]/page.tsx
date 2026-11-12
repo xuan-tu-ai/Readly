@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { BookOpen, ChevronLeft, Clock, Gauge, Layers } from "lucide-react";
+import { BookOpen, CalendarDays, ChevronLeft, Clock, Gauge, Layers } from "lucide-react";
 import { PageSkeleton } from "@/components/app-shell";
 import { MascotSays } from "@/components/mascot/mascot";
 import { Badge } from "@/components/ui/badge";
@@ -13,10 +13,13 @@ import { SegmentPath } from "@/components/works/segment-path";
 import { GENRE_COLOR, WorkCover } from "@/components/works/work-cover";
 import { GENRE_LABEL, difficultyLabel, formatMinutes } from "@/lib/catalog";
 import { requireUser } from "@/server/auth/dal";
+import { cn } from "@/lib/utils";
+import { getStudentDeadline } from "@/server/services/assignments";
 import { getCompletionStatus } from "@/server/services/questions";
 import { listWorkGames } from "@/server/services/minigames";
 import { getWorkPath } from "@/server/services/reading";
 import { getVisibleWorkBySlug } from "@/server/services/works";
+import { formatDayMonth } from "@/lib/vn-date";
 
 export const metadata: Metadata = { title: "Tác phẩm" };
 
@@ -34,13 +37,14 @@ async function WorkDetail({ params }: Pick<PageProps<"/student/works/[slug]">, "
   const work = await getVisibleWorkBySlug(slug);
   if (!work) notFound();
   const readable = work.status === "PUBLISHED" && work.segmentCount > 0;
-  const [path, completion, games] = readable
+  const [path, completion, games, deadline] = readable
     ? await Promise.all([
         getWorkPath(user.id, work.id),
         getCompletionStatus(user.id, work.id),
         listWorkGames(user.id, work.id),
+        getStudentDeadline(user.id, work.id),
       ])
-    : [[], null, []];
+    : [[], null, [], null];
   const readCount = path.filter((n) => n.read).length;
   const started = readCount > 0;
 
@@ -76,6 +80,11 @@ async function WorkDetail({ params }: Pick<PageProps<"/student/works/[slug]">, "
                 </Badge>
               ))}
               {work.status === "COMING_SOON" ? <Badge>Sắp có</Badge> : null}
+              {deadline ? (
+                <Badge className={cn("gap-1", !completion?.completedAt && deadline.passed ? "bg-destructive" : "bg-brand-orange")}>
+                  <CalendarDays aria-hidden /> GV giao – hạn {formatDayMonth(deadline.dueAt)}
+                </Badge>
+              ) : null}
             </div>
             <h1 className="font-heading text-4xl leading-tight font-semibold">{work.title}</h1>
             <p className="text-lg text-muted-foreground">{work.author}</p>

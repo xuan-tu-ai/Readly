@@ -131,6 +131,13 @@ Task:
 **Xong khi:** unit test truy vấn tiến độ & quyền (GV lớp cũ mất quyền sau khi HS đổi lớp); file .xlsx mở được trong Excel, tiếng Việt đúng.
 **Cắt nếu trễ:** heatmap (giữ feed).
 
+**Ghi chú khi làm (đã xong):**
+- Trang lớp chia tab: Tổng quan (bài giao, biểu đồ tiến độ, HS quá hạn, xuất .xlsx) · Học sinh (+ trang từng em, quản lý tài khoản) · Câu trả lời · Highlight · Cài đặt lớp.
+- Hạn đọc = hết ngày đã chọn theo giờ VN. Thưởng đúng hạn được chốt lúc hoàn thành (`WorkCompletion.onTime`): đổi hạn hay gỡ bài giao sau đó không trừ điểm.
+- Bảng `Notification` tạo sớm ở giai đoạn này (thông báo giao bài + nhắc nhở). Giai đoạn 7 thêm chuông, web push và các nguồn khác; sự kiện `AnswerGraded` đã có `source: auto | ai | teacher` để báo "GV sửa mức".
+- `AiReport` lưu báo cáo của GV; hàng chờ admin để giai đoạn 8.
+- Seed lớp demo DEMO12 có 14 HS mẫu (`hs01…hs14@demo.readly.local`) với tiến độ, câu trả lời, highlight khác nhau; giai đoạn 9 chỉ cần mở rộng.
+
 ## Giai đoạn 7 – Thảo luận & thông báo
 Task:
 - `Post` (workId, classId, type QUESTION/REFLECTION, quote anchor, pinned, hidden, resolved), `Reply` (1 cấp), `Like`, `PostReport`.

@@ -3,6 +3,7 @@
 // Phase 2: works, tags, segments, interest quiz results.
 // Phase 3: reading progress, segment reads, reading time, highlights.
 // Phase 4: questions, answers (AI grading), work completion.
+// Phase 5: gamification. Phase 6: assignments, teacher review, notifications.
 
 generator client {
   provider = "prisma-client"
@@ -50,22 +51,26 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  sessions      Session[]
-  memberships   ClassMembership[]
-  classesTaught Class[]
-  settings      UserSettings?
-  quizResults   QuizResult[]
-  progress      ReadingProgress[]
-  segmentReads  SegmentRead[]
-  readingTimes  ReadingTime[]
-  highlights    Highlight[]
-  answers       Answer[]
-  completions   WorkCompletion[]
-  pointEntries  PointEntry[]
-  streakDays    StreakDay[]
-  badges        UserBadge[]
-  gamePlays     MiniGamePlay[]
-  player        PlayerState?
+  sessions        Session[]
+  memberships     ClassMembership[]
+  classesTaught   Class[]
+  settings        UserSettings?
+  quizResults     QuizResult[]
+  progress        ReadingProgress[]
+  segmentReads    SegmentRead[]
+  readingTimes    ReadingTime[]
+  highlights      Highlight[]
+  answers         Answer[]
+  completions     WorkCompletion[]
+  pointEntries    PointEntry[]
+  streakDays      StreakDay[]
+  badges          UserBadge[]
+  gamePlays       MiniGamePlay[]
+  player          PlayerState?
+  notifications   Notification[]    @relation("NotificationRecipient")
+  sentNotices     Notification[]    @relation("NotificationSender")
+  reviewedAnswers Answer[]          @relation("AnswerReviewer")
+  aiReports       AiReport[]
 }
 
 /// Database session. `id` is the SHA-256 hash of the cookie token,
@@ -82,18 +87,19 @@ model Session {
 }
 
 model Class {
-  id         String   @id @default(cuid())
-  name       String
+  id                 String   @id @default(cuid())
+  name               String
   /// Join code students type when registering or switching class.
-  code       String   @unique
-  codeActive Boolean  @default(true)
+  code               String   @unique
+  codeActive         Boolean  @default(true)
   /// Weekly class leaderboard (spec §8.2): on by default, the teacher can turn it off.
-  leaderboardEnabled Boolean @default(true)
-  teacherId  String
-  createdAt  DateTime @default(now())
+  leaderboardEnabled Boolean  @default(true)
+  teacherId          String
+  createdAt          DateTime @default(now())
 
   teacher     User              @relation(fields: [teacherId], references: [id])
   memberships ClassMembership[]
+  assignments Assignment[]
 
   @@index([teacherId])
 }
@@ -166,6 +172,7 @@ model Work {
   completions WorkCompletion[]
   badges      BadgeDefinition[]
   miniGames   MiniGame[]
+  assignments Assignment[]
 
   @@index([status, genre])
 }
@@ -393,8 +400,14 @@ model Answer {
   submittedAt  DateTime     @default(now())
   gradedAt     DateTime?
 
-  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Last time a teacher reviewed this answer (level, note or hiding the AI text).
+  reviewedAt DateTime?
+  reviewerId String?
+
+  question Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviewer User?      @relation("AnswerReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reports  AiReport[]
 
   @@unique([questionId, userId, attempt])
   @@index([userId, submittedAt])
@@ -406,6 +419,9 @@ model WorkCompletion {
   userId      String
   workId      String
   completedAt DateTime @default(now())
+  /// Completed on or before the deadline of a teacher assignment (+bonus points).
+  /// Fixed at completion time, so a later deadline change never takes points back.
+  onTime      Boolean  @default(false)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
@@ -486,9 +502,9 @@ model StreakDay {
 
 /// Per-student state that is not derived from the ledger.
 model PlayerState {
-  userId          String @id
+  userId          String  @id
   /// Highest level already celebrated, so a level-up is shown once.
-  celebratedLevel Int    @default(1)
+  celebratedLevel Int     @default(1)
   /// Key from src/lib/art.ts (AVATARS); null = picked from the user id.
   avatar          String?
 
@@ -580,4 +596,77 @@ model MiniGamePlay {
   game MiniGame @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@index([userId, gameId])
+}
+
+// ───────────────────────── Teacher (spec §10) ─────────────────────────
+
+/// A work the teacher asks a class to read by a deadline. Completion rates,
+/// reminders and the report are computed against these.
+model Assignment {
+  id        String   @id @default(cuid())
+  classId   String
+  workId    String
+  /// End of the due day in Vietnam time (23:59:59.999 +07:00).
+  dueAt     DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  work  Work  @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, workId])
+  @@index([classId, dueAt])
+}
+
+/// A teacher flags AI feedback so the admin reviews the question's rubric (spec §6.5).
+model AiReport {
+  id         String    @id @default(cuid())
+  answerId   String
+  reporterId String
+  reason     String
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  answer   Answer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  reporter User   @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@unique([answerId, reporterId])
+  @@index([resolvedAt, createdAt])
+}
+
+// ───────────────────────── Notifications (spec §11) ─────────────────────────
+
+/// Same kinds as NOTIFICATION_KINDS in src/lib/art.ts (icons).
+enum NotificationKind {
+  ASSIGNMENT
+  REMINDER
+  GRADED
+  TEACHER_REVIEW
+  BADGE
+  REPLY
+  LEVEL_UP
+  STREAK
+}
+
+/// In-app notification. Phase 6 writes assignment and reminder notices;
+/// phase 7 adds the bell, web push and the other sources.
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  kind      NotificationKind
+  title     String
+  body      String?
+  /// In-app link opened from the notification.
+  href      String?
+  /// Who triggered it (the teacher, for reminders).
+  senderId  String?
+  workId    String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user   User  @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  sender User? @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([workId, kind])
 }

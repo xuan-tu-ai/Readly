@@ -45,9 +45,16 @@ export async function listTeacherClasses(actor: Actor) {
   const classes = await db.class.findMany({
     where: { teacherId: actor.id },
     orderBy: { createdAt: "desc" },
-    include: { _count: { select: { memberships: { where: { leftAt: null } } } } },
+    include: {
+      _count: { select: { memberships: { where: { leftAt: null } }, assignments: { where: { dueAt: { gte: new Date() } } } } },
+    },
   });
-  return classes.map(({ _count, ...cls }) => ({ ...cls, studentCount: _count.memberships }));
+  return classes.map(({ _count, ...cls }) => ({
+    ...cls,
+    studentCount: _count.memberships,
+    /** Assignments whose deadline has not passed yet. */
+    openAssignments: _count.assignments,
+  }));
 }
 
 export async function getClassRoster(actor: Actor, classId: string) {

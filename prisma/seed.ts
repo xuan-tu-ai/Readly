@@ -8,6 +8,7 @@ import "dotenv/config";
 import { createPrismaClient } from "../src/server/db";
 import { hashPassword } from "../src/server/auth/password";
 import { seedContent } from "./seed-content";
+import { seedDemoClass } from "./seed-demo-class";
 
 const DEMO_TEACHER = {
   email: "giaovien@readly.local",
@@ -43,6 +44,7 @@ async function main() {
     });
     console.log(`✔ Admin: ${adminEmail}`);
 
+    let demoClassId: string | null = null;
     if (process.env.SEED_DEMO === "true") {
       const teacher = await db.user.upsert({
         where: { email: DEMO_TEACHER.email },
@@ -60,6 +62,7 @@ async function main() {
         update: {},
         create: { ...DEMO_CLASS, teacherId: teacher.id },
       });
+      demoClassId = demoClass.id;
       console.log(`✔ Giáo viên demo: ${DEMO_TEACHER.email} · lớp ${DEMO_CLASS.name} (mã ${DEMO_CLASS.code})`);
 
       const existing = await db.user.findUnique({ where: { email: DEMO_STUDENT.email }, select: { id: true } });
@@ -82,6 +85,15 @@ async function main() {
     console.log(
       `✔ Nội dung mẫu: ${content.works} tác phẩm, ${content.tags} tag, ${content.segmentsCreated} phân đoạn mới, ${content.questionsCreated} câu hỏi mới, ${content.gamesCreated} mini game mới, ${content.badges} huy hiệu`,
     );
+
+    if (demoClassId) {
+      const demo = await seedDemoClass(db, demoClassId);
+      console.log(
+        demo
+          ? `✔ Lớp demo: ${demo.students} học sinh mẫu (hs01…hs14@demo.readly.local), ${demo.assignments} bài giao`
+          : "✔ Lớp demo: dữ liệu mẫu đã có, bỏ qua",
+      );
+    }
   } finally {
     await db.$disconnect();
   }

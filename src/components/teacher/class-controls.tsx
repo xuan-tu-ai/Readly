@@ -43,10 +43,13 @@ export function RemoveStudentButton({
   classId,
   studentId,
   studentName,
+  returnTo,
 }: {
   classId: string;
   studentId: string;
   studentName: string;
+  /** Page to open after removal (e.g. the class list when removing from the student's page). */
+  returnTo?: string;
 }) {
   const [state, formAction] = useActionState(removeStudentAction, initialFormState);
   return (
@@ -59,6 +62,7 @@ export function RemoveStudentButton({
     >
       <input type="hidden" name="classId" value={classId} />
       <input type="hidden" name="studentId" value={studentId} />
+      {returnTo ? <input type="hidden" name="returnTo" value={returnTo} /> : null}
       <SubmitButton variant="destructive" size="sm">
         Xóa khỏi lớp
       </SubmitButton>
