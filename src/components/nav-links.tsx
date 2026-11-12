@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
-import { BookOpenText, Home, Image as ImageIcon, Shield, Users, type LucideIcon } from "lucide-react";
+import { Award, BookOpenText, Home, Image as ImageIcon, Shield, Trophy, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const ICONS = {
@@ -12,6 +12,8 @@ const ICONS = {
   users: { icon: Users, tone: "bg-brand-blue text-white" },
   shield: { icon: Shield, tone: "bg-brand-purple text-white" },
   image: { icon: ImageIcon, tone: "bg-brand-pink text-white" },
+  trophy: { icon: Trophy, tone: "bg-[#f7b72a] text-white" },
+  award: { icon: Award, tone: "bg-brand-purple text-white" },
 } satisfies Record<string, { icon: LucideIcon; tone: string }>;
 
 export type NavItem = { href: string; label: string; icon: keyof typeof ICONS };
@@ -75,7 +77,7 @@ function NavView({ items, variant, isActive }: { items: NavItem[]; variant: Vari
               "border-2 border-transparent transition-colors",
               side
                 ? "flex items-center gap-4 rounded-xl px-3 py-2.5 text-sm font-bold tracking-wide text-sidebar-foreground uppercase hover:bg-muted"
-                : "flex flex-col items-center gap-0.5 rounded-xl px-4 py-1 text-[0.7rem] font-bold text-muted-foreground",
+                : "flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 text-[0.65rem] font-bold text-muted-foreground min-[400px]:px-3",
               active &&
                 (side
                   ? "border-sidebar-accent-foreground/40 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent"

@@ -58,6 +58,14 @@ export const AVATARS = [
 
 export type AvatarKey = (typeof AVATARS)[number]["key"];
 
+/** A stable avatar for students who have not picked one yet. */
+export function avatarFor(userId: string, chosen?: string | null): AvatarKey {
+  if (chosen && AVATARS.some((a) => a.key === chosen)) return chosen as AvatarKey;
+  let h = 0;
+  for (const ch of userId) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return AVATARS[h % AVATARS.length].key;
+}
+
 /** In-app notification kinds (spec §11) and discussion markers (spec §7). */
 export const NOTIFICATION_KINDS = [
   { key: "assignment", label: "Giao tác phẩm mới" },

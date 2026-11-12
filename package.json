@@ -16,7 +16,8 @@
     "db:seed": "prisma db seed",
     "db:generate": "prisma generate",
     "postinstall": "prisma generate",
-    "icons": "node scripts/generate-app-icons.mjs"
+    "icons": "node scripts/generate-app-icons.mjs",
+    "gamification:backfill": "tsx scripts/backfill-gamification.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

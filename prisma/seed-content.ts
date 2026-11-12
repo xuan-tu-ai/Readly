@@ -12,6 +12,7 @@ import { z } from "zod";
 import type { Prisma, PrismaClient } from "../src/generated/prisma/client";
 import { GENRES, workSearchText } from "../src/lib/catalog";
 import { sanitizeSegmentHtml } from "../src/lib/reading/sanitize";
+import { seedBadges, seedMiniGames } from "./seed-gamification";
 
 const tagSchema = z.object({
   slug: z.string(),
@@ -90,6 +91,7 @@ export async function seedContent(db: PrismaClient) {
 
   let segmentsCreated = 0;
   let questionsCreated = 0;
+  let gamesCreated = 0;
   for (const { tags: workTags, ...work } of works) {
     const data = { ...work, coverUrl: work.coverUrl ?? null, searchText: workSearchText(work) };
     const saved = await db.work.upsert({ where: { slug: work.slug }, update: data, create: data });
@@ -105,8 +107,10 @@ export async function seedContent(db: PrismaClient) {
     if (work.status === "PUBLISHED" && (await db.question.count({ where: { workId: saved.id } })) === 0) {
       questionsCreated += await seedPlaceholderQuestions(db, saved.id, work);
     }
+    if (work.status === "PUBLISHED") gamesCreated += await seedMiniGames(db, saved.id, work.genre);
   }
-  return { tags: tags.length, works: works.length, segmentsCreated, questionsCreated };
+  const badges = await seedBadges(db);
+  return { tags: tags.length, works: works.length, segmentsCreated, questionsCreated, gamesCreated, badges };
 }
 
 const KEY_POINTS: Record<string, string[]> = {

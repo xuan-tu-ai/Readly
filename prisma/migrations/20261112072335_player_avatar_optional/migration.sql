@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "PlayerState" ALTER COLUMN "avatar" DROP NOT NULL,
+ALTER COLUMN "avatar" DROP DEFAULT;

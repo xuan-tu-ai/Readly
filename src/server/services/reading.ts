@@ -17,6 +17,8 @@ import { assertRole } from "@/server/authz";
 import { DomainError, notFound } from "@/server/errors";
 import { emit } from "@/server/events";
 import { isResolved } from "@/lib/questions/rules";
+import { totalPoints } from "./gamification";
+import { listWorkGames } from "./minigames";
 import { getCompletionStatus, getQuestionsForReader, refreshCompletion } from "./questions";
 
 // ───────────────────────── Reader data ─────────────────────────
@@ -43,7 +45,7 @@ export async function getReader(actor: Actor, slug: string) {
   if (!work) return null;
 
   const segmentIds = work.segments.map((s) => s.id);
-  const [progress, reads, highlights, settings, questions, completion] = await Promise.all([
+  const [progress, reads, highlights, settings, questions, completion, games, points] = await Promise.all([
     db.readingProgress.findUnique({
       where: { userId_workId: { userId: actor.id, workId: work.id } },
       select: { segmentId: true, segmentFraction: true },
@@ -56,6 +58,8 @@ export async function getReader(actor: Actor, slug: string) {
     getReadingSettings(actor.id),
     getQuestionsForReader(actor.id, work.id),
     getCompletionStatus(actor.id, work.id),
+    listWorkGames(actor.id, work.id),
+    totalPoints(actor.id),
   ]);
 
   return {
@@ -73,6 +77,8 @@ export async function getReader(actor: Actor, slug: string) {
     highlights,
     settings,
     questions,
+    games,
+    points,
     completion,
   };
 }

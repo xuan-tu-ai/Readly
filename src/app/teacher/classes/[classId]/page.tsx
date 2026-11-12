@@ -6,7 +6,9 @@ import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResetPasswordForm } from "@/components/reset-password-form";
+import { setLeaderboardAction } from "@/app/actions/gamification";
 import { resetStudentPasswordAction } from "@/app/actions/teacher";
+import { Button } from "@/components/ui/button";
 import { requireUser } from "@/server/auth/dal";
 import { DomainError } from "@/server/errors";
 import { getClassRoster } from "@/server/services/classes";
@@ -60,6 +62,26 @@ async function ClassDetail({ params }: Pick<PageProps<"/teacher/classes/[classId
         </CardHeader>
         <CardContent>
           <ClassCodeControls classId={cls.id} codeActive={cls.codeActive} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Bảng xếp hạng tuần</CardTitle>
+          <CardDescription>
+            {cls.leaderboardEnabled
+              ? "Đang bật: học sinh thấy điểm tuần của cả lớp (làm mới mỗi thứ Hai)."
+              : "Đang tắt: học sinh vẫn nhận điểm, streak và huy hiệu nhưng không thấy bảng xếp hạng."}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={setLeaderboardAction}>
+            <input type="hidden" name="classId" value={cls.id} />
+            <input type="hidden" name="enabled" value={cls.leaderboardEnabled ? "false" : "true"} />
+            <Button type="submit" variant="outline">
+              {cls.leaderboardEnabled ? "Tắt bảng xếp hạng" : "Bật bảng xếp hạng"}
+            </Button>
+          </form>
         </CardContent>
       </Card>
 

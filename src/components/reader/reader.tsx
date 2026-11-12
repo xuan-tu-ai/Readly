@@ -29,6 +29,7 @@ import {
   COLOR_OPTIONS,
   PendingToolbar,
 } from "./highlight-toolbar";
+import { MiniGameCard } from "@/components/gamification/mini-game-card";
 import { QuestionCard } from "./question-card";
 import { ReaderSettings, type ReaderSettingsValue } from "./reader-settings";
 import { TocSheet } from "./toc-sheet";
@@ -236,6 +237,16 @@ export function Reader({
               ))}
             </div>
           ) : null}
+          {data.games
+            .filter((g) => g.unlockSegmentId === segment.id)
+            .map((g) => (
+              <MiniGameCard
+                key={g.id}
+                game={g}
+                unlocked={readIds.has(segment.id)}
+                className="mt-4 text-base leading-normal"
+              />
+            ))}
         </section>
       ))}
       <section

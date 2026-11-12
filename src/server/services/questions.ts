@@ -183,10 +183,11 @@ export async function submitAnswer(actor: Actor, questionId: string, rawContent:
 
   if (question.type === "MCQ") {
     const isCorrect = content === question.correctOptionId;
-    await db.answer.create({
+    const answer = await db.answer.create({
       data: { ...base, status: "GRADED", isCorrect, level: isCorrect ? "DAT" : "CHUA_DAT", gradedAt: new Date() },
+      select: { id: true },
     });
-    await afterGraded(actor.id, question.workId, questionId);
+    await afterGraded(actor.id, question.workId, questionId, answer.id);
   } else if (question.type === "PREDICTION") {
     await db.answer.create({ data: { ...base, status: "GRADED", gradedAt: new Date() } });
     await refreshCompletion(actor.id, question.workId);
@@ -197,8 +198,8 @@ export async function submitAnswer(actor: Actor, questionId: string, rawContent:
   return getQuestionView(actor.id, questionId);
 }
 
-async function afterGraded(userId: string, workId: string, questionId: string, answerId?: string) {
-  if (answerId) await emit({ type: "AnswerGraded", userId, answerId, questionId, workId });
+async function afterGraded(userId: string, workId: string, questionId: string, answerId: string) {
+  await emit({ type: "AnswerGraded", userId, answerId, questionId, workId });
   await refreshCompletion(userId, workId);
 }
 
