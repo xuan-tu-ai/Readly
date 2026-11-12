@@ -4,6 +4,7 @@
 // Phase 3: reading progress, segment reads, reading time, highlights.
 // Phase 4: questions, answers (AI grading), work completion.
 // Phase 5: gamification. Phase 6: assignments, teacher review, notifications.
+// Phase 7: class discussions, notification delivery (bell, web push, deadline cron).
 
 generator client {
   provider = "prisma-client"
@@ -51,26 +52,31 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  sessions        Session[]
-  memberships     ClassMembership[]
-  classesTaught   Class[]
-  settings        UserSettings?
-  quizResults     QuizResult[]
-  progress        ReadingProgress[]
-  segmentReads    SegmentRead[]
-  readingTimes    ReadingTime[]
-  highlights      Highlight[]
-  answers         Answer[]
-  completions     WorkCompletion[]
-  pointEntries    PointEntry[]
-  streakDays      StreakDay[]
-  badges          UserBadge[]
-  gamePlays       MiniGamePlay[]
-  player          PlayerState?
-  notifications   Notification[]    @relation("NotificationRecipient")
-  sentNotices     Notification[]    @relation("NotificationSender")
-  reviewedAnswers Answer[]          @relation("AnswerReviewer")
-  aiReports       AiReport[]
+  sessions          Session[]
+  memberships       ClassMembership[]
+  classesTaught     Class[]
+  settings          UserSettings?
+  quizResults       QuizResult[]
+  progress          ReadingProgress[]
+  segmentReads      SegmentRead[]
+  readingTimes      ReadingTime[]
+  highlights        Highlight[]
+  answers           Answer[]
+  completions       WorkCompletion[]
+  pointEntries      PointEntry[]
+  streakDays        StreakDay[]
+  badges            UserBadge[]
+  gamePlays         MiniGamePlay[]
+  player            PlayerState?
+  notifications     Notification[]     @relation("NotificationRecipient")
+  sentNotices       Notification[]     @relation("NotificationSender")
+  reviewedAnswers   Answer[]           @relation("AnswerReviewer")
+  aiReports         AiReport[]
+  posts             Post[]
+  replies           Reply[]
+  postLikes         PostLike[]
+  postReports       PostReport[]
+  pushSubscriptions PushSubscription[]
 }
 
 /// Database session. `id` is the SHA-256 hash of the cookie token,
@@ -100,6 +106,7 @@ model Class {
   teacher     User              @relation(fields: [teacherId], references: [id])
   memberships ClassMembership[]
   assignments Assignment[]
+  posts       Post[]
 
   @@index([teacherId])
 }
@@ -173,6 +180,7 @@ model Work {
   badges      BadgeDefinition[]
   miniGames   MiniGame[]
   assignments Assignment[]
+  posts       Post[]
 
   @@index([status, genre])
 }
@@ -217,6 +225,8 @@ model Segment {
   questions    Question[]
   /// Mini games that open once this segment has been read.
   unlocksGames MiniGame[]
+  /// Discussion posts quoting this segment.
+  quotedBy     Post[]
 
   @@index([workId, order])
 }
@@ -661,12 +671,116 @@ model Notification {
   /// Who triggered it (the teacher, for reminders).
   senderId  String?
   workId    String?
+  /// Set for notices that must go out once only (e.g. "deadline:<assignment>:2").
+  dedupeKey String?
   readAt    DateTime?
   createdAt DateTime         @default(now())
 
   user   User  @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
   sender User? @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
 
+  @@unique([userId, dedupeKey])
   @@index([userId, createdAt])
   @@index([workId, kind])
+}
+
+/// A browser that accepted web push for this user (spec §11).
+model PushSubscription {
+  id         String    @id @default(cuid())
+  userId     String
+  endpoint   String    @unique
+  p256dh     String
+  auth       String
+  createdAt  DateTime  @default(now())
+  lastSentAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ───────────────────────── Discussion (spec §7) ─────────────────────────
+
+enum PostType {
+  QUESTION // Câu hỏi
+  REFLECTION // Cảm nhận
+}
+
+/// One discussion area per work × class. Posts stay in the class they were
+/// written in when the author switches class.
+model Post {
+  id         String   @id @default(cuid())
+  workId     String
+  classId    String
+  authorId   String
+  type       PostType
+  body       String
+  /// Optional quoted passage; offsets index the segment's text model, like highlights.
+  segmentId  String?
+  quoteStart Int?
+  quoteEnd   Int?
+  quote      String?
+  pinned     Boolean  @default(false)
+  hidden     Boolean  @default(false)
+  /// Teacher marked the question as answered.
+  resolved   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  work    Work         @relation(fields: [workId], references: [id], onDelete: Cascade)
+  class   Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+  author  User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  segment Segment?     @relation(fields: [segmentId], references: [id], onDelete: SetNull)
+  replies Reply[]
+  likes   PostLike[]
+  reports PostReport[]
+
+  @@index([workId, classId, createdAt])
+}
+
+/// Replies are one level deep (flat).
+model Reply {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  body      String
+  hidden    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  post    Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author  User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reports PostReport[]
+
+  @@index([postId, createdAt])
+}
+
+model PostLike {
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([userId])
+}
+
+/// A student reports a post or a reply; it waits in the class teacher's queue.
+model PostReport {
+  id         String    @id @default(cuid())
+  postId     String
+  /// Set when the report is about a reply rather than the post itself.
+  replyId    String?
+  reporterId String
+  reason     String?
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reply    Reply? @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  reporter User   @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([postId, resolvedAt])
+  @@index([reporterId])
 }

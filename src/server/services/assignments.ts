@@ -10,6 +10,7 @@ import {
 import { assertTeacherOfClass } from "@/server/authz";
 import { db } from "@/server/db";
 import { DomainError, notFound } from "@/server/errors";
+import { notify } from "@/server/services/notifications";
 import { formatDate } from "@/lib/vn-date";
 
 /**
@@ -151,23 +152,18 @@ export async function createAssignment(
   }
 
   const members = await activeMembers(input.classId);
-  const assignment = await db.$transaction(async (tx) => {
-    const created = await tx.assignment.create({ data: { classId: input.classId, workId: work.id, dueAt } });
-    if (members.length > 0) {
-      await tx.notification.createMany({
-        data: members.map((m) => ({
-          userId: m.id,
-          kind: "ASSIGNMENT" as const,
-          title: `Bài mới: ${work.title}`,
-          body: `Hạn đọc: ${formatDate(dueAt)}.`,
-          href: `/student/works/${work.slug}`,
-          senderId: actor.id,
-          workId: work.id,
-        })),
-      });
-    }
-    return created;
-  });
+  const assignment = await db.assignment.create({ data: { classId: input.classId, workId: work.id, dueAt } });
+  await notify(
+    members.map((m) => ({
+      userId: m.id,
+      kind: "ASSIGNMENT" as const,
+      title: `Bài mới: ${work.title}`,
+      body: `Hạn đọc: ${formatDate(dueAt)}.`,
+      href: `/student/works/${work.slug}`,
+      senderId: actor.id,
+      workId: work.id,
+    })),
+  );
   return { assignment, work, notified: members.length };
 }
 
@@ -227,20 +223,18 @@ export async function remindStudents(
   const skip = new Set([...finished, ...recent].map((r) => r.userId));
   const recipients = targets.filter((id) => !skip.has(id));
   const text = message?.trim() || `Hạn đọc ${formatDate(assignment.dueAt)} (${dueLabel(assignment.dueAt, now)}). Đọc tiếp nhé!`;
-  if (recipients.length > 0) {
-    await db.notification.createMany({
-      data: recipients.map((userId) => ({
-        userId,
-        kind: "REMINDER" as const,
-        title: `Nhắc đọc: ${assignment.work.title}`,
-        body: text,
-        href: `/student/works/${assignment.work.slug}`,
-        senderId: actor.id,
-        workId: assignment.work.id,
-        createdAt: now,
-      })),
-    });
-  }
+  await notify(
+    recipients.map((userId) => ({
+      userId,
+      kind: "REMINDER" as const,
+      title: `Nhắc đọc: ${assignment.work.title}`,
+      body: text,
+      href: `/student/works/${assignment.work.slug}`,
+      senderId: actor.id,
+      workId: assignment.work.id,
+      createdAt: now,
+    })),
+  );
   return { sent: recipients.length, skipped: studentIds.length - recipients.length };
 }
 

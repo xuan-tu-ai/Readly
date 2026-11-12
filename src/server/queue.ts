@@ -12,6 +12,8 @@ export const QUEUES = {
   gradeAnswer: "answer.grade",
   gradeAnswerFailed: "answer.grade.failed",
   comparePrediction: "prediction.compare",
+  pushNotifications: "notification.push",
+  deadlineReminders: "assignment.deadline-reminders",
 } as const;
 
 export type JobSender = (queue: string, data: object) => Promise<void>;

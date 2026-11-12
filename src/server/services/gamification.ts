@@ -16,6 +16,7 @@ import { vnDay } from "@/lib/reading/active-time";
 import type { Actor } from "@/lib/roles";
 import { assertRole, assertTeacherOfClass } from "@/server/authz";
 import { db } from "@/server/db";
+import { notify } from "@/server/services/notifications";
 
 /**
  * Points, levels, streaks, badges and the weekly leaderboard (spec §8).
@@ -180,8 +181,22 @@ export async function evaluateBadges(userId: string): Promise<string[]> {
   const stats = await badgeStats(userId);
   const earned = pending.filter((b) => badgeProgress(b, stats).earned).map((b) => b.id);
   if (earned.length === 0) return [];
-  await db.userBadge.createMany({ data: earned.map((badgeId) => ({ userId, badgeId })), skipDuplicates: true });
-  return earned;
+  const awarded = await db.userBadge.createManyAndReturn({
+    data: earned.map((badgeId) => ({ userId, badgeId })),
+    skipDuplicates: true,
+    select: { badge: { select: { id: true, name: true, description: true } } },
+  });
+  await notify(
+    awarded.map(({ badge }) => ({
+      userId,
+      kind: "BADGE" as const,
+      title: `Huy hiệu mới: ${badge.name}`,
+      body: badge.description,
+      href: "/student/achievements",
+      dedupeKey: `badge:${badge.id}`,
+    })),
+  );
+  return awarded.map(({ badge }) => badge.id);
 }
 
 const asEmblem = (key: string): BadgeEmblem =>

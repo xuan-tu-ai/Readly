@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { BookOpen, CalendarDays, ChevronLeft, Clock, Gauge, Layers } from "lucide-react";
+import { BookOpen, CalendarDays, ChevronLeft, ChevronRight, Clock, Gauge, Layers } from "lucide-react";
+import { DiscussionIcon } from "@/components/art/notification-icons";
 import { PageSkeleton } from "@/components/app-shell";
 import { MascotSays } from "@/components/mascot/mascot";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ import { GENRE_LABEL, difficultyLabel, formatMinutes } from "@/lib/catalog";
 import { requireUser } from "@/server/auth/dal";
 import { cn } from "@/lib/utils";
 import { getStudentDeadline } from "@/server/services/assignments";
+import { countClassPosts } from "@/server/services/discussions";
 import { getCompletionStatus } from "@/server/services/questions";
 import { listWorkGames } from "@/server/services/minigames";
 import { getWorkPath } from "@/server/services/reading";
@@ -37,14 +39,15 @@ async function WorkDetail({ params }: Pick<PageProps<"/student/works/[slug]">, "
   const work = await getVisibleWorkBySlug(slug);
   if (!work) notFound();
   const readable = work.status === "PUBLISHED" && work.segmentCount > 0;
-  const [path, completion, games, deadline] = readable
+  const [path, completion, games, deadline, postCount] = readable
     ? await Promise.all([
         getWorkPath(user.id, work.id),
         getCompletionStatus(user.id, work.id),
         listWorkGames(user.id, work.id),
         getStudentDeadline(user.id, work.id),
+        countClassPosts(user.id, work.id),
       ])
-    : [[], null, [], null];
+    : [[], null, [], null, null];
   const readCount = path.filter((n) => n.read).length;
   const started = readCount > 0;
 
@@ -130,6 +133,30 @@ async function WorkDetail({ params }: Pick<PageProps<"/student/works/[slug]">, "
             <h2 className="font-heading text-2xl font-semibold">Về tác giả</h2>
             <p className="leading-relaxed text-muted-foreground">{work.authorBio}</p>
           </section>
+          {readable ? (
+            <section className="grid gap-3" aria-labelledby="discussion-heading">
+              <h2 id="discussion-heading" className="font-heading text-2xl font-semibold">
+                Thảo luận
+              </h2>
+              <Link
+                href={`/student/works/${work.slug}/discussion`}
+                className="group flex items-center gap-3 rounded-2xl border-2 bg-card p-3 transition-transform hover:-translate-y-0.5"
+              >
+                <DiscussionIcon marker="question" size="md" />
+                <span className="min-w-0 flex-1">
+                  <span className="block font-bold">
+                    {postCount === null ? "Thảo luận cùng lớp" : postCount > 0 ? `${postCount} bài trong lớp bạn` : "Chưa có bài nào"}
+                  </span>
+                  <span className="block text-sm text-muted-foreground">
+                    {postCount === null
+                      ? "Vào một lớp để hỏi và chia sẻ cảm nhận với các bạn."
+                      : "Đặt câu hỏi, chia sẻ cảm nhận, trích đoạn văn bạn thích."}
+                  </span>
+                </span>
+                <ChevronRight className="size-5 text-muted-foreground transition-transform group-hover:translate-x-0.5" aria-hidden />
+              </Link>
+            </section>
+          ) : null}
           {games.length > 0 ? (
             <section className="grid gap-3">
               <h2 className="font-heading text-2xl font-semibold">Mini game</h2>

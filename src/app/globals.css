@@ -305,6 +305,8 @@
 ::highlight(hl-purple) { background-color: oklch(0.86 0.09 300 / 0.65); }
 ::highlight(hl-pending) { background-color: oklch(0.8 0.08 250 / 0.45); }
 ::highlight(hl-active) { text-decoration: underline 2px; text-underline-offset: 3px; }
+/* A quote opened from the discussion. */
+::highlight(hl-focus) { background-color: oklch(0.86 0.12 60 / 0.6); text-decoration: underline 2px oklch(0.64 0.15 50); text-underline-offset: 3px; }
 
 .reader-surface[data-tone="dark"] ::highlight(hl-yellow) { background-color: oklch(0.55 0.12 95 / 0.55); }
 .reader-surface[data-tone="dark"] ::highlight(hl-blue) { background-color: oklch(0.5 0.1 230 / 0.6); }

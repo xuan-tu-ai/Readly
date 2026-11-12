@@ -149,6 +149,13 @@ Task:
 **Xong khi:** HS lớp B không thấy thảo luận lớp A; cron nhắc chạy đúng (test với thời gian giả lập); push nhận được trên Chrome localhost.
 **Cắt nếu trễ:** web push (giữ in-app).
 
+**Ghi chú khi làm (đã xong):**
+- Thảo luận ở `/student/works/<slug>/discussion`; "Thảo luận đoạn này" có ở cả thanh tô sáng lẫn khi chọn đoạn. Bấm trích dẫn mở trang đọc ở `?seg=…&q=start-end`, đoạn trích được tô cam.
+- Bộ lọc từ cấm giữ nguyên dấu tiếng Việt (bỏ dấu sẽ chặn nhầm "lớn", "đi"…) + vài chữ viết tắt; danh sách trong `src/lib/discussion.ts`.
+- Mọi thông báo đi qua `notify()`: lưu vào chuông rồi xếp job `notification.push`; worker gửi web push nếu có khóa VAPID (không có thì chỉ có chuông). Nguồn: giao bài, nhắc tay, cron nhắc hạn, AI chấm xong, GV chấm lại, huy hiệu mới, có trả lời.
+- Cron `assignment.deadline-reminders` chạy mỗi giờ (giờ VN), chỉ gửi từ 7:00, mỗi mốc 2 ngày / 1 ngày đúng một lần nhờ `dedupeKey`.
+- Trang đọc được đặt `key` theo đích trong URL: Next 16 giữ trạng thái trang đã mở, nên không có key thì trang đọc cũ hiện lại ở vị trí cũ.
+
 ## Giai đoạn 8 – Admin & nhập nội dung
 Task:
 - CRUD tác phẩm, metadata, tags; trạng thái draft/published/coming_soon.

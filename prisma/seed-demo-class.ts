@@ -16,6 +16,7 @@ import { vnDay } from "../src/lib/reading/active-time";
 import { anchorFor, sentenceAt } from "../src/lib/reading/text";
 import { dueAtFromDate, vnDateString } from "../src/lib/teacher";
 import { db as appDb } from "../src/server/db";
+import { setJobSender } from "../src/server/queue";
 import { evaluateBadges, recalculateUser, recordActivity } from "../src/server/services/gamification";
 
 type Profile = "ace" | "good" | "late" | "behind" | "flagged" | "idle";
@@ -297,6 +298,8 @@ export async function seedDemoClass(db: PrismaClient, classId: string, now = new
   }
 
   // Points, streaks and badges from the history above (same as the backfill script).
+  // Historical data: store badge notices, but don't queue web pushes for them.
+  setJobSender(async () => {});
   for (const userId of ids) {
     await recalculateUser(userId);
     const [reads, answers] = await Promise.all([

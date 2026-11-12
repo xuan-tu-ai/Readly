@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
-import { AlertTriangle, CalendarDays, Clock3, Download, UserRound } from "lucide-react";
+import { AlertTriangle, CalendarDays, Clock3, Download, Flag, UserRound } from "lucide-react";
 import { PageSkeleton } from "@/components/app-shell";
 import { Mascot } from "@/components/mascot/mascot";
 import { AssignForm, AssignmentActions } from "@/components/teacher/assignment-forms";
@@ -14,6 +14,7 @@ import { progressText, vnDateString } from "@/lib/teacher";
 import { cn } from "@/lib/utils";
 import { formatDate, formatTimeDayMonth } from "@/lib/vn-date";
 import { listAssignableWorks } from "@/server/services/assignments";
+import { countOpenReports } from "@/server/services/discussions";
 import { getClassDashboard, type AssignmentRow } from "@/server/services/teacher";
 import { loadForTeacher } from "./load";
 
@@ -32,9 +33,10 @@ async function Dashboard({ params }: Pick<PageProps<"/teacher/classes/[classId]"
   // Deadlines are compared with the request time.
   await connection();
   const now = new Date();
-  const [data, works] = await Promise.all([
+  const [data, works, openReports] = await Promise.all([
     loadForTeacher((user) => getClassDashboard(user, classId, now)),
     listAssignableWorks(),
+    countOpenReports(classId),
   ]);
   const today = vnDateString(now);
   const active = data.assignments.filter((a) => !a.overdue);
@@ -99,6 +101,19 @@ async function Dashboard({ params }: Pick<PageProps<"/teacher/classes/[classId]"
           </h2>
           <AssignForm classId={classId} works={works.filter((w) => !assignedIds.has(w.id))} minDate={today} />
         </section>
+
+        {openReports > 0 ? (
+          <Link
+            href={`/teacher/classes/${classId}/discussions`}
+            className="flex items-center gap-3 rounded-2xl border-2 border-destructive/40 bg-destructive/5 p-4 hover:bg-destructive/10"
+          >
+            <Flag className="size-5 shrink-0 text-destructive" aria-hidden />
+            <span className="grid">
+              <span className="font-bold">{openReports} báo cáo thảo luận chờ xem</span>
+              <span className="text-xs text-muted-foreground">Bấm để mở hàng chờ kiểm duyệt</span>
+            </span>
+          </Link>
+        ) : null}
 
         <section className="grid gap-3 rounded-2xl border-2 bg-card p-5" aria-labelledby="behind-heading">
           <h2 id="behind-heading" className="flex items-center gap-2 text-lg font-semibold">

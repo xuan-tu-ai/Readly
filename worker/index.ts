@@ -28,6 +28,7 @@ async function main() {
       console.log(`[worker] ${job.name} ${incoming.id} xong`, result ?? "");
       return result;
     });
+    if (job.cron) await boss.schedule(job.name, job.cron, {}, { tz: "Asia/Ho_Chi_Minh" });
   }
   console.log(`[worker] sẵn sàng · hàng đợi: ${jobs.map((j) => j.name).join(", ")}`);
 

@@ -18,6 +18,9 @@ export default defineConfig({
     env: {
       DATABASE_URL: testDatabaseUrl,
       AI_PROVIDER: "mock",
+      // Never reach real push services from tests.
+      WEB_PUSH_PUBLIC_KEY: "",
+      WEB_PUSH_PRIVATE_KEY: "",
     },
   },
 });
