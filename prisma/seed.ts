@@ -15,6 +15,11 @@ const DEMO_TEACHER = {
   password: "readly-gv-123",
 };
 const DEMO_CLASS = { name: "12A1 (demo)", code: "DEMO12" };
+const DEMO_STUDENT = {
+  email: "hocsinh@readly.local",
+  name: "Trần Minh An",
+  password: "readly-hs-123",
+};
 
 async function main() {
   const db = createPrismaClient();
@@ -50,12 +55,27 @@ async function main() {
           settings: { create: {} },
         },
       });
-      await db.class.upsert({
+      const demoClass = await db.class.upsert({
         where: { code: DEMO_CLASS.code },
         update: {},
         create: { ...DEMO_CLASS, teacherId: teacher.id },
       });
       console.log(`✔ Giáo viên demo: ${DEMO_TEACHER.email} · lớp ${DEMO_CLASS.name} (mã ${DEMO_CLASS.code})`);
+
+      const existing = await db.user.findUnique({ where: { email: DEMO_STUDENT.email }, select: { id: true } });
+      if (!existing) {
+        await db.user.create({
+          data: {
+            email: DEMO_STUDENT.email,
+            name: DEMO_STUDENT.name,
+            role: "STUDENT",
+            passwordHash: await hashPassword(DEMO_STUDENT.password),
+            settings: { create: {} },
+            memberships: { create: { classId: demoClass.id } },
+          },
+        });
+      }
+      console.log(`✔ Học sinh demo: ${DEMO_STUDENT.email} (lớp ${DEMO_CLASS.code})`);
     }
 
     const content = await seedContent(db);

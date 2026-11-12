@@ -61,3 +61,6 @@ next-env.d.ts
 
 # vitest local output
 /.vitest/
+
+# Local design references (screen recordings, not part of the app)
+/frontend-inspiration/

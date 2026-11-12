@@ -58,7 +58,7 @@ function Shell({ children }: { children: React.ReactNode }) {
     <div
       role="dialog"
       aria-label="Tô sáng"
-      className="fixed inset-x-3 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30 mx-auto grid max-w-lg gap-3 rounded-xl border bg-popover p-3 text-popover-foreground shadow-lg md:bottom-6 md:left-[calc(15rem+0.75rem)]"
+      className="fixed inset-x-3 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30 mx-auto grid max-w-lg animate-rise-in gap-3 rounded-2xl border-2 bg-popover p-3 font-sans text-popover-foreground shadow-[0_4px_0_var(--border)]"
     >
       {children}
     </div>

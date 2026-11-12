@@ -19,6 +19,17 @@ enum Role {
   STUDENT
 }
 
+enum ReadingFont {
+  NOTO_SERIF
+  LORA
+  BE_VIETNAM
+}
+
+enum PageMode {
+  SCROLL
+  PAGED
+}
+
 enum ReadingTheme {
   LIGHT
   SEPIA
@@ -397,6 +408,11 @@ model UserSettings {
   fontSize   Int          @default(18)
   lineHeight Float        @default(1.7)
   theme      ReadingTheme @default(LIGHT)
+  /// Reading typeface (see src/lib/reading/appearance.ts).
+  font       ReadingFont  @default(NOTO_SERIF)
+  /// Decorative reader background id, "none" for a plain theme colour.
+  backdrop   String       @default("none")
+  pageMode   PageMode     @default(SCROLL)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

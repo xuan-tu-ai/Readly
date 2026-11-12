@@ -9,11 +9,14 @@ import {
   deleteHighlight,
   getContinueReading,
   getReader,
+  getWeeklyStats,
+  getWorkPath,
   getWorkProgress,
   markSegmentsRead,
   saveProgress,
   track,
   updateHighlight,
+  readingSettingsSchema,
   updateReadingSettings,
 } from "@/server/services/reading";
 import { makeUser, resetDatabase } from "../helpers/db";
@@ -195,6 +198,81 @@ describe("reading settings", () => {
     const student = await makeUser("STUDENT");
     await makeWork("doc");
     await updateReadingSettings(student.actor, { fontSize: 22, lineHeight: 1.9, theme: "SEPIA" });
-    expect((await getReader(student.actor, "doc"))?.settings).toEqual({ fontSize: 22, lineHeight: 1.9, theme: "SEPIA" });
+    expect((await getReader(student.actor, "doc"))?.settings).toEqual({
+      fontSize: 22,
+      lineHeight: 1.9,
+      theme: "SEPIA",
+      font: "NOTO_SERIF",
+      backdrop: "none",
+      pageMode: "SCROLL",
+    });
+
+    await updateReadingSettings(student.actor, {
+      fontSize: 22,
+      lineHeight: 1.9,
+      theme: "SEPIA",
+      font: "LORA",
+      backdrop: "dem-sao",
+      pageMode: "PAGED",
+    });
+    expect((await getReader(student.actor, "doc"))?.settings).toMatchObject({
+      font: "LORA",
+      backdrop: "dem-sao",
+      pageMode: "PAGED",
+    });
+  });
+
+  it("only accepts known backdrops", () => {
+    const base = { fontSize: 18, lineHeight: 1.7, theme: "LIGHT" };
+    expect(readingSettingsSchema.safeParse({ ...base, backdrop: "hoa-dao" }).success).toBe(true);
+    expect(readingSettingsSchema.safeParse({ ...base, backdrop: "url(evil)" }).success).toBe(false);
+    expect(readingSettingsSchema.safeParse({ ...base, pageMode: "SIDEWAYS" }).success).toBe(false);
+  });
+});
+
+describe("getWorkPath", () => {
+  it("marks read segments and the current one, never locking anything", async () => {
+    const student = await makeUser("STUDENT");
+    const work = await makeWork("doc", "PUBLISHED", 3);
+    const [first, second, third] = work.segments;
+
+    let path = await getWorkPath(student.actor.id, work.id);
+    expect(path.map((n) => [n.id, n.read, n.current])).toEqual([
+      [first.id, false, true],
+      [second.id, false, false],
+      [third.id, false, false],
+    ]);
+
+    await markSegmentsRead(student.actor, [first.id]);
+    path = await getWorkPath(student.actor.id, work.id);
+    expect(path.find((n) => n.current)?.id).toBe(second.id);
+
+    await saveProgress(student.actor, third.id, 0.5);
+    path = await getWorkPath(student.actor.id, work.id);
+    expect(path.find((n) => n.current)?.id).toBe(third.id);
+    expect(path.filter((n) => n.read).map((n) => n.id)).toEqual([first.id]);
+  });
+});
+
+describe("getWeeklyStats", () => {
+  it("sums the last 7 Vietnam days only", async () => {
+    const student = await makeUser("STUDENT");
+    const work = await makeWork("doc");
+    const segmentId = work.segments[0].id;
+    const now = new Date("2026-11-12T03:00:00Z"); // 10:00 in Vietnam
+    const day = (iso: string) => new Date(`${iso}T00:00:00Z`);
+    await db.readingTime.createMany({
+      data: [
+        { userId: student.actor.id, segmentId, day: day("2026-11-12"), seconds: 600 },
+        { userId: student.actor.id, segmentId, day: day("2026-11-06"), seconds: 300 },
+        { userId: student.actor.id, segmentId, day: day("2026-11-05"), seconds: 900 }, // 8 days ago
+      ],
+    });
+
+    const stats = await getWeeklyStats(student.actor.id, now);
+    expect(stats.minutes).toBe(15);
+    expect(stats.days).toHaveLength(7);
+    expect(stats.days[0]).toMatchObject({ minutes: 5 });
+    expect(stats.days[6]).toMatchObject({ minutes: 10 });
   });
 });

@@ -1,19 +1,28 @@
 import type { Metadata, Viewport } from "next";
-import { Be_Vietnam_Pro, Noto_Serif } from "next/font/google";
+import { Be_Vietnam_Pro, Lora, Noto_Serif } from "next/font/google";
 import "./globals.css";
 
 const sans = Be_Vietnam_Pro({
   variable: "--font-sans",
   subsets: ["vietnamese", "latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 /** Serif face for the reading text. */
 const reading = Noto_Serif({
   variable: "--font-reading",
   subsets: ["vietnamese", "latin"],
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+/** Optional reading face, only fetched when a reader picks it. */
+const lora = Lora({
+  variable: "--font-lora",
+  subsets: ["vietnamese", "latin"],
   weight: ["400", "700"],
   style: ["normal", "italic"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -29,7 +38,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="vi" className={`${sans.variable} ${reading.variable} h-full antialiased`}>
+    <html lang="vi" className={`${sans.variable} ${reading.variable} ${lora.variable} h-full antialiased`}>
       <body className="min-h-full bg-background font-sans text-foreground">{children}</body>
     </html>
   );

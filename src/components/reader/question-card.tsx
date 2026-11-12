@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { CheckCircle2, Clock3, Loader2, Sparkles, XCircle } from "lucide-react";
+import { Mascot } from "@/components/mascot/mascot";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,7 +45,7 @@ export function QuestionCard({ question, onSubmit }: Props) {
   const openType = question.type === "SHORT" || question.type === "ESSAY" || question.type === "PREDICTION";
 
   return (
-    <div className="grid gap-3 rounded-xl border bg-card p-4 text-card-foreground" data-question={question.id}>
+    <div className="grid gap-3 rounded-2xl border-2 bg-card p-4 text-card-foreground" data-question={question.id}>
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <Badge variant="secondary">{TYPE_LABEL[question.type]}</Badge>
         {question.required ? null : <span className="text-muted-foreground">Không bắt buộc</span>}
@@ -139,7 +140,7 @@ function McqBody({
             <label
               key={option.id}
               className={cn(
-                "flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2 text-sm has-checked:border-primary has-checked:bg-primary/5",
+                "flex cursor-pointer items-center gap-3 rounded-xl border-2 px-3 py-2.5 text-sm font-medium has-checked:border-brand-blue has-checked:bg-sidebar-accent",
                 correct && "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40",
                 wrong && "border-amber-400 text-muted-foreground line-through",
                 disabled && "cursor-default",
@@ -243,7 +244,7 @@ function AnswerFeedback({ answer, type }: { answer: AnswerView; type: QuestionVi
       <p className="whitespace-pre-line">{answer.content}</p>
       {answer.status === "PENDING" ? (
         <p className="flex items-center gap-2 text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" aria-hidden /> AI đang đọc câu trả lời của bạn… Bạn cứ đọc tiếp nhé.
+          <Mascot pose="think" size={44} label="" /> Mướp đang đọc câu trả lời của bạn… Bạn cứ đọc tiếp nhé.
         </p>
       ) : null}
       {answer.status === "FAILED" ? (

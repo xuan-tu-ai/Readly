@@ -73,3 +73,16 @@ export async function getVisibleWorkBySlug(slug: string) {
   const { _count, ...rest } = work;
   return { ...toCard(rest), summary: rest.summary, authorBio: rest.authorBio, segmentCount: _count.segments };
 }
+
+/** Readable works for the library hero carousel, with their summaries. */
+export async function listFeatured(limit = 4) {
+  const rows = await db.work.findMany({
+    where: { status: "PUBLISHED" },
+    select: { ...cardSelect, summary: true },
+    orderBy: { title: "asc" },
+    take: limit,
+  });
+  return rows.map(({ summary, ...row }) => ({ ...toCard(row), summary }));
+}
+
+export type FeaturedWork = Awaited<ReturnType<typeof listFeatured>>[number];

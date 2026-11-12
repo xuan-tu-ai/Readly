@@ -1,7 +1,14 @@
 import { z } from "zod";
-import type { HighlightColor, ReadingTheme } from "@/generated/prisma/enums";
+import type { HighlightColor } from "@/generated/prisma/enums";
 import type { Actor } from "@/lib/roles";
 import { vnDay } from "@/lib/reading/active-time";
+import {
+  BACKDROPS,
+  DEFAULT_READING_SETTINGS,
+  FONT_SIZES,
+  LINE_HEIGHTS,
+  type ReadingSettings,
+} from "@/lib/reading/appearance";
 import { htmlToText } from "@/lib/reading/html-text";
 import { sanitizeSegmentHtml } from "@/lib/reading/sanitize";
 import { anchorFor, snapToWords } from "@/lib/reading/text";
@@ -9,6 +16,7 @@ import { db } from "@/server/db";
 import { assertRole } from "@/server/authz";
 import { DomainError, notFound } from "@/server/errors";
 import { emit } from "@/server/events";
+import { isResolved } from "@/lib/questions/rules";
 import { getCompletionStatus, getQuestionsForReader, refreshCompletion } from "./questions";
 
 // ───────────────────────── Reader data ─────────────────────────
@@ -201,28 +209,89 @@ export async function getWorkProgress(userId: string, workId: string) {
   return { started: progress !== null, total, read };
 }
 
-// ───────────────────────── Settings ─────────────────────────
+/**
+ * Segment "path" for the work page: every segment with its state, plus where
+ * the student is now. Purely informational; segments are never locked.
+ */
+export async function getWorkPath(userId: string, workId: string) {
+  const [segments, reads, progress, questions] = await Promise.all([
+    db.segment.findMany({
+      where: { workId, archivedAt: null },
+      orderBy: { order: "asc" },
+      select: { id: true, order: true, title: true },
+    }),
+    db.segmentRead.findMany({ where: { userId, segment: { workId } }, select: { segmentId: true } }),
+    db.readingProgress.findUnique({ where: { userId_workId: { userId, workId } }, select: { segmentId: true } }),
+    getQuestionsForReader(userId, workId),
+  ]);
+  const read = new Set(reads.map((r) => r.segmentId));
+  const owed = new Set(
+    questions
+      .filter((q) => q.required && q.segmentId && !isResolved(q.state))
+      .map((q) => q.segmentId as string),
+  );
+  const currentId = progress?.segmentId ?? segments.find((s) => !read.has(s.id))?.id ?? segments[0]?.id ?? null;
+  return segments.map((s) => ({
+    ...s,
+    read: read.has(s.id),
+    owed: owed.has(s.id),
+    current: s.id === currentId,
+  }));
+}
 
-export const FONT_SIZES = [16, 18, 20, 22, 24] as const;
-export const LINE_HEIGHTS = [1.5, 1.7, 1.9] as const;
+export type WorkPathNode = Awaited<ReturnType<typeof getWorkPath>>[number];
+
+const DAY_MS = 86_400_000;
+
+/** Reading activity over the last 7 Vietnam days (today included). */
+export async function getWeeklyStats(userId: string, now = new Date()) {
+  const since = new Date(vnDay(now).getTime() - 6 * DAY_MS);
+  const [time, segments, completed] = await Promise.all([
+    db.readingTime.groupBy({ by: ["day"], where: { userId, day: { gte: since } }, _sum: { seconds: true } }),
+    db.segmentRead.count({ where: { userId, readAt: { gte: since } } }),
+    db.workCompletion.count({ where: { userId } }),
+  ]);
+  const byDay = new Map(time.map((t) => [t.day.getTime(), t._sum.seconds ?? 0]));
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const day = new Date(since.getTime() + i * DAY_MS);
+    return { day, minutes: Math.round((byDay.get(day.getTime()) ?? 0) / 60) };
+  });
+  return {
+    days,
+    minutes: days.reduce((sum, d) => sum + d.minutes, 0),
+    segments,
+    completedWorks: completed,
+  };
+}
+
+// ───────────────────────── Settings ─────────────────────────
 
 export const readingSettingsSchema = z.object({
   fontSize: z.coerce.number().refine((v) => (FONT_SIZES as readonly number[]).includes(v)),
   lineHeight: z.coerce.number().refine((v) => (LINE_HEIGHTS as readonly number[]).includes(v)),
   theme: z.enum(["LIGHT", "SEPIA", "DARK"]),
+  font: z.enum(["NOTO_SERIF", "LORA", "BE_VIETNAM"]).optional(),
+  backdrop: z
+    .string()
+    .refine((v) => BACKDROPS.some((b) => b.id === v))
+    .optional(),
+  pageMode: z.enum(["SCROLL", "PAGED"]).optional(),
 });
 
-export type ReadingSettings = { fontSize: number; lineHeight: number; theme: ReadingTheme };
+export type { ReadingSettings };
 
 export async function getReadingSettings(userId: string): Promise<ReadingSettings> {
   const settings = await db.userSettings.findUnique({
     where: { userId },
-    select: { fontSize: true, lineHeight: true, theme: true },
+    select: { fontSize: true, lineHeight: true, theme: true, font: true, backdrop: true, pageMode: true },
   });
-  return settings ?? { fontSize: 18, lineHeight: 1.7, theme: "LIGHT" };
+  if (!settings) return DEFAULT_READING_SETTINGS;
+  // A backdrop removed from the list falls back to the plain theme.
+  return BACKDROPS.some((b) => b.id === settings.backdrop) ? settings : { ...settings, backdrop: "none" };
 }
 
-export async function updateReadingSettings(actor: Actor, settings: ReadingSettings) {
+/** Fields left out keep their stored value (or the column default on create). */
+export async function updateReadingSettings(actor: Actor, settings: z.infer<typeof readingSettingsSchema>) {
   await db.userSettings.upsert({
     where: { userId: actor.id },
     update: settings,

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { PageSkeleton } from "@/components/app-shell";
 import type { Metadata } from "next";
+import { MascotSays } from "@/components/mascot/mascot";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { requireUser } from "@/server/auth/dal";
 import { getActiveClass } from "@/server/services/classes";
@@ -24,7 +25,12 @@ async function StudentClass() {
 
   return (
     <div className="grid gap-6">
-      <h1 className="text-2xl font-semibold">Lớp học</h1>
+      <MascotSays pose={activeClass ? "idle" : "think"} size={96}>
+        <span className="block font-heading text-2xl font-semibold">Lớp học</span>
+        <span className="text-muted-foreground">
+          {activeClass ? `Bạn đang học lớp ${activeClass.name}.` : "Nhập mã lớp để nhận bài giao từ giáo viên nhé."}
+        </span>
+      </MascotSays>
 
       <Card>
         <CardHeader>
