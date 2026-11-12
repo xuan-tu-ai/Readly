@@ -41,7 +41,7 @@ async function TeacherHome() {
                   <CardHeader>
                     <CardTitle>{cls.name}</CardTitle>
                     <CardDescription>
-                      {cls.studentCount} học sinh · mã{" "}
+                      {cls.studentCount} học sinh · {cls.openAssignments} bài đang giao · mã{" "}
                       <span className="font-mono tracking-widest">{cls.code}</span>
                       {cls.codeActive ? "" : " (đã khóa)"}
                     </CardDescription>

@@ -53,6 +53,8 @@ function toAnswerView(a: AnswerRow) {
     improvements: a.aiHidden ? null : a.improvements,
     feedback: a.aiHidden ? null : a.feedback,
     teacherNote: a.teacherNote,
+    /** The level shown was set by the teacher, not the AI. */
+    levelByTeacher: a.teacherLevel !== null,
     submittedAt: a.submittedAt,
   };
 }
@@ -187,7 +189,7 @@ export async function submitAnswer(actor: Actor, questionId: string, rawContent:
       data: { ...base, status: "GRADED", isCorrect, level: isCorrect ? "DAT" : "CHUA_DAT", gradedAt: new Date() },
       select: { id: true },
     });
-    await afterGraded(actor.id, question.workId, questionId, answer.id);
+    await settleAnswer({ userId: actor.id, workId: question.workId, questionId, answerId: answer.id, source: "auto" });
   } else if (question.type === "PREDICTION") {
     await db.answer.create({ data: { ...base, status: "GRADED", gradedAt: new Date() } });
     await refreshCompletion(actor.id, question.workId);
@@ -198,9 +200,19 @@ export async function submitAnswer(actor: Actor, questionId: string, rawContent:
   return getQuestionView(actor.id, questionId);
 }
 
-async function afterGraded(userId: string, workId: string, questionId: string, answerId: string) {
-  await emit({ type: "AnswerGraded", userId, answerId, questionId, workId });
-  await refreshCompletion(userId, workId);
+/**
+ * After a level is set (MCQ, AI or a teacher override): points, streak and
+ * badges via the AnswerGraded event, then completion.
+ */
+export async function settleAnswer(input: {
+  userId: string;
+  workId: string;
+  questionId: string;
+  answerId: string;
+  source: "auto" | "ai" | "teacher";
+}) {
+  await emit({ type: "AnswerGraded", ...input });
+  await refreshCompletion(input.userId, input.workId);
 }
 
 // ───────────────────────── Completion ─────────────────────────
@@ -231,12 +243,21 @@ export async function getCompletionStatus(userId: string, workId: string) {
 /**
  * Records completion the first time the conditions hold. Completion is never
  * revoked (e.g. if a teacher later lowers a level), to keep points stable.
+ * `onTime` is fixed here: the student's current class assigned this work and
+ * its deadline has not passed (early bonus, spec §8.1).
  */
-export async function refreshCompletion(userId: string, workId: string): Promise<boolean> {
+export async function refreshCompletion(userId: string, workId: string, now = new Date()): Promise<boolean> {
   const status = await getCompletionStatus(userId, workId);
   if (status.completedAt || !status.complete) return false;
 
-  const { count } = await db.workCompletion.createMany({ data: [{ userId, workId }], skipDuplicates: true });
+  const assigned = await db.assignment.findFirst({
+    where: { workId, dueAt: { gte: now }, class: { memberships: { some: { studentId: userId, leftAt: null } } } },
+    select: { id: true },
+  });
+  const { count } = await db.workCompletion.createMany({
+    data: [{ userId, workId, completedAt: now, onTime: assigned !== null }],
+    skipDuplicates: true,
+  });
   if (count === 0) return false;
 
   const prediction = await db.answer.findFirst({
@@ -300,7 +321,9 @@ export async function gradeAnswerJob(answerId: string) {
       gradedAt: new Date(),
     },
   });
-  if (count > 0) await afterGraded(answer.userId, question.workId, question.id, answer.id);
+  if (count > 0) {
+    await settleAnswer({ userId: answer.userId, workId: question.workId, questionId: question.id, answerId: answer.id, source: "ai" });
+  }
   return { level: result.level };
 }
 

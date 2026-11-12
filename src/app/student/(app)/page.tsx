@@ -10,12 +10,14 @@ import { LevelEmblem } from "@/components/art/level";
 import { Mascot, MascotSays } from "@/components/mascot/mascot";
 import { buttonVariants } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { AssignedWorks } from "@/components/works/assigned-works";
 import { QuizCallToAction, RecommendationRow } from "@/components/works/recommendations";
 import { WorkCover } from "@/components/works/work-cover";
 import { cn } from "@/lib/utils";
 import { requireUser } from "@/server/auth/dal";
 import { getActiveClass } from "@/server/services/classes";
-import { getClassLeaderboard, getPlayer, listBadges } from "@/server/services/gamification";
+import { listStudentAssignments } from "@/server/services/assignments";
+import { getClassLeaderboard, getPlayer, getPointTable, listBadges } from "@/server/services/gamification";
 import { getRecommendations } from "@/server/services/quiz";
 import { getContinueReading, getWeeklyStats } from "@/server/services/reading";
 
@@ -37,7 +39,7 @@ function firstName(name: string) {
 
 async function StudentHome() {
   const user = await requireUser("STUDENT");
-  const [activeClass, recommendations, continueReading, stats, player, board, badges] = await Promise.all([
+  const [activeClass, recommendations, continueReading, stats, player, board, badges, assignments, table] = await Promise.all([
     getActiveClass(user.id),
     getRecommendations(user.id, 6),
     getContinueReading(user.id),
@@ -45,6 +47,8 @@ async function StudentHome() {
     getPlayer(user.id),
     getClassLeaderboard(user.id, new Date(), 3),
     listBadges(user.id),
+    listStudentAssignments(user.id),
+    getPointTable(),
   ]);
   const recentBadges = badges.filter((b) => b.earned).slice(0, 3);
 
@@ -118,6 +122,8 @@ async function StudentHome() {
             </Link>
           </section>
         )}
+
+        {assignments.length > 0 ? <AssignedWorks items={assignments} earlyBonus={table.workEarlyBonus} /> : null}
 
         <section className="grid min-w-0 gap-4">
           <div className="flex items-end justify-between gap-3">

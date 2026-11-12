@@ -16,7 +16,9 @@ export type DomainErrorCode =
   | "CLASS_CODE_INVALID"
   | "ALREADY_IN_CLASS"
   | "NOT_IN_CLASS"
-  | "CODE_GENERATION_FAILED";
+  | "CODE_GENERATION_FAILED"
+  | "INVALID_INPUT"
+  | "ALREADY_EXISTS";
 
 export function forbidden(message = "Bạn không có quyền thực hiện thao tác này."): never {
   throw new DomainError("FORBIDDEN", message);

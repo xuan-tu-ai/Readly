@@ -84,6 +84,7 @@ async function Leaderboard() {
             ["Tự luận ngắn: Đạt / Sâu sắc", `${table.shortDat} / ${table.shortSauSac}`],
             ["Đoạn cảm nhận: Đạt / Sâu sắc", `${table.essayDat} / ${table.essaySauSac}`],
             ["Hoàn thành tác phẩm", table.workCompleted],
+            ["Xong bài giao trước hạn", `+${table.workEarlyBonus}`],
             ["Mini game (theo kỷ lục)", `tối đa ${table.miniGameMax}`],
           ].map(([label, value]) => (
             <li key={label} className="flex items-center justify-between gap-3">

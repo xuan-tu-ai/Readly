@@ -80,9 +80,11 @@ export async function syncQuestionPoints(userId: string, questionId: string, tab
   return syncKey(userId, KEY.question(questionId), question.type, target);
 }
 
+/** Completing a work, plus the early bonus when it beat an assigned deadline. */
 export async function syncWorkPoints(userId: string, workId: string, table?: PointTable): Promise<number> {
   const completion = await db.workCompletion.findUnique({ where: { userId_workId: { userId, workId } } });
-  const target = completion ? (table ?? (await getPointTable())).workCompleted : 0;
+  const points = completion ? (table ?? (await getPointTable())) : null;
+  const target = points ? points.workCompleted + (completion!.onTime ? points.workEarlyBonus : 0) : 0;
   return syncKey(userId, KEY.work(workId), "WORK_COMPLETED", target);
 }
 

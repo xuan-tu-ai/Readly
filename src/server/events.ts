@@ -5,7 +5,15 @@
  */
 
 export type DomainEvent =
-  | { type: "AnswerGraded"; userId: string; answerId: string; questionId: string; workId: string }
+  | {
+      type: "AnswerGraded";
+      userId: string;
+      answerId: string;
+      questionId: string;
+      workId: string;
+      /** Who settled the level: auto-graded MCQ, the AI, or a teacher override. */
+      source: "auto" | "ai" | "teacher";
+    }
   | { type: "SegmentsRead"; userId: string; workId: string; segmentIds: string[] }
   | { type: "WorkCompleted"; userId: string; workId: string };
 

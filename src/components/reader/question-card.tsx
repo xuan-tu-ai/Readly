@@ -254,6 +254,7 @@ function AnswerFeedback({ answer, type }: { answer: AnswerView; type: QuestionVi
         <div className="grid gap-1">
           <span className={cn("w-fit rounded-full px-2 py-0.5 text-xs font-medium", LEVEL_STYLE[answer.level])}>
             {LEVEL_LABEL[answer.level]}
+            {answer.levelByTeacher ? " · giáo viên chấm" : ""}
           </span>
           {answer.strengths ? (
             <p>
