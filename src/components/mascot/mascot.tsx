@@ -6,7 +6,32 @@ import { cn } from "@/lib/utils";
  * tail, arms) so CSS can animate each one; see the "Mascot" block in
  * globals.css. Animations stop under `prefers-reduced-motion`.
  */
-export type MascotPose = "idle" | "wave" | "think" | "cheer" | "sad" | "sleep" | "read";
+export type MascotPose =
+  | "idle"
+  | "wave"
+  | "think"
+  | "cheer"
+  | "sad"
+  | "sleep"
+  | "read"
+  | "trophy"
+  | "fire"
+  | "medal"
+  | "point";
+
+export const MASCOT_POSES: { pose: MascotPose; label: string; use: string }[] = [
+  { pose: "idle", label: "Đứng yên", use: "Mặc định" },
+  { pose: "wave", label: "Vẫy chào", use: "Lời chào, onboarding" },
+  { pose: "think", label: "Suy nghĩ", use: "Chờ AI chấm, gợi ý" },
+  { pose: "cheer", label: "Cổ vũ", use: "Hoàn thành, trả lời đúng" },
+  { pose: "sad", label: "Buồn", use: "Lỗi, không có kết quả, mất streak" },
+  { pose: "sleep", label: "Ngủ", use: "Trống, sắp có" },
+  { pose: "read", label: "Đọc sách", use: "Đang đọc, lộ trình" },
+  { pose: "trophy", label: "Cầm cúp", use: "Lên cấp, đứng đầu bảng xếp hạng" },
+  { pose: "fire", label: "Ôm ngọn lửa", use: "Giữ streak" },
+  { pose: "medal", label: "Đeo huy chương", use: "Nhận huy hiệu" },
+  { pose: "point", label: "Chỉ tay", use: "Hướng dẫn, giới thiệu tính năng" },
+];
 
 const FUR = "#f2a65a";
 const FUR_DARK = "#d9823b";
@@ -102,6 +127,8 @@ function Eyes({ pose }: { pose: MascotPose }) {
   const arc = (d: string) => <path d={d} stroke={INK} strokeWidth="4.5" strokeLinecap="round" fill="none" />;
   switch (pose) {
     case "cheer":
+    case "trophy":
+    case "medal":
       return (
         <>
           {arc("M71 88 Q80 77 89 88")}
@@ -130,6 +157,13 @@ function Eyes({ pose }: { pose: MascotPose }) {
           <Eye cx={123} cy={82} />
         </>
       );
+    case "point":
+      return (
+        <>
+          <Eye cx={85} cy={86} />
+          <Eye cx={125} cy={86} />
+        </>
+      );
     case "read":
       return (
         <>
@@ -148,7 +182,7 @@ function Eyes({ pose }: { pose: MascotPose }) {
 }
 
 function Mouth({ pose }: { pose: MascotPose }) {
-  if (pose === "cheer" || pose === "wave") {
+  if (pose === "cheer" || pose === "wave" || pose === "trophy" || pose === "fire" || pose === "medal" || pose === "point") {
     return <path d="M92 106 Q100 120 108 106 Z" fill="#b5485a" stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />;
   }
   if (pose === "sad") {
@@ -177,9 +211,46 @@ function Arms({ pose }: { pose: MascotPose }) {
   switch (pose) {
     case "wave":
     case "think":
+    case "point":
       return <Paw cx={76} cy={160} rotate={15} />;
     case "cheer":
       return null;
+    case "trophy":
+      return (
+        <g className="m-held">
+          <path d="M78 142 H70 C66 156 74 164 84 162 M122 142 H130 C134 156 126 164 116 162" stroke="#e09b0f" strokeWidth="6" fill="none" strokeLinecap="round" />
+          <path d="M78 136 H122 V154 C122 168 112 176 100 176 C88 176 78 168 78 154 Z" fill="#ffc83d" />
+          <path d="M100 136 H122 V154 C122 168 112 176 100 176 Z" fill="#ffb31f" />
+          <rect x="95" y="176" width="10" height="6" fill="#e09b0f" />
+          <rect x="84" y="181" width="32" height="11" rx="3" fill="#a8714a" />
+          <path d="M100 142 l2.6 5.4 6 .9 -4.3 4.2 1 5.9 -5.3 -2.8 -5.3 2.8 1 -5.9 -4.3 -4.2 6 -.9z" fill="#fff" />
+          <ellipse cx="74" cy="156" rx="9" ry="11" fill={FUR} />
+          <ellipse cx="126" cy="156" rx="9" ry="11" fill={FUR} />
+        </g>
+      );
+    case "fire":
+      return (
+        <g>
+          <g className="m-flicker">
+            <path d="M100 124 C106 136 120 142 120 160 C120 174 111 184 100 184 C89 184 80 174 80 160 C80 150 86 144 90 138 C91 146 94 150 98 151 C96 142 96 132 100 124 Z" fill="#ff7a3d" />
+            <path d="M100 152 C104 159 111 163 111 170 C111 177 106 182 100 182 C94 182 89 177 89 170 C89 164 95 160 100 152 Z" fill="#ffc83d" />
+          </g>
+          <ellipse cx="78" cy="164" rx="9" ry="12" fill={FUR} />
+          <ellipse cx="122" cy="164" rx="9" ry="12" fill={FUR} />
+        </g>
+      );
+    case "medal":
+      return (
+        <g>
+          <Paw cx={76} cy={160} rotate={15} />
+          <Paw cx={124} cy={160} rotate={-15} />
+          <path d="M84 120 L96 146 M116 120 L104 146" stroke="#4ea3f5" strokeWidth="7" strokeLinecap="round" />
+          <circle cx="100" cy="153" r="15" fill="#c48508" />
+          <circle cx="100" cy="151" r="15" fill="#f7b72a" />
+          <circle cx="100" cy="151" r="9" fill="#ffd45e" />
+          <path d="M100 145 l1.8 3.7 4.1 .6 -3 2.9 .7 4.1 -3.6 -1.9 -3.6 1.9 .7 -4.1 -3 -2.9 4.1 -.6z" fill="#c48508" />
+        </g>
+      );
     case "read":
       return (
         <g>
@@ -217,6 +288,13 @@ function RaisedArms({ pose }: { pose: MascotPose }) {
           <ellipse cx="156" cy="108" rx="11" ry="21" fill={FUR} stroke={FUR_DARK} strokeWidth="2" transform="rotate(-30 156 108)" />
           <circle cx="36" cy="92" r="8" fill={CREAM} />
           <circle cx="164" cy="92" r="8" fill={CREAM} />
+        </g>
+      );
+    case "point":
+      return (
+        <g className="m-arm m-arm-point">
+          <ellipse cx="152" cy="112" rx="10" ry="23" fill={FUR} stroke={FUR_DARK} strokeWidth="2" transform="rotate(-62 152 112)" />
+          <ellipse cx="173" cy="100" rx="8.5" ry="8" fill={CREAM} stroke={FUR_DARK} strokeWidth="2" />
         </g>
       );
     case "think":
@@ -271,6 +349,19 @@ function Extras({ pose }: { pose: MascotPose }) {
       break;
     case "sad":
       content = <path d="M88 96 q4 7 0 10 q-4 -3 0 -10 z" fill="#8cc8f0" />;
+      break;
+    case "trophy":
+    case "medal":
+      content = (
+        <>
+          <Sparkle x={30} y={46} />
+          <Sparkle x={172} y={50} s={0.8} color="#7ad38c" />
+          <Sparkle x={156} y={14} s={0.6} color="#4ea3f5" />
+        </>
+      );
+      break;
+    case "point":
+      content = <Sparkle x={192} y={84} s={0.7} />;
       break;
     default:
       return null;

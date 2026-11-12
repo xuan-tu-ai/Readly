@@ -100,6 +100,12 @@ Task:
 **Xong khi:** lint/typecheck/test/build sạch; kiểm tra trên trình duyệt desktop + điện thoại cho các màn học sinh, trình đọc ở cả hai chế độ.
 
 ## Giai đoạn 5 – Game hóa
+**Hình ảnh đã chuẩn bị sẵn** (PR riêng trước giai đoạn này; xem tất cả ở `/admin/assets`, mã lưu DB nằm trong `src/lib/art.ts`):
+- Huy hiệu `BadgeArt`: 12 hình chính × 4 bậc khung (đồng/bạc/vàng/kim cương) + trạng thái chưa mở + ruy băng chú thích.
+- Cấp độ `LevelEmblem` 1–5; icon game hóa: streak (cháy/tắt), XP, huy chương 1–3, vương miện, sao, 2 loại mini game, khóa, rương.
+- Hiệu ứng `Confetti`, `Sunburst`; Mướp thêm tư thế `trophy`, `fire`, `medal`, `point`.
+- Cho giai đoạn 7, 9: icon thông báo & thảo luận, 12 avatar mèo, app icon PWA + manifest + badge thông báo đẩy.
+
 Task:
 - `PointLedger` (sự kiện → điểm), cấu hình bảng điểm (`GamificationConfig`), tính lại khi đổi mức.
 - Cấp độ từ tổng điểm.
