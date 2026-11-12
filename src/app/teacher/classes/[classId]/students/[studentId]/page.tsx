@@ -140,8 +140,8 @@ function WorkBlock({ work: w, classId }: { work: StudentReport["works"][number];
         <span className="flex items-center gap-1 text-muted-foreground">
           <Clock3 className="size-4" aria-hidden /> {w.progress.minutes} phút đọc
         </span>
-        {w.onTime ? <span className="font-bold text-[#178a45]">+ thưởng đúng hạn</span> : null}
-        {w.owed > 0 ? <span className="font-bold text-[#9a6700]">Còn {w.owed} câu bắt buộc</span> : null}
+        {w.onTime ? <span className="font-bold text-[#178a45] dark:text-[#5fd68f]">+ thưởng đúng hạn</span> : null}
+        {w.owed > 0 ? <span className="font-bold text-[#9a6700] dark:text-[#e8b54a]">Còn {w.owed} câu bắt buộc</span> : null}
         {w.flagged > 0 ? (
           <span className="inline-flex items-center gap-1 font-bold text-destructive">
             <TriangleAlert className="size-4" aria-hidden /> {w.flagged} câu hết 3 lượt
@@ -165,7 +165,7 @@ function WorkBlock({ work: w, classId }: { work: StudentReport["works"][number];
                     <span
                       className={cn(
                         "text-xs font-bold",
-                        q.state.flagged ? "text-destructive" : q.state.status === "passed" ? "text-[#178a45]" : "text-muted-foreground",
+                        q.state.flagged ? "text-destructive" : q.state.status === "passed" ? "text-[#178a45] dark:text-[#5fd68f]" : "text-muted-foreground",
                       )}
                     >
                       {q.state.status === "passed" ? (level ? LEVEL_LABEL[level] : "Đúng") : STATE_LABEL[q.state.status]}

@@ -194,14 +194,19 @@ describe("questions", () => {
       stage: "POST", segment: null, type: "ESSAY", prompt: "Cảm nhận của em về bài thơ?",
       options: null, correctIndex: null, explanation: null, rubric: null, keyPoints: null, outline: "Mở – thân – kết",
     };
+    // A level left empty (seen with real models) must not throw the whole set away.
+    const short = { ...essay, type: "SHORT", outline: null, rubric: { chuaDat: "Chung chung.", dat: "", sauSac: "Sâu, có dẫn chứng." }, keyPoints: ["Ý 1"] };
     vi.spyOn(ai, "getAiProvider").mockReturnValue(
-      new MockProvider({ ...defaultMockResponders, "draft-questions": () => ({ questions: [essay] }) }),
+      new MockProvider({ ...defaultMockResponders, "draft-questions": () => ({ questions: [essay, short] }) }),
     );
-    const [draft] = await draftQuestions(a.actor, poem.id);
-    expect(draft.rubric?.dat).toBeTruthy();
-    expect(draft.keyPoints?.length).toBeGreaterThan(0);
-    const input = questionInputSchema.parse(draftToInput(draft, new Map()));
-    expect(await addDraftQuestions(a.actor, poem.id, [input])).toBe(1);
+    const drafts = await draftQuestions(a.actor, poem.id);
+    for (const draft of drafts) {
+      expect(draft.rubric?.dat.length).toBeGreaterThan(3);
+      expect(draft.keyPoints?.length).toBeGreaterThan(0);
+    }
+    expect(drafts[1].keyPoints).toEqual(["Ý 1"]);
+    const inputs = drafts.map((d) => questionInputSchema.parse(draftToInput(d, new Map())));
+    expect(await addDraftQuestions(a.actor, poem.id, inputs)).toBe(2);
   });
 });
 

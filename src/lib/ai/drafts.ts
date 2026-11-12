@@ -25,11 +25,33 @@ const MCQ_GUIDE = [
   "- Phần giải thích nói lý do theo nội dung, không gọi phương án bằng chữ cái hay số thứ tự (A, B, phương án 1…) vì thứ tự có thể bị đổi.",
 ].join("\n");
 
+const LEVEL_TEXT = {
+  chuaDat: "Mô tả một câu trả lời ở mức Chưa đạt (1–2 câu, không để trống).",
+  dat: "Mô tả một câu trả lời ở mức Đạt (1–2 câu, không để trống).",
+  sauSac: "Mô tả một câu trả lời ở mức Sâu sắc (1–2 câu, không để trống).",
+};
+
 const rubricShape = z.object({
-  chuaDat: z.string().min(3).max(400),
-  dat: z.string().min(3).max(400),
-  sauSac: z.string().min(3).max(400),
+  chuaDat: z.string().min(3).max(400).describe(LEVEL_TEXT.chuaDat),
+  dat: z.string().min(3).max(400).describe(LEVEL_TEXT.dat),
+  sauSac: z.string().min(3).max(400).describe(LEVEL_TEXT.sauSac),
 });
+
+/**
+ * Inside a whole question set a level is sometimes left empty by real models;
+ * accept it here (one gap must not throw away the set) and let the caller
+ * ask for that rubric again (see `rubricComplete`).
+ */
+const lenientRubricShape = z.object({
+  chuaDat: z.string().max(400).describe(LEVEL_TEXT.chuaDat),
+  dat: z.string().max(400).describe(LEVEL_TEXT.dat),
+  sauSac: z.string().max(400).describe(LEVEL_TEXT.sauSac),
+});
+
+/** All three levels written out. */
+export function rubricComplete(rubric: { chuaDat: string; dat: string; sauSac: string } | null | undefined): boolean {
+  return !!rubric && [rubric.chuaDat, rubric.dat, rubric.sauSac].every((level) => level.trim().length >= 3);
+}
 
 // ───────────────────────── Questions ─────────────────────────
 
@@ -44,7 +66,7 @@ export const draftQuestionSchema = z.object({
   correctIndex: z.number().int().min(0).max(3).nullable(),
   explanation: z.string().max(400).nullable(),
   /** SHORT/ESSAY only. */
-  rubric: rubricShape.nullable(),
+  rubric: lenientRubricShape.nullable(),
   keyPoints: z.array(z.string().min(1).max(200)).max(6).nullable(),
   /** ESSAY only: a suggested outline. */
   outline: z.string().max(1200).nullable(),

@@ -8,12 +8,12 @@ export function StatusText({ progress: p, className }: { progress: WorkProgress;
   const [Icon, text, tone] =
     p.status === "done"
       ? p.late
-        ? [Clock, `Xong trễ ${formatDayMonth(p.completedAt!)}`, "text-[#9a6700]"]
-        : [CheckCircle2, `Xong ${formatDayMonth(p.completedAt!)}`, "text-[#178a45]"]
+        ? [Clock, `Xong trễ ${formatDayMonth(p.completedAt!)}`, "text-[#9a6700] dark:text-[#e8b54a]"]
+        : [CheckCircle2, `Xong ${formatDayMonth(p.completedAt!)}`, "text-[#178a45] dark:text-[#5fd68f]"]
       : p.overdue
         ? [AlertTriangle, p.status === "reading" ? `Quá hạn · ${p.percent}%` : "Quá hạn · chưa đọc", "text-destructive"]
         : p.status === "reading"
-          ? [BookOpen, "Đang đọc", "text-[#2a78d6]"]
+          ? [BookOpen, "Đang đọc", "text-[#2a78d6] dark:text-[#7ab4ff]"]
           : [Circle, "Chưa đọc", "text-muted-foreground"];
   return (
     <span className={cn("inline-flex items-center gap-1.5 font-semibold whitespace-nowrap", tone, className)}>

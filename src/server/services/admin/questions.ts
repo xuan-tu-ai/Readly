@@ -1,6 +1,6 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { getAiProvider } from "@/lib/ai";
-import { buildDraftQuestionsRequest, buildDraftRubricRequest, type DraftQuestion } from "@/lib/ai/drafts";
+import { buildDraftQuestionsRequest, buildDraftRubricRequest, rubricComplete, type DraftQuestion } from "@/lib/ai/drafts";
 import type { QuestionInput } from "@/lib/content/schemas";
 import { htmlToText } from "@/lib/reading/html-text";
 import { mcqOptionsSchema, rubricSchema } from "@/lib/questions/rules";
@@ -127,17 +127,22 @@ export async function draftQuestions(actor: Actor, workId: string): Promise<Draf
   const bySegment = new Map(work.segments.map((s) => [s.order, s.text]));
   // Drop drafts the model attached to a segment that does not exist.
   const kept = result.questions.filter((q) => q.stage !== "DURING" || (q.segment !== null && bySegment.has(q.segment)));
-  // Real models sometimes leave out the rubric of an open question, which would block saving it:
+  // Real models sometimes leave out the rubric of an open question (or one of its levels), which would block saving it:
   // ask for that rubric separately (best effort, in parallel).
   const wholeText = work.segments.map((s) => `${s.title}\n${s.text}`).join("\n\n");
   return Promise.all(
     kept.map(async (q) => {
-      if ((q.type !== "SHORT" && q.type !== "ESSAY") || (q.rubric && q.keyPoints?.length)) return q;
+      if ((q.type !== "SHORT" && q.type !== "ESSAY") || (rubricComplete(q.rubric) && q.keyPoints?.length)) return q;
       const sourceText = (q.segment !== null && bySegment.get(q.segment)) || wholeText;
       const filled = await getAiProvider()
         .generateStructured(buildDraftRubricRequest({ type: q.type, prompt: q.prompt, sourceText }))
         .catch(() => null);
-      return filled ? { ...q, rubric: q.rubric ?? filled.rubric, keyPoints: q.keyPoints?.length ? q.keyPoints : filled.keyPoints } : q;
+      if (!filled) return q;
+      return {
+        ...q,
+        rubric: rubricComplete(q.rubric) ? q.rubric : filled.rubric,
+        keyPoints: q.keyPoints?.length ? q.keyPoints : filled.keyPoints,
+      };
     }),
   );
 }

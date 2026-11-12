@@ -8,7 +8,7 @@ import "dotenv/config";
 import { createPrismaClient } from "../src/server/db";
 import { hashPassword } from "../src/server/auth/password";
 import { seedContent } from "./seed-content";
-import { seedDemoClass } from "./seed-demo-class";
+import { DEMO_STUDENT_COUNT, seedDemoClass } from "./seed-demo-class";
 
 const DEMO_TEACHER = {
   email: "giaovien@readly.local",
@@ -25,6 +25,11 @@ const DEMO_STUDENT = {
 async function main() {
   const db = createPrismaClient();
   try {
+    // Production containers seed on every start; only a brand-new database is filled.
+    if (process.env.SEED_ONLY_IF_EMPTY === "true" && (await db.user.count()) > 0) {
+      console.log("✔ Cơ sở dữ liệu đã có dữ liệu, bỏ qua seed");
+      return;
+    }
     const adminEmail = process.env.SEED_ADMIN_EMAIL?.trim().toLowerCase();
     const adminPassword = process.env.SEED_ADMIN_PASSWORD;
     if (!adminEmail || !adminPassword) {
@@ -83,14 +88,14 @@ async function main() {
 
     const content = await seedContent(db);
     console.log(
-      `✔ Nội dung mẫu: ${content.works} tác phẩm, ${content.tags} tag, ${content.segmentsCreated} phân đoạn mới, ${content.questionsCreated} câu hỏi mới, ${content.gamesCreated} mini game mới, ${content.badges} huy hiệu`,
+      `✔ Nội dung mẫu: ${content.works} tác phẩm, ${content.tags} tag, ${content.segmentsCreated} phân đoạn mới, ${content.questionsCreated} câu hỏi mới, ${content.gamesCreated} mini game mới, ${content.realWorks} tác phẩm có toàn văn, ${content.badges} huy hiệu`,
     );
 
     if (demoClassId) {
       const demo = await seedDemoClass(db, demoClassId);
       console.log(
         demo
-          ? `✔ Lớp demo: ${demo.students} học sinh mẫu (hs01…hs14@demo.readly.local), ${demo.assignments} bài giao`
+          ? `✔ Lớp demo: ${demo.students} học sinh mẫu (hs01…hs${DEMO_STUDENT_COUNT}@demo.readly.local), ${demo.assignments} bài giao, ${demo.posts} bài thảo luận`
           : "✔ Lớp demo: dữ liệu mẫu đã có, bỏ qua",
       );
     }

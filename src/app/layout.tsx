@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, Lora, Noto_Serif } from "next/font/google";
+import { THEME_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const sans = Be_Vietnam_Pro({
@@ -27,7 +28,7 @@ const lora = Lora({
 
 export const metadata: Metadata = {
   title: { default: "Readly", template: "%s · Readly" },
-  description: "Đọc 45 tác phẩm văn học lớp 12 cùng hướng dẫn đọc bằng AI.",
+  description: "Đọc tác phẩm văn học lớp 12 cùng hướng dẫn đọc, câu hỏi và nhận xét bằng AI.",
 };
 
 export const viewport: Viewport = {
@@ -38,7 +39,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="vi" className={`${sans.variable} ${reading.variable} ${lora.variable} h-full antialiased`}>
+    // The theme script adds "dark" to <html> before hydration; React must not undo it.
+    <html lang="vi" className={`${sans.variable} ${reading.variable} ${lora.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-full bg-background font-sans text-foreground">{children}</body>
     </html>
   );

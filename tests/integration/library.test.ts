@@ -4,6 +4,7 @@ import { workSearchText } from "@/lib/catalog";
 import { getVisibleWorkBySlug, listLibrary } from "@/server/services/works";
 import { getLatestQuizAnswers, getRecommendations, saveQuizResult } from "@/server/services/quiz";
 import { loadSampleContent, placeholderSegments, seedContent } from "../../prisma/seed-content";
+import { loadRealWorks } from "../../prisma/seed-real-works";
 import { makeUser, resetDatabase } from "../helpers/db";
 import type { Genre, WorkStatus } from "@/generated/prisma/enums";
 
@@ -154,7 +155,26 @@ describe("sample content seed", () => {
 
     expect(first.segmentsCreated).toBe(published * 5);
     expect(second.segmentsCreated).toBe(0);
-    expect(await db.work.count()).toBe(45);
+    const real = loadRealWorks();
+    expect(first.realWorksCreated).toBe(real.length);
+    expect(second.realWorksCreated).toBe(0);
+    expect(await db.work.count()).toBe(45 + real.length);
+  });
+
+  it("seeds the real works with full text, questions for every stage and mini games", async () => {
+    await seedContent(db);
+    for (const w of loadRealWorks()) {
+      const work = await db.work.findUniqueOrThrow({
+        where: { slug: w.slug },
+        include: { segments: true, questions: true, miniGames: true },
+      });
+      expect(work.segments).toHaveLength(w.segments.length);
+      expect(work.segments.every((s) => !s.content.includes("giữ chỗ"))).toBe(true);
+      expect(new Set(work.questions.map((q) => q.stage))).toEqual(new Set(["PRE", "DURING", "POST"]));
+      expect(work.questions.filter((q) => q.type === "MCQ").every((q) => q.correctOptionId)).toBe(true);
+      expect(work.miniGames.length).toBeGreaterThan(0);
+      expect(work.background).toContain("Tác giả");
+    }
   });
 
   it("marks placeholder text clearly", () => {
