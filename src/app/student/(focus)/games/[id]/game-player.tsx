@@ -17,12 +17,12 @@ import type { PlayableGame } from "@/server/services/minigames";
 const PAIR_TONES = [
   "border-brand-blue bg-sidebar-accent",
   "border-brand-orange bg-accent",
-  "border-brand-purple bg-[#f1eaff]",
-  "border-brand-pink bg-[#ffe8f0]",
+  "border-brand-purple bg-[#f1eaff] dark:bg-[#3a2d57]",
+  "border-brand-pink bg-[#ffe8f0] dark:bg-[#4f2433]",
   "border-primary bg-secondary",
-  "border-[#35c2b8] bg-[#dcf6f4]",
-  "border-[#f7b72a] bg-[#fff4cf]",
-  "border-[#a8714a] bg-[#f6e9de]",
+  "border-[#35c2b8] bg-[#dcf6f4] dark:bg-[#173f3c]",
+  "border-[#f7b72a] bg-[#fff4cf] dark:bg-[#4a3b12]",
+  "border-[#a8714a] bg-[#f6e9de] dark:bg-[#43301f]",
 ];
 
 export function GamePlayer({ game }: { game: PlayableGame }) {
@@ -270,7 +270,7 @@ function Result({ result, game, onReplay }: { result: PlayGameResult; game: Play
             key={r.id}
             className={cn(
               "flex gap-3 rounded-2xl border-2 p-3 text-sm",
-              r.correct ? "border-primary/40 bg-secondary" : "border-destructive/30 bg-[#fdecec]",
+              r.correct ? "border-primary/40 bg-secondary" : "border-destructive/30 bg-[#fdecec] dark:bg-[#4a2222]",
             )}
           >
             {r.correct ? (

@@ -47,7 +47,7 @@ export function AssignedWorks({ items, earlyBonus }: { items: StudentAssignment[
                           a.progress.overdue
                             ? "bg-destructive/10 text-destructive"
                             : urgent
-                              ? "bg-brand-orange/15 text-[#a8461b]"
+                              ? "bg-brand-orange/15 text-[#a8461b] dark:text-[#ff9e6b]"
                               : "bg-muted text-muted-foreground",
                         )}
                       >
@@ -63,7 +63,7 @@ export function AssignedWorks({ items, earlyBonus }: { items: StudentAssignment[
                       <p className="text-xs font-bold text-muted-foreground">Đã đọc hết, còn câu hỏi bắt buộc chưa xong.</p>
                     ) : null}
                     {!a.progress.overdue && earlyBonus > 0 ? (
-                      <p className="flex items-center gap-1 text-xs font-bold text-[#a8761b]">
+                      <p className="flex items-center gap-1 text-xs font-bold text-[#a8761b] dark:text-[#e8b54a]">
                         <XpIcon size={16} /> Xong trước hạn: thêm {earlyBonus} điểm
                       </p>
                     ) : null}

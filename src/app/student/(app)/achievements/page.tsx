@@ -41,7 +41,7 @@ async function Achievements() {
             <h2 id="level-heading" className="font-heading text-3xl font-semibold">
               {level.name}
             </h2>
-            <p className="flex items-center gap-1.5 font-extrabold text-[#c48508]">
+            <p className="flex items-center gap-1.5 font-extrabold text-[#c48508] dark:text-[#f2c14e]">
               <XpIcon size={22} /> {player.points} điểm
             </p>
             {level.next !== null ? (
@@ -80,7 +80,7 @@ async function Achievements() {
                 <span
                   className={cn(
                     "grid size-9 place-items-center rounded-full",
-                    d.active ? "bg-[#ffe3d1]" : "bg-muted",
+                    d.active ? "bg-[#ffe3d1] dark:bg-[#5a2e14]" : "bg-muted",
                     i === streak.week.length - 1 && "ring-2 ring-[#f26b2b]/40",
                   )}
                 >

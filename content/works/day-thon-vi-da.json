@@ -1,0 +1,222 @@
+{
+  "slug": "day-thon-vi-da",
+  "title": "Đây thôn Vĩ Dạ",
+  "author": "Hàn Mặc Tử",
+  "authorBio": "Hàn Mặc Tử (1912–1940), tên thật Nguyễn Trọng Trí, quê Đồng Hới, Quảng Bình; một trong những nhà thơ lạ nhất của phong trào Thơ mới. Ông mắc bệnh phong và mất năm 28 tuổi, để lại những vần thơ vừa trong trẻo vừa đau thương.",
+  "genre": "THO",
+  "difficulty": 2,
+  "estMinutes": 10,
+  "status": "PUBLISHED",
+  "summary": "Từ một lời mời trách nhẹ nhàng, thôn Vĩ bên sông Hương hiện lên trong nắng sớm, đêm trăng và màn sương, gửi gắm tình yêu thiên nhiên, khát khao gắn bó với đời và nỗi cô đơn của thi sĩ.",
+  "tags": [
+    "thien-nhien",
+    "tinh-yeu",
+    "que-huong",
+    "tru-tinh",
+    "suy-tu"
+  ],
+  "source": "Văn bản: Wikisource tiếng Việt, theo sách giáo khoa Ngữ văn 11 (phạm vi công cộng).",
+  "segments": [
+    {
+      "title": "Khổ 1: Nắng thôn Vĩ",
+      "html": "<p>Sao anh không về chơi thôn Vĩ?<br />Nhìn nắng hàng cau nắng mới lên.<br />Vườn ai mướt quá xanh như ngọc<br />Lá trúc che ngang mặt chữ điền.</p>"
+    },
+    {
+      "title": "Khổ 2: Sông trăng",
+      "html": "<p>Gió theo lối gió, mây đường mây,<br />Dòng nước buồn thiu, hoa bắp lay...<br />Thuyền ai đậu bến sông trăng đó,<br />Có chở trăng về kịp tối nay?</p>"
+    },
+    {
+      "title": "Khổ 3: Sương khói",
+      "html": "<p>Mơ khách đường xa, khách đường xa,<br />Áo em trắng quá nhìn không ra...<br />Ở đây sương khói mờ nhân ảnh,<br />Ai biết tình ai có đậm đà?</p>"
+    }
+  ],
+  "background": "<p><strong>Tác giả.</strong> Hàn Mặc Tử (1912–1940), tên thật Nguyễn Trọng Trí, là gương mặt độc đáo của phong trào Thơ mới. Ông mắc bệnh phong, sống những năm cuối đời trong đau đớn và cô đơn.</p><p><strong>Hoàn cảnh.</strong> Bài thơ viết năm 1938, in trong tập <em>Thơ Điên</em> (về sau đổi tên là <em>Đau thương</em>). Cảm hứng được cho là khơi dậy từ tấm bưu ảnh phong cảnh xứ Huế kèm lời thăm hỏi của Hoàng Thị Kim Cúc, người con gái thôn Vĩ mà nhà thơ từng thầm thương.</p><p><strong>Địa danh.</strong> Vĩ Dạ là một thôn nhỏ bên bờ sông Hương, ở ngoại ô thành phố Huế, nổi tiếng với những khu vườn xanh mướt, nên thơ.</p><p><strong>Khi đọc, hãy để ý:</strong> mỗi khổ thơ mở đầu bằng một hình ảnh khác nhau (nắng, trăng, sương) và kết thúc bằng một câu hỏi.</p>",
+  "questions": [
+    {
+      "stage": "PRE",
+      "type": "PREDICTION",
+      "segment": null,
+      "prompt": "Nhan đề “Đây thôn Vĩ Dạ” vừa chỉ một địa danh, vừa như một lời giới thiệu, một tiếng gọi. Em dự đoán bài thơ sẽ nói về cảnh và người nơi ấy như thế nào, và tâm trạng của người viết khi nhớ về đó ra sao?",
+      "required": false
+    },
+    {
+      "stage": "DURING",
+      "type": "MCQ",
+      "segment": 1,
+      "prompt": "Hình ảnh “Vườn ai mướt quá xanh như ngọc” trong khổ thơ thứ nhất gợi tả điều gì?",
+      "options": [
+        "Khu vườn được chăm sóc tỉ mỉ, thể hiện sự sung túc của gia đình nơi thôn Vĩ",
+        "Khu vườn tươi mướt, óng ả như ngọc dưới nắng sớm, tràn đầy sức sống",
+        "Khu vườn rộng lớn với nhiều loài cây quý, tiêu biểu cho cảnh sắc xứ Huế",
+        "Khu vườn ẩn trong sương sớm, mờ ảo như ngọc bích, gợi nỗi buồn man mác"
+      ],
+      "correct": 1,
+      "explanation": "Từ “mướt” và so sánh “xanh như ngọc” cho thấy khu vườn căng tràn nhựa sống, óng ả, trong trẻo dưới nắng mới lên. Cách hiểu về sự sung túc hay về loài cây quý không được câu thơ nhắc tới; còn sương sớm làm mờ ảo cảnh vật là chi tiết thuộc khổ thơ cuối."
+    },
+    {
+      "stage": "DURING",
+      "type": "SHORT",
+      "segment": 1,
+      "prompt": "Qua khổ thơ thứ nhất, em hình dung thế nào về cảnh thôn Vĩ và tình cảm của người viết đối với nơi ấy?",
+      "rubric": {
+        "chuaDat": "Nêu được một vài hình ảnh như nắng hàng cau, vườn xanh, lá trúc nhưng chưa nhận xét gì về vẻ đẹp cảnh vật và tình cảm của tác giả; diễn đạt lộn xộn.",
+        "dat": "Nêu được cảnh thôn Vĩ tươi sáng, tinh khôi trong nắng sớm và nhận ra tình cảm tha thiết, có chút ngỡ ngàng, nuối tiếc của người viết; có dẫn chứng từ khổ thơ.",
+        "sauSac": "Phân tích được vẻ đẹp vừa thực vừa như hồi tưởng, tâm trạng vui say đắm trước cảnh nhưng ẩn chứa nỗi băn khoăn, mong mỏi được trở về; biết gắn câu hỏi mở đầu với hình ảnh con người thấp thoáng sau lá trúc."
+      },
+      "keyPoints": [
+        "Cảnh thôn Vĩ hiện lên trong nắng sớm, hàng cau, khu vườn mướt xanh như ngọc",
+        "Câu hỏi mở đầu gợi lời mời, lời trách nhẹ nhàng của người con gái thôn Vĩ",
+        "Hình ảnh “lá trúc che ngang mặt chữ điền” gợi con người kín đáo, hài hòa với cảnh",
+        "Tình cảm của tác giả: yêu tha thiết, lưu luyến và có chút ngỡ ngàng, xa vắng"
+      ]
+    },
+    {
+      "stage": "DURING",
+      "type": "MCQ",
+      "segment": 2,
+      "prompt": "Hai câu thơ “Gió theo lối gió, mây đường mây / Dòng nước buồn thiu, hoa bắp lay” gợi điều gì rõ nhất?",
+      "options": [
+        "Sự chia lìa, xa cách khi gió và mây mỗi thứ trôi một đường, cảnh vật nhuốm buồn",
+        "Vẻ êm đềm của thiên nhiên khi gió và mây quyện hòa trong không gian tĩnh lặng",
+        "Vẻ đẹp thơ mộng của dòng sông có con thuyền đang đậu chờ đợi dưới trăng",
+        "Niềm vui thanh thản trước cảnh vật tự do, phóng khoáng giữa đất trời cao rộng"
+      ],
+      "correct": 0,
+      "explanation": "Cách ngắt nhịp và sự tách đôi “gió theo lối gió, mây đường mây” cho thấy cảnh vật không gắn bó mà chia lìa, kèm theo đó là dòng nước “buồn thiu”. Hình ảnh thuyền đậu bến sông trăng thuộc hai câu thơ sau, còn sắc thái êm đềm, vui tươi trái với nỗi buồn mà câu thơ gợi ra."
+    },
+    {
+      "stage": "DURING",
+      "type": "MCQ",
+      "segment": 3,
+      "prompt": "Điệp ngữ “khách đường xa” trong câu “Mơ khách đường xa, khách đường xa” gợi điều gì?",
+      "options": [
+        "Người khách trong mộng càng lúc càng xa xôi, khó với tới",
+        "Nhiều vị khách phương xa cùng lúc tìm về thôn Vĩ",
+        "Niềm vui háo hức khi sắp được đón khách đường xa",
+        "Lời trách móc người khách đã lỡ hẹn với thôn Vĩ"
+      ],
+      "correct": 0,
+      "explanation": "Hai lần lặp “khách đường xa” như kéo dài khoảng cách: hình bóng người thương chỉ hiện ra trong mơ và ngày càng xa vời, mờ ảo. Câu thơ không nói đến việc đón khách, nhiều người về thôn Vĩ hay một lời trách lỡ hẹn."
+    },
+    {
+      "stage": "DURING",
+      "type": "SHORT",
+      "segment": 3,
+      "prompt": "Vì sao câu hỏi “Ai biết tình ai có đậm đà?” ở cuối bài thơ lại để ngỏ, không có câu trả lời? Điều đó thể hiện tâm trạng gì của người viết?",
+      "rubric": {
+        "chuaDat": "Có nêu câu hỏi cuối bài nhưng chưa lí giải được vì sao để ngỏ, chưa gọi tên được tâm trạng; trả lời quá ngắn hoặc lan man.",
+        "dat": "Lí giải được câu hỏi để ngỏ như một nỗi hoài nghi, khắc khoải trước sự mờ nhòe của sương khói và của tình người; có dẫn chứng câu thơ.",
+        "sauSac": "Phân tích được sự vận động từ cảnh thực đến cõi mộng rồi trở về day dứt; chỉ ra câu hỏi tu từ vừa là nỗi cô đơn, mặc cảm chia lìa vừa là khát khao được tin, được yêu thương của tác giả."
+      },
+      "keyPoints": [
+        "Câu hỏi tu từ khép bài bằng một dấu hỏi lửng, không có lời đáp",
+        "“Sương khói mờ nhân ảnh” khiến con người và tình cảm trở nên nhòe mờ, khó xác tín",
+        "Tâm trạng: hoài nghi, khắc khoải, cô đơn, mặc cảm về khoảng cách",
+        "Ẩn sau đó là khát khao được thấu hiểu, được yêu thương đậm đà"
+      ]
+    },
+    {
+      "stage": "POST",
+      "type": "SHORT",
+      "segment": null,
+      "prompt": "Mạch cảm xúc trong “Đây thôn Vĩ Dạ” vận động từ khổ thơ thứ nhất đến khổ thơ thứ ba như thế nào? Hãy tóm tắt bằng một đoạn ngắn.",
+      "rubric": {
+        "chuaDat": "Kể lại nội dung ba khổ thơ nhưng chưa chỉ ra được sự vận động của mạch cảm xúc; chưa có nhận xét chung.",
+        "dat": "Nêu được trình tự cảm xúc: từ cảnh thôn Vĩ tươi sáng, sang nỗi buồn chia lìa bên sông trăng, đến nỗi xa cách, hoài nghi trong sương khói; có dẫn chứng.",
+        "sauSac": "Phân tích được sự chuyển dịch từ cái nhìn bên ngoài vào bên trong, từ thực tới mộng rồi trở về thực tại; nhận ra đó là hành trình tâm trạng của một con người khao khát gắn bó nhưng luôn cảm nhận sự chia lìa."
+      },
+      "keyPoints": [
+        "Khổ đầu: cảnh thôn Vĩ tinh khôi, tình cảm tha thiết và có chút ngỡ ngàng",
+        "Khổ hai: cảnh chia lìa, nỗi buồn man mác và khát vọng hội ngộ qua hình ảnh bến sông trăng",
+        "Khổ ba: không gian mờ ảo, con người xa cách, tình cảm bị sương khói che lấp",
+        "Mạch vận động: từ cái nhìn ra bên ngoài đến tiếng lòng day dứt bên trong",
+        "Câu hỏi để ngỏ cuối bài kết lại toàn bộ mạch cảm xúc bằng nỗi hoài nghi, khát khao"
+      ]
+    },
+    {
+      "stage": "POST",
+      "type": "ESSAY",
+      "segment": null,
+      "prompt": "Viết đoạn văn khoảng 150–300 chữ trình bày cảm nhận của em về vẻ đẹp của thôn Vĩ trong khổ thơ thứ nhất, từ đó nhận xét tình cảm của Hàn Mặc Tử dành cho mảnh đất này.",
+      "rubric": {
+        "chuaDat": "Đoạn văn chưa đủ dung lượng hoặc chép lại ý thơ; chưa nêu được cảm nhận về vẻ đẹp cảnh vật và tình cảm tác giả; còn mắc nhiều lỗi diễn đạt.",
+        "dat": "Đoạn văn đủ dung lượng, nêu được vẻ đẹp tươi sáng, tinh khôi của thôn Vĩ và tình cảm tha thiết, lưu luyến của tác giả; có dẫn chứng, diễn đạt khá mạch lạc.",
+        "sauSac": "Đoạn văn giàu hình ảnh và cảm xúc, phân tích được sự hòa quyện giữa cảnh và người, nhận ra vẻ đẹp vừa thực vừa như hồi tưởng cùng nỗi niềm kín đáo trong câu hỏi mở đầu; lập luận chặt chẽ, không sai lỗi diễn đạt."
+      },
+      "keyPoints": [
+        "Bức tranh thôn Vĩ trong nắng sớm với hàng cau, khu vườn mướt xanh như ngọc",
+        "Vẻ đẹp tinh khôi, tràn đầy sức sống, được cảm nhận bằng con mắt vừa say đắm vừa nuối tiếc",
+        "Con người thấp thoáng sau lá trúc với “mặt chữ điền”, hài hòa, kín đáo, gần gũi",
+        "Tình cảm tha thiết, mong mỏi được trở về của nhà thơ",
+        "Nhận xét: cảnh đẹp gắn với tình người, càng đẹp càng gợi nỗi xa cách"
+      ],
+      "outline": "Mở đoạn: giới thiệu khổ thơ đầu và ấn tượng chung về vẻ đẹp thôn Vĩ. Thân đoạn: (1) Câu hỏi “Sao anh không về chơi thôn Vĩ?” – lời mời, lời trách nhẹ nhàng, cũng là tiếng lòng mong mỏi; (2) Hình ảnh nắng mới lên trên hàng cau, khu vườn “mướt quá xanh như ngọc” – không gian tươi sáng, tinh khôi; (3) Hình ảnh “lá trúc che ngang mặt chữ điền” – con người kín đáo, hòa hợp với cảnh; (4) Nhận xét: cảnh sắc vừa như thực vừa như hồi tưởng, gắn với tình yêu tha thiết và nỗi ngỡ ngàng, xa cách của tác giả. Kết đoạn: khẳng định vẻ đẹp của thôn Vĩ và tình cảm chân thành của Hàn Mặc Tử.",
+      "minWords": 150,
+      "maxWords": 300
+    }
+  ],
+  "games": [
+    {
+      "type": "DETAIL",
+      "title": "Đoán chi tiết",
+      "unlockSegment": 3,
+      "items": [
+        {
+          "text": "Nhìn nắng ___ nắng mới lên.",
+          "options": [
+            "hàng tre",
+            "hàng cau",
+            "hàng xoan",
+            "hàng chuối"
+          ],
+          "answer": 1,
+          "explanation": "Hình ảnh “nắng hàng cau” mở ra bức tranh thôn Vĩ buổi sớm, tươi sáng và thân thuộc."
+        },
+        {
+          "text": "Vườn ai mướt quá ___ như ngọc",
+          "options": [
+            "thắm",
+            "tươi",
+            "xanh",
+            "biếc"
+          ],
+          "answer": 2,
+          "explanation": "Chữ “xanh” gợi màu xanh mướt, óng ả của khu vườn, được ví như ngọc quý."
+        },
+        {
+          "text": "Lá trúc che ngang mặt ___",
+          "options": [
+            "chữ nhất",
+            "chữ tam",
+            "chữ vương",
+            "chữ điền"
+          ],
+          "answer": 3,
+          "explanation": "Khuôn mặt chữ điền sau lá trúc gợi vẻ đẹp kín đáo, hài hoà, đậm chất thôn quê."
+        },
+        {
+          "text": "Dòng nước buồn thiu, ___ lay...",
+          "options": [
+            "hoa bắp",
+            "hoa sen",
+            "hoa cúc",
+            "hoa súng"
+          ],
+          "answer": 0,
+          "explanation": "“Hoa bắp lay” là chi tiết rất đặc trưng của xứ Huế, gợi nhịp lay nhẹ buồn man mác."
+        },
+        {
+          "text": "Thuyền ai đậu bến sông ___ đó,",
+          "options": [
+            "mây",
+            "sương",
+            "trăng",
+            "sao"
+          ],
+          "answer": 2,
+          "explanation": "“Sông trăng” là hình ảnh lãng mạn, gắn với con thuyền chở trăng trong câu hỏi day dứt của thi nhân."
+        }
+      ]
+    }
+  ]
+}

@@ -537,7 +537,7 @@ function CompletionBanner({
 }) {
   if (completion.completedAt) {
     return (
-      <div className="flex animate-pop-in items-center gap-4 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">
+      <div className="flex animate-pop-in items-center gap-4 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-100">
         <Mascot pose="cheer" size={72} label="" />
         Tuyệt vời! Bạn đã hoàn thành tác phẩm này. Xem lại dự đoán ban đầu ở
         phần “Trước khi đọc” nhé.

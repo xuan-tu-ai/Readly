@@ -13,6 +13,7 @@ import type { Prisma, PrismaClient } from "../src/generated/prisma/client";
 import { GENRES, workSearchText } from "../src/lib/catalog";
 import { sanitizeSegmentHtml } from "../src/lib/reading/sanitize";
 import { seedBadges, seedMiniGames } from "./seed-gamification";
+import { seedRealWorks } from "./seed-real-works";
 
 const tagSchema = z.object({
   slug: z.string(),
@@ -109,8 +110,9 @@ export async function seedContent(db: PrismaClient) {
     }
     if (work.status === "PUBLISHED") gamesCreated += await seedMiniGames(db, saved.id, work.genre);
   }
+  const real = await seedRealWorks(db, tagIds);
   const badges = await seedBadges(db);
-  return { tags: tags.length, works: works.length, segmentsCreated, questionsCreated, gamesCreated, badges };
+  return { tags: tags.length, works: works.length, segmentsCreated, questionsCreated, gamesCreated, ...real, badges };
 }
 
 const KEY_POINTS: Record<string, string[]> = {

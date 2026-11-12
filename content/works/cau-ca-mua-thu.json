@@ -1,0 +1,202 @@
+{
+  "slug": "cau-ca-mua-thu",
+  "title": "Câu cá mùa thu (Thu điếu)",
+  "author": "Nguyễn Khuyến",
+  "authorBio": "Nguyễn Khuyến (1835–1909), hiệu Quế Sơn, quê làng Yên Đổ, Bình Lục, Hà Nam; đỗ đầu cả ba kì thi nên được gọi là Tam nguyên Yên Đổ. Sau hơn mười năm làm quan, ông cáo về quê ở ẩn và được xem là nhà thơ của làng cảnh Việt Nam.",
+  "genre": "THO",
+  "difficulty": 1,
+  "estMinutes": 8,
+  "status": "PUBLISHED",
+  "summary": "Bức tranh mùa thu làng quê Bắc Bộ trong trẻo, tĩnh lặng quanh một ao nhỏ, và tâm sự kín đáo của nhà nho ở ẩn ngồi câu cá mà lòng đầy suy tư.",
+  "tags": [
+    "thien-nhien",
+    "que-huong",
+    "tru-tinh",
+    "suy-tu"
+  ],
+  "source": "Văn bản theo sách giáo khoa Ngữ văn (bài thơ chữ Nôm, phạm vi công cộng).",
+  "segments": [
+    {
+      "title": "Câu 1–4: Ao thu",
+      "html": "<p>Ao thu lạnh lẽo nước trong veo,<br />Một chiếc thuyền câu bé tẻo teo.<br />Sóng biếc theo làn hơi gợn tí,<br />Lá vàng trước gió khẽ đưa vèo.</p>"
+    },
+    {
+      "title": "Câu 5–8: Người câu cá",
+      "html": "<p>Tầng mây lơ lửng trời xanh ngắt,<br />Ngõ trúc quanh co khách vắng teo.<br />Tựa gối, ôm cần lâu chẳng được,<br />Cá đâu đớp động dưới chân bèo.</p>"
+    }
+  ],
+  "background": "<p><strong>Tác giả.</strong> Nguyễn Khuyến (1835–1909) đỗ đầu cả ba kì thi Hương, thi Hội, thi Đình nên được gọi là Tam nguyên Yên Đổ. Làm quan hơn mười năm, ông cáo quan về sống ở quê nhà Yên Đổ (Hà Nam) đến cuối đời.</p><p><strong>Hoàn cảnh.</strong> Bài thơ viết bằng chữ Nôm, thuộc chùm ba bài thơ thu nổi tiếng: <em>Thu điếu</em> (câu cá mùa thu), <em>Thu vịnh</em> (vịnh mùa thu), <em>Thu ẩm</em> (uống rượu mùa thu), sáng tác khi ông đã về ở ẩn.</p><p><strong>Thể thơ.</strong> Thất ngôn bát cú Đường luật, gieo vần “eo” (veo, teo, vèo, teo, bèo) tạo cảm giác không gian thu hẹp, tĩnh lặng.</p><p><strong>Khi đọc, hãy để ý:</strong> những từ chỉ mức độ rất nhỏ, rất nhẹ (tẻo teo, gợn tí, khẽ đưa) và tư thế của người ngồi câu ở hai câu cuối.</p>",
+  "questions": [
+    {
+      "stage": "PRE",
+      "type": "PREDICTION",
+      "segment": null,
+      "prompt": "Nhan đề “Câu cá mùa thu” gợi cho em liên tưởng gì về bức tranh làng quê mùa thu và về con người ngồi câu? Em hãy dự đoán vài nét sẽ xuất hiện trong bài thơ.",
+      "required": false
+    },
+    {
+      "stage": "DURING",
+      "type": "MCQ",
+      "segment": 1,
+      "prompt": "Bốn câu đầu của bài thơ đã dựng lên cảnh ao thu bằng những hình ảnh nào?",
+      "options": [
+        "Ao thu nước trong, thuyền câu bé, ngõ trúc quanh co, khách vắng teo",
+        "Ao thu lạnh lẽo, sóng biếc gợn tí, cá đớp động dưới chân bèo",
+        "Ao thu lạnh lẽo, nước trong veo, thuyền câu bé, lá vàng khẽ đưa vèo",
+        "Ao thu nước trong, mây lơ lửng, thuyền câu bé, lá vàng khẽ đưa vèo"
+      ],
+      "correct": 2,
+      "explanation": "Bốn câu đầu chỉ gồm những chi tiết thuộc về ao thu: nước trong veo, chiếc thuyền câu bé tẻo teo, sóng biếc gợn tí, lá vàng khẽ đưa vèo. Ngõ trúc quanh co, khách vắng teo, mây lơ lửng và cá đớp động dưới chân bèo đều thuộc những câu sau, không nằm trong phạm vi bốn câu mở đầu."
+    },
+    {
+      "stage": "DURING",
+      "type": "SHORT",
+      "segment": 1,
+      "prompt": "Tìm những từ ngữ trong bốn câu đầu gợi tả sự nhỏ bé, khẽ nhẹ của cảnh vật và cho biết cách dùng từ ấy mang lại hiệu quả gì cho bức tranh ao thu.",
+      "rubric": {
+        "chuaDat": "Chưa chỉ ra được từ ngữ gợi tả sự nhỏ bé, khẽ nhẹ hoặc có nêu nhưng không gắn với bức tranh ao thu.",
+        "dat": "Chỉ ra được các từ như “bé tẻo teo”, “gợn tí”, “khẽ đưa vèo” và nêu được hiệu quả: gợi không gian nhỏ, yên tĩnh, chuyển động rất nhẹ.",
+        "sauSac": "Chỉ ra đúng hệ thống từ ngữ và phân tích được sự cộng hưởng giữa các từ ấy: cái nhỏ bé, mong manh, khẽ khàng khiến ao thu càng thêm tĩnh lặng, đồng thời hé lộ một hồn người tinh tế, lặng lẽ."
+      },
+      "keyPoints": [
+        "Nước trong veo: mặt ao phẳng lặng, nhìn thấu đáy.",
+        "Chiếc thuyền câu bé tẻo teo: sự vật nhỏ bé, thu nhỏ không gian.",
+        "Sóng biếc theo làn hơi gợn tí: chuyển động chỉ là một làn gợn rất nhẹ.",
+        "Lá vàng trước gió khẽ đưa vèo: sắc thu điểm vào cảnh, động mà như không.",
+        "Hệ thống từ nhỏ nhẹ làm nổi bật vẻ tĩnh lặng, thanh sạch của ao thu."
+      ]
+    },
+    {
+      "stage": "DURING",
+      "type": "MCQ",
+      "segment": 2,
+      "prompt": "Hai câu thơ cuối thể hiện điều gì về tư thế và tâm trạng của người ngồi câu?",
+      "options": [
+        "Người câu chờ lâu nhưng phải ngồi dậy vì cá đớp mạnh dưới chân bèo",
+        "Người câu rời thuyền sang bên bèo để đợi cá đớp lúc trời sắp tối",
+        "Người câu dựa gối nghỉ ngơi vì đã câu được cá dưới chân bèo",
+        "Người câu chờ lâu trong tư thế gần như bất động, chỉ có tiếng cá đớp khẽ phá vỡ sự tĩnh lặng"
+      ],
+      "correct": 3,
+      "explanation": "“Tựa gối, ôm cần lâu chẳng được” cho thấy người câu ngồi rất lâu, giữ nguyên tư thế tựa gối ôm cần; còn tiếng cá đớp động dưới chân bèo chỉ là một tiếng động rất khẽ, càng làm nổi bật sự yên tĩnh của không gian chứ không phải người câu được cá hay phải đổi chỗ ngồi."
+    },
+    {
+      "stage": "DURING",
+      "type": "SHORT",
+      "segment": 2,
+      "prompt": "Hai câu thơ cuối vừa tả cảnh câu cá vừa gợi tâm trạng con người. Hãy phân tích hai câu thơ đó để làm rõ điều ấy.",
+      "rubric": {
+        "chuaDat": "Chưa phân tích được hai câu thơ, chỉ chép lại câu chữ hoặc nêu cảm nhận chung chung.",
+        "dat": "Làm rõ được tư thế “tựa gối, ôm cần lâu” của người câu và tiếng cá đớp dưới chân bèo, thấy được sự tĩnh lặng của cảnh và dáng vẻ lặng lẽ, chờ đợi của con người.",
+        "sauSac": "Phân tích sâu mối quan hệ giữa cảnh và tình: tư thế gần như bất động gợi nỗi chờ mong, trăn trở kín đáo; tiếng cá đớp khẽ càng tôn lên cái tĩnh lặng tuyệt đối và tâm thế ung dung mà uẩn khúc của nhà thơ."
+      },
+      "keyPoints": [
+        "“Tựa gối, ôm cần lâu chẳng được” là tư thế ngồi câu lâu, gần như bất động.",
+        "Thời gian chờ đợi dài mà không có gì biến chuyển, gợi sự lặng lẽ, trầm tư.",
+        "“Cá đâu đớp động dưới chân bèo” là tiếng động rất khẽ của thiên nhiên.",
+        "Tiếng động nhỏ ấy càng làm nổi bật sự yên tĩnh của cảnh thu và nỗi niềm riêng của con người.",
+        "Cảnh và người hòa làm một trong vẻ tĩnh lặng, thanh khiết của mùa thu."
+      ]
+    },
+    {
+      "stage": "POST",
+      "type": "SHORT",
+      "segment": null,
+      "prompt": "Qua bài thơ, em thấy bức tranh mùa thu và con người ngồi câu có mối quan hệ như thế nào? Hãy trình bày bằng một đoạn ngắn.",
+      "rubric": {
+        "chuaDat": "Chưa nêu được mối quan hệ giữa cảnh thu và con người, hoặc chỉ nhắc lại nội dung bài thơ.",
+        "dat": "Nêu được sự gắn bó giữa cảnh vật tĩnh lặng, thanh sạch và dáng vẻ lặng lẽ của người ngồi câu, thấy được cảnh gợi tình.",
+        "sauSac": "Phân tích được sự hòa quyện giữa cảnh và người: cảnh thu nhỏ bé, yên tĩnh phản chiếu tâm hồn tinh tế, trầm mặc, gắn bó với quê hương và những nỗi niềm kín đáo của nhà thơ."
+      },
+      "keyPoints": [
+        "Cảnh ao thu nhỏ bé, trong trẻo, tĩnh lặng.",
+        "Con người hiện lên với tư thế tựa gối ôm cần, lặng lẽ chờ đợi.",
+        "Cảnh và người cùng chung một nhịp tĩnh, một vẻ thanh sạch.",
+        "Cảnh gợi tình: thiên nhiên khẽ khàng phản chiếu tâm trạng con người.",
+        "Bài thơ cho thấy tình yêu quê hương và tấm lòng trầm tư của Nguyễn Khuyến."
+      ]
+    },
+    {
+      "stage": "POST",
+      "type": "ESSAY",
+      "segment": null,
+      "prompt": "Viết một đoạn văn (khoảng 150 – 300 chữ) trình bày cảm nhận của em về vẻ đẹp của bức tranh mùa thu trong bài “Câu cá mùa thu”.",
+      "rubric": {
+        "chuaDat": "Đoạn văn chưa đúng dung lượng, chưa làm nổi bật vẻ đẹp bức tranh mùa thu, chủ yếu kể lại nội dung bài thơ.",
+        "dat": "Đoạn văn đúng dung lượng, nêu được những nét đẹp chính của bức tranh mùa thu: ao nước trong, thuyền câu nhỏ, sóng gợn nhẹ, lá vàng, mây xanh, ngõ trúc; diễn đạt mạch lạc, có cảm xúc.",
+        "sauSac": "Đoạn văn đúng dung lượng, cảm nhận tinh tế vẻ đẹp vừa thanh sạch vừa tĩnh lặng của bức tranh thu, biết chọn và phân tích hình ảnh, từ ngữ đặc sắc, liên hệ được với tâm hồn nhà thơ, hành văn trong sáng, giàu hình ảnh."
+      },
+      "keyPoints": [
+        "Bức tranh mùa thu hiện lên với ao nước trong veo, chiếc thuyền câu bé tẻo teo.",
+        "Sóng biếc gợn tí và lá vàng khẽ đưa vèo tạo nên những chuyển động rất nhẹ.",
+        "Không gian mở lên với tầng mây lơ lửng, trời xanh ngắt, ngõ trúc quanh co, khách vắng teo.",
+        "Sắc thu trong trẻo, thanh sạch, tĩnh lặng và mang hồn quê Bắc Bộ.",
+        "Con người tựa gối ôm cần và tiếng cá đớp khẽ góp phần làm nên vẻ đẹp vừa tĩnh vừa có hồn của bức tranh.",
+        "Qua bức tranh ấy, người đọc cảm nhận tình yêu quê hương và tâm hồn tinh tế của Nguyễn Khuyến."
+      ],
+      "outline": "Mở đoạn: giới thiệu bài thơ “Câu cá mùa thu” và vẻ đẹp bức tranh mùa thu. Thân đoạn: (1) Không gian ao thu nhỏ bé, trong veo với nước trong, thuyền câu bé tẻo teo; (2) Những chuyển động rất nhẹ của sóng biếc gợn tí và lá vàng khẽ đưa vèo; (3) Không gian mở rộng với tầng mây lơ lửng, trời xanh ngắt, ngõ trúc quanh co, khách vắng teo – gợi vẻ tĩnh lặng, thanh sạch; (4) Hình ảnh người câu tựa gối ôm cần và tiếng cá đớp khẽ dưới chân bèo làm bức tranh có hồn. Kết đoạn: khẳng định vẻ đẹp trong trẻo, tĩnh lặng của bức tranh thu và tình yêu quê hương, tâm hồn tinh tế của nhà thơ.",
+      "minWords": 150,
+      "maxWords": 300
+    }
+  ],
+  "games": [
+    {
+      "type": "DETAIL",
+      "title": "Đoán chi tiết",
+      "unlockSegment": 2,
+      "items": [
+        {
+          "text": "Ao thu lạnh lẽo nước ___,",
+          "options": [
+            "mênh mông",
+            "xanh thẳm",
+            "trong veo",
+            "đục ngầu"
+          ],
+          "answer": 2,
+          "explanation": "Nguyễn Khuyến viết “nước trong veo” – vừa tả ao thu trong sạch, vừa gợi cái tĩnh lặng, lạnh lẽo của cảnh thu."
+        },
+        {
+          "text": "Một chiếc thuyền câu bé ___,",
+          "options": [
+            "tẻo teo",
+            "mênh mông",
+            "lênh đênh"
+          ],
+          "answer": 0,
+          "explanation": "“Bé tẻo teo” nhấn mạnh sự nhỏ bé của chiếc thuyền câu, hài hòa với không gian ao thu nhỏ hẹp, tĩnh lặng."
+        },
+        {
+          "text": "Lá vàng trước gió khẽ đưa ___,",
+          "options": [
+            "nhè nhẹ",
+            "chầm chậm",
+            "vèo"
+          ],
+          "answer": 2,
+          "explanation": "“Đưa vèo” gợi chuyển động rất nhẹ, rất nhanh của lá vàng, góp phần tô đậm vẻ tĩnh của bức tranh thu."
+        },
+        {
+          "text": "Ngõ trúc quanh co khách ___,",
+          "options": [
+            "vắng teo",
+            "nhộn nhịp",
+            "mênh mông"
+          ],
+          "answer": 0,
+          "explanation": "“Khách vắng teo” nhấn vào sự vắng lặng, quạnh quẽ của ngõ trúc – nét tiêu biểu của làng quê trong thơ Nguyễn Khuyến."
+        },
+        {
+          "text": "Cá đâu đớp động dưới chân ___.",
+          "options": [
+            "sen",
+            "bèo",
+            "cỏ"
+          ],
+          "answer": 1,
+          "explanation": "“Dưới chân bèo” vẽ đúng mặt ao có bèo; tiếng cá đớp động càng làm nổi bật không gian yên ắng."
+        }
+      ]
+    }
+  ]
+}

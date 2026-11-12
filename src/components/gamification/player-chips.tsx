@@ -21,7 +21,7 @@ export async function PlayerChips({ compact = false }: { compact?: boolean }) {
         <StreakFlame lit={player.streak.today} size={22} />
         {player.streak.current}
       </span>
-      <span className={cn(chip, "text-[#c48508]")}>
+      <span className={cn(chip, "text-[#c48508] dark:text-[#f2c14e]")}>
         <XpIcon size={22} />
         {player.points}
       </span>

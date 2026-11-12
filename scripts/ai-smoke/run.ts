@@ -16,6 +16,7 @@ import {
   buildDraftMatchRequest,
   buildDraftQuestionsRequest,
   buildDraftRubricRequest,
+  rubricComplete,
   type DraftQuestion,
 } from "../../src/lib/ai/drafts";
 import { buildGradingRequest, buildPredictionRequest } from "../../src/server/grading/prompts";
@@ -122,7 +123,7 @@ function checkQuestions(questions: DraftQuestion[], segmentCount: number): strin
       const others = lengths.filter((_, j) => j !== q.correctIndex);
       if (right !== undefined && others.length > 0 && right > 1.4 * Math.max(...others)) problems.push(`${at}: đáp án đúng dài nổi bật`);
     }
-    if ((q.type === "SHORT" || q.type === "ESSAY") && (!q.rubric || !q.keyPoints?.length)) problems.push(`${at}: thiếu rubric/ý chính`);
+    if ((q.type === "SHORT" || q.type === "ESSAY") && (!rubricComplete(q.rubric) || !q.keyPoints?.length)) problems.push(`${at}: thiếu rubric/ý chính`);
     if (q.type === "ESSAY" && !q.outline) problems.push(`${at}: thiếu dàn ý`);
     problems.push(...vietnamese(q.prompt).map((p) => `${at}: ${p}`));
   }

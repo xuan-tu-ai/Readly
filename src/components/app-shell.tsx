@@ -9,6 +9,7 @@ import { PlayerChips, PlayerChipsSkeleton } from "./gamification/player-chips";
 import { NotificationBell, NotificationBellSkeleton } from "./notifications/bell";
 import { Brand } from "./brand";
 import { BottomNav, SideNav, type NavItem } from "./nav-links";
+import { ThemeToggle } from "./theme-toggle";
 
 const NAV: Record<Role, NavItem[]> = {
   STUDENT: [
@@ -17,6 +18,7 @@ const NAV: Record<Role, NavItem[]> = {
     { href: "/student/leaderboard", label: "Xếp hạng", icon: "trophy" },
     { href: "/student/achievements", label: "Thành tích", icon: "award" },
     { href: "/student/class", label: "Lớp học", icon: "users" },
+    { href: "/student/profile", label: "Hồ sơ", icon: "user" },
   ],
   TEACHER: [{ href: "/teacher", label: "Lớp học", icon: "users" }],
   ADMIN: [
@@ -63,6 +65,7 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
                 <NotificationBell />
               </Suspense>
             ) : null}
+            <ThemeToggle />
             <LogoutButton compact />
           </div>
         </header>
@@ -98,6 +101,7 @@ async function UserBlock() {
           <p className="truncate text-xs text-muted-foreground">{user.email}</p>
         </div>
       </div>
+      <ThemeToggle withLabel />
       <LogoutButton />
     </div>
   );

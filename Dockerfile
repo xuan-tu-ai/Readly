@@ -1,4 +1,5 @@
-# One image for the web app, the worker and the migrate job (see docker-compose.yml).
+# One image for the web app and the worker; docker/start.sh picks the process
+# from SERVICE_ROLE (web: migrate + seed-if-empty + next start, worker: pg-boss).
 FROM node:24-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json prisma.config.ts ./
@@ -22,4 +23,4 @@ ENV NODE_ENV=production \
     PORT=3000
 COPY --from=build /app ./
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+CMD ["sh", "docker/start.sh"]

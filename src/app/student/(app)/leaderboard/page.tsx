@@ -89,7 +89,7 @@ async function Leaderboard() {
           ].map(([label, value]) => (
             <li key={label} className="flex items-center justify-between gap-3">
               <span>{label}</span>
-              <span className="flex shrink-0 items-center gap-1 font-extrabold text-[#c48508]">
+              <span className="flex shrink-0 items-center gap-1 font-extrabold text-[#c48508] dark:text-[#f2c14e]">
                 <XpIcon size={18} /> {value}
               </span>
             </li>
@@ -146,7 +146,7 @@ function Row({ row }: { row: LeaderboardRow }) {
         {row.name}
         {row.me ? <span className="ml-2 text-xs font-extrabold text-brand-blue uppercase">Bạn</span> : null}
       </span>
-      <span className="flex items-center gap-1 font-extrabold text-[#c48508] tabular-nums">
+      <span className="flex items-center gap-1 font-extrabold text-[#c48508] dark:text-[#f2c14e] tabular-nums">
         <XpIcon size={20} /> {row.points}
       </span>
     </li>

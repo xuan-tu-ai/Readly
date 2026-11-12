@@ -1,0 +1,187 @@
+{
+  "slug": "thuong-vo",
+  "title": "Thương vợ",
+  "author": "Trần Tế Xương",
+  "authorBio": "Trần Tế Xương (1870–1907), thường gọi là Tú Xương, quê làng Vị Xuyên, Mỹ Lộc, Nam Định. Ông đi thi nhiều lần nhưng chỉ đỗ tú tài; thơ ông gồm hai mảng trào phúng và trữ tình, đều xuất phát từ tấm lòng gắn bó với dân, với nước và với gia đình.",
+  "genre": "THO",
+  "difficulty": 1,
+  "estMinutes": 8,
+  "status": "PUBLISHED",
+  "summary": "Chân dung bà Tú tần tảo buôn bán nuôi cả gia đình, qua cái nhìn vừa thương yêu, biết ơn vừa tự trách của chính người chồng.",
+  "tags": [
+    "gia-dinh",
+    "than-phan",
+    "tru-tinh",
+    "hai-huoc"
+  ],
+  "source": "Văn bản theo sách giáo khoa Ngữ văn (phạm vi công cộng).",
+  "segments": [
+    {
+      "title": "Câu 1–4: Bà Tú tảo tần",
+      "html": "<p>Quanh năm buôn bán ở mom sông,<br />Nuôi đủ năm con với một chồng.<br />Lặn lội thân cò khi quãng vắng,<br />Eo sèo mặt nước buổi đò đông.</p>"
+    },
+    {
+      "title": "Câu 5–8: Đức hi sinh và lời tự trách",
+      "html": "<p>Một duyên hai nợ, âu đành phận,<br />Năm nắng mười mưa, dám quản công.<br />Cha mẹ thói đời ăn ở bạc,<br />Có chồng hờ hững cũng như không!</p>"
+    }
+  ],
+  "background": "<p><strong>Tác giả.</strong> Trần Tế Xương (1870–1907), thường gọi là Tú Xương, sống ở thành Nam (Nam Định). Ông đi thi tám lần, chỉ đỗ tú tài; cả đời gia đình trông vào sự tảo tần của vợ là bà Tú.</p><p><strong>Nhân vật bà Tú.</strong> Bà buôn bán ở bến sông Vị gần nhà để nuôi chồng và các con. Tú Xương viết khá nhiều bài thơ về vợ, trong đó <em>Thương vợ</em> là bài cảm động nhất.</p><p><strong>Từ khó.</strong> <em>Mom sông</em>: phần đất nhô ra ở bờ sông. <em>Eo sèo</em>: tiếng kì kèo, cãi cọ khi mua bán. <em>Một duyên hai nợ</em>: duyên vợ chồng thì ít mà nợ phải gánh thì nhiều. <em>Âu đành phận</em>: đành chấp nhận số phận.</p><p><strong>Thể thơ.</strong> Thất ngôn bát cú Đường luật, vận dụng sáng tạo hình ảnh và thành ngữ dân gian (con cò, năm nắng mười mưa).</p>",
+  "questions": [
+    {
+      "stage": "PRE",
+      "type": "PREDICTION",
+      "segment": null,
+      "prompt": "Nhan đề “Thương vợ” gợi cho em điều gì về nội dung và giọng điệu của bài thơ? Em thử dự đoán: người chồng trong bài sẽ nói về vợ mình bằng tình cảm nào?",
+      "required": false
+    },
+    {
+      "stage": "DURING",
+      "type": "MCQ",
+      "segment": 1,
+      "prompt": "Câu thơ “Nuôi đủ năm con với một chồng” cho thấy điều gì về gánh nặng của bà Tú?",
+      "options": [
+        "Bà Tú nuôi năm con, còn chồng đi buôn bán ở mom sông để phụ giúp thêm.",
+        "Bà Tú nuôi năm con, còn người chồng chỉ lo liệu chuyện chi tiêu trong nhà.",
+        "Gia đình có năm con và một chồng, mọi việc đều do người chồng quán xuyến.",
+        "Bà Tú phải nuôi cả năm con lẫn người chồng, gánh nặng dồn về phía mình."
+      ],
+      "correct": 3,
+      "explanation": "Câu thơ cho thấy bà Tú là lao động chính, phải lo cho cả đàn con và cả người chồng; chữ “đủ” nhấn vào sự vất vả mưu sinh ấy, đồng thời cũng chứa đựng nét tự trào của nhà thơ khi tự xếp mình vào số người được vợ nuôi."
+    },
+    {
+      "stage": "DURING",
+      "type": "SHORT",
+      "segment": 1,
+      "prompt": "Hình ảnh “thân cò” cùng không gian “quãng vắng”, “buổi đò đông” gợi lên cảnh mưu sinh và thân phận bà Tú như thế nào? Trả lời trong 2–3 câu.",
+      "rubric": {
+        "chuaDat": "Chưa nêu được nội dung của hình ảnh thân cò hoặc cảnh buôn bán ở mom sông; có thể chép lại câu thơ mà không giải thích gì.",
+        "dat": "Nêu được hình ảnh “thân cò” gợi thân phận nhỏ bé, vất vả và cảnh buôn bán ở mom sông vừa vắng vẻ vừa đông đúc, chật vật.",
+        "sauSac": "Phân tích được sự hòa kết giữa hình ảnh con cò trong ca dao với cảnh đời thực, thấy đồng thời không gian lao động nguy hiểm, bon chen và tấm thân chịu thương chịu khó của bà Tú; biết gắn với nhan đề “Thương vợ”."
+      },
+      "keyPoints": [
+        "Hình ảnh “thân cò” gợi con người nhỏ bé, lam lũ, thường xuất hiện trong ca dao để nói về thân phận vất vả.",
+        "“Quãng vắng” gợi nơi hẻo lánh, nguy hiểm; “buổi đò đông” gợi sự bon chen, chật chội của cảnh mua bán.",
+        "Các từ láy “lặn lội”, “eo sèo” tô đậm sự chật vật, tảo tần trong công việc mưu sinh của bà Tú."
+      ]
+    },
+    {
+      "stage": "DURING",
+      "type": "MCQ",
+      "segment": 2,
+      "prompt": "Hai câu “Cha mẹ thói đời ăn ở bạc, / Có chồng hờ hững cũng như không!” chủ yếu thể hiện điều gì?",
+      "options": [
+        "Nhà thơ oán trách cha mẹ đã để gia đình mình rơi vào cảnh bạc bẽo, thiếu thốn.",
+        "Nhà thơ mượn chuyện “thói đời” để tự trách mình đã đối xử bạc bẽo với vợ, để vợ có chồng mà như không.",
+        "Nhà thơ cho rằng bà Tú đã hết duyên nợ với chồng nên đành chịu cảnh sống đơn độc.",
+        "Nhà thơ khẳng định tấm lòng chung thủy của bà Tú dù người chồng tỏ ra hờ hững với mình."
+      ],
+      "correct": 1,
+      "explanation": "Đây là lời tự trào, tự trách của Trần Tế Xương: ông mượn chuyện “thói đời” để nhận ra người chồng trong nhà chẳng làm được gì cho vợ, khiến bà Tú có chồng mà cuộc sống chẳng khác người không chồng, qua đó bộc lộ sự thương vợ và cả nỗi chua xót về chính mình."
+    },
+    {
+      "stage": "DURING",
+      "type": "SHORT",
+      "segment": 2,
+      "prompt": "Em hiểu thế nào về cụm từ “dám quản công” trong câu “Năm nắng mười mưa, dám quản công”? Trả lời trong 1–3 câu.",
+      "rubric": {
+        "chuaDat": "Chưa giải thích được nghĩa của “dám quản công”, hoặc hiểu sai thành lời kể công, phàn nàn của bà Tú.",
+        "dat": "Nêu được “dám quản công” nghĩa là không quản ngại, không kể công, đành nhận lấy phần vất vả về mình.",
+        "sauSac": "Giải thích rõ câu thơ vừa nói đức hi sinh của bà Tú vừa mang giọng tự trào của nhà thơ; biết gắn với mạch cảm xúc từ xót thương đến tự trách trong toàn bài."
+      },
+      "keyPoints": [
+        "“Năm nắng mười mưa” gợi công việc mưu sinh dãi nắng dầm mưa, kéo dài quanh năm.",
+        "“Dám quản công” nghĩa là không dám kể công, không quản ngại công sức vất vả — lời khẳng định đức hi sinh, nhẫn nhịn của bà Tú.",
+        "Đằng sau lời nói về phận đành nhận ấy ẩn chứa nỗi day dứt, tự trách mình của tác giả."
+      ]
+    },
+    {
+      "stage": "POST",
+      "type": "SHORT",
+      "segment": null,
+      "prompt": "Qua hình ảnh bà Tú trong hai phân đoạn, em có nhận xét gì về tình cảm của Trần Tế Xương dành cho vợ? Trả lời trong 2–3 câu.",
+      "rubric": {
+        "chuaDat": "Chưa nêu được tình cảm của nhà thơ với vợ, hoặc chỉ nói chung chung về nỗi thương mà không dựa vào chi tiết trong văn bản.",
+        "dat": "Nêu được nhà thơ hiểu và thương vợ trước gánh nặng mưu sinh, đồng thời biết tự trách mình khi để vợ vất vả.",
+        "sauSac": "Chỉ ra được sự hòa quyện giữa xót thương, biết ơn và tự trào, tự trách; thấy đó là tình cảm vừa chân thành vừa mang dấu ấn trào phúng đặc sắc của Trần Tế Xương."
+      },
+      "keyPoints": [
+        "Nhà thơ thấy và hiểu rõ nỗi vất vả, sự tần tảo của vợ ở mom sông.",
+        "Ông trân trọng đức hi sinh, lòng chịu thương chịu khó của bà Tú.",
+        "Tự trách mình là người chồng hờ hững, ăn ở bạc bẽo — nét tự trào đặc trưng của Trần Tế Xương."
+      ]
+    },
+    {
+      "stage": "POST",
+      "type": "ESSAY",
+      "segment": null,
+      "prompt": "Viết một đoạn văn 150–300 chữ cảm nhận về hình ảnh bà Tú trong hai phân đoạn văn bản, qua đó thấy được tình cảm của tác giả.",
+      "rubric": {
+        "chuaDat": "Đoạn văn quá ngắn hoặc chỉ kể, chép lại câu thơ; chưa nêu được vẻ đẹp, nỗi vất vả của bà Tú và tình cảm tác giả.",
+        "dat": "Đoạn văn đúng dung lượng, nêu được cảnh mưu sinh vất vả, đức hi sinh của bà Tú và tình thương của nhà thơ; có dẫn chứng từ văn bản.",
+        "sauSac": "Đoạn văn sâu sắc, kết hợp được cảm nhận về nỗi vất vả, sự nhẫn nhịn và lòng chung thủy của bà Tú với giọng tự trào tự trách của Trần Tế Xương; diễn đạt trôi chảy, có dẫn chứng và cảm xúc chân thực."
+      },
+      "keyPoints": [
+        "Bà Tú là người vợ tần tảo, quanh năm buôn bán ở mom sông, nuôi cả con lẫn chồng.",
+        "Đức hi sinh, nhẫn nhịn: âu đành phận, không quản công, chấp nhận nắng mưa vất vả.",
+        "Tình thương và sự tự trào, tự trách của Trần Tế Xương trước người vợ có chồng mà như không.",
+        "Sự kế thừa hình ảnh con cò ca dao và giọng trào phúng tạo nên vẻ đẹp riêng cho bài thơ."
+      ],
+      "outline": "Mở đoạn: Giới thiệu bài thơ “Thương vợ” và nhân vật trung tâm là bà Tú. Thân đoạn: (1) Nỗi vất vả mưu sinh: quanh năm buôn bán ở mom sông, hình ảnh “thân cò” lận đận, cảnh “quãng vắng”, “buổi đò đông” bon chen; (2) Đức hi sinh và sự nhẫn nhịn: “âu đành phận”, “dám quản công”, chấp nhận nắng mưa, không kể công; (3) Tình cảm của nhà thơ: xót thương, trân trọng vợ và tự trào, tự trách mình qua hai câu “Cha mẹ thói đời…”. Kết đoạn: Khái quát vẻ đẹp của bà Tú và tấm lòng chân thành của Trần Tế Xương.",
+      "minWords": 150,
+      "maxWords": 300
+    }
+  ],
+  "games": [
+    {
+      "type": "DETAIL",
+      "title": "Đoán chi tiết",
+      "unlockSegment": 2,
+      "items": [
+        {
+          "text": "Quanh năm buôn bán ở ___, / Nuôi đủ năm con với một chồng.",
+          "options": [
+            "bến đò",
+            "mom sông",
+            "cửa chợ",
+            "đầu làng"
+          ],
+          "answer": 1,
+          "explanation": "“Mom sông” là mỏm đất nhô ra sát mặt nước ven sông — nơi bà Tú buôn bán quanh năm, vừa nhọc nhằn vừa chênh vênh, không ổn định."
+        },
+        {
+          "text": "Lặn lội thân cò khi ___, / Eo sèo mặt nước buổi đò đông.",
+          "options": [
+            "chợ chiều",
+            "bến sông",
+            "quãng vắng",
+            "đường xa"
+          ],
+          "answer": 2,
+          "explanation": "“Quãng vắng” đối với “đò đông” ở câu dưới: vắng vẻ thì lặn lội một mình, đông đúc thì chen chúc eo sèo — nỗi vất vả đủ cả hai chiều."
+        },
+        {
+          "text": "Một duyên hai nợ, âu đành ___, / Năm nắng mười mưa, dám quản công.",
+          "options": [
+            "thân",
+            "đời",
+            "công",
+            "phận"
+          ],
+          "answer": 3,
+          "explanation": "“Âu đành phận”: đành chấp nhận số phận. “Một duyên hai nợ” – duyên vợ chồng thì ít mà nợ phải gánh thì nhiều, bà Tú nhận hết về mình."
+        },
+        {
+          "text": "Cha mẹ thói đời ăn ở ___, / Có chồng hờ hững cũng như không!",
+          "options": [
+            "dày",
+            "bạc",
+            "lành",
+            "nặng"
+          ],
+          "answer": 1,
+          "explanation": "“Ăn ở bạc” chỉ thói đời bạc bẽo, phụ bạc; câu thơ là lời ông Tú tự trách mình và tự cười mình khi để vợ vất vả."
+        }
+      ]
+    }
+  ]
+}

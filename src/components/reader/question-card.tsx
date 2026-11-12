@@ -226,7 +226,7 @@ function OpenAnswerForm({
           {retry ? `Nộp lại (còn ${question.state.attemptsLeft} lượt)` : "Nộp"}
         </Button>
         {essay ? (
-          <span className={cn("text-xs tabular-nums", words < min || words > max ? "text-muted-foreground" : "text-emerald-700")}>
+          <span className={cn("text-xs tabular-nums", words < min || words > max ? "text-muted-foreground" : "text-emerald-700 dark:text-emerald-400")}>
             {words}/{min}–{max} chữ
           </span>
         ) : null}

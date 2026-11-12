@@ -181,8 +181,9 @@ export async function track(actor: Actor, payload: TrackPayload) {
 
 /** The work the student touched most recently, for "Tiếp tục đọc". */
 export async function getContinueReading(userId: string) {
+  // Finished works are not "continue reading" any more.
   const progress = await db.readingProgress.findFirst({
-    where: { userId, work: { status: "PUBLISHED" } },
+    where: { userId, work: { status: "PUBLISHED", completions: { none: { userId } } } },
     orderBy: { updatedAt: "desc" },
     select: {
       updatedAt: true,

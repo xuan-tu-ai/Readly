@@ -58,7 +58,7 @@ export function AnswerCard({
       <blockquote className="rounded-xl border-l-4 border-brand-blue/50 bg-muted/40 px-3 py-2 whitespace-pre-line">{a.content}</blockquote>
 
       {a.question.type === "MCQ" ? (
-        <p className={cn("text-sm font-bold", a.isCorrect ? "text-[#178a45]" : "text-destructive")}>
+        <p className={cn("text-sm font-bold", a.isCorrect ? "text-[#178a45] dark:text-[#5fd68f]" : "text-destructive")}>
           {a.isCorrect ? "Đúng" : "Sai"}
         </p>
       ) : (

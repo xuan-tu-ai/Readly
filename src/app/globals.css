@@ -106,6 +106,50 @@
   --sidebar-ring: oklch(0.68 0.17 150);
 }
 
+/*
+ * Dark mode ("Tối"): deep ink background, the same leafy green and brand
+ * colours slightly lifted so they keep their contrast. Set on <html> by the
+ * theme script in the root layout (system preference or the user's choice).
+ */
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.2 0.018 260);
+  --foreground: oklch(0.94 0.01 85);
+  --card: oklch(0.245 0.02 260);
+  --card-foreground: oklch(0.94 0.01 85);
+  --popover: oklch(0.26 0.02 260);
+  --popover-foreground: oklch(0.94 0.01 85);
+  --primary: oklch(0.66 0.17 150);
+  --primary-foreground: oklch(1 0 0);
+  --primary-edge: oklch(0.52 0.14 150);
+  --secondary: oklch(0.3 0.045 150);
+  --secondary-foreground: oklch(0.86 0.09 150);
+  --muted: oklch(0.29 0.015 260);
+  --muted-foreground: oklch(0.74 0.02 260);
+  --accent: oklch(0.33 0.05 60);
+  --accent-foreground: oklch(0.87 0.1 65);
+  --brand-orange: oklch(0.74 0.15 60);
+  --brand-orange-edge: oklch(0.56 0.14 50);
+  --brand-blue: oklch(0.68 0.14 245);
+  --brand-blue-edge: oklch(0.5 0.14 250);
+  --brand-purple: oklch(0.68 0.16 300);
+  --brand-pink: oklch(0.72 0.15 0);
+  --brand-yellow: oklch(0.84 0.15 90);
+  --destructive: oklch(0.66 0.2 25);
+  --destructive-edge: oklch(0.48 0.17 25);
+  --border: oklch(0.35 0.02 260);
+  --input: oklch(0.38 0.02 260);
+  --ring: oklch(0.7 0.17 150);
+  --sidebar: oklch(0.225 0.02 260);
+  --sidebar-foreground: oklch(0.86 0.01 260);
+  --sidebar-primary: oklch(0.66 0.17 150);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.32 0.06 240);
+  --sidebar-accent-foreground: oklch(0.86 0.1 235);
+  --sidebar-border: oklch(0.35 0.02 260);
+  --sidebar-ring: oklch(0.7 0.17 150);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

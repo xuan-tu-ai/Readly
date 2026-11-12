@@ -158,9 +158,9 @@ function ReportForm({ answerId, onDone }: { answerId: string; onDone: (m?: strin
 }
 
 export const LEVEL_CHIP: Record<AnswerLevel, string> = {
-  CHUA_DAT: "bg-amber-100 text-amber-900",
-  DAT: "bg-emerald-100 text-emerald-900",
-  SAU_SAC: "bg-violet-100 text-violet-900",
+  CHUA_DAT: "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200",
+  DAT: "bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
+  SAU_SAC: "bg-violet-100 text-violet-900 dark:bg-violet-950 dark:text-violet-200",
 };
 
 export function LevelChip({ level, by, className }: { level: AnswerLevel; by?: string; className?: string }) {

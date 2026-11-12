@@ -238,7 +238,7 @@ export function GameRow({ workId, row, segments }: { workId: string; row: GameRo
       <div className="flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold">{MINI_GAME_LABEL[row.type]}</span>
         <span className="rounded-full border-2 px-2 py-0.5 text-xs font-bold">Mở sau {row.segmentLabel}</span>
-        <span className={cn("text-xs font-bold", row.published ? "text-[#178a45]" : "text-muted-foreground")}>
+        <span className={cn("text-xs font-bold", row.published ? "text-[#178a45] dark:text-[#5fd68f]" : "text-muted-foreground")}>
           {row.published ? "Đã xuất bản" : "Nháp"}
         </span>
         <span className="ml-auto text-xs text-muted-foreground">

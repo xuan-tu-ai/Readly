@@ -3,6 +3,9 @@ name: readly
 x-app-env: &app-env
   DATABASE_URL: postgresql://readly:readly@postgres:5432/readly
   AI_PROVIDER: ${AI_PROVIDER:-mock}
+  OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://tokenharbor.ai/v1}
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  OPENAI_MODEL: ${OPENAI_MODEL:-deepseek-v4.1-flash:free}
   GEMINI_API_KEY: ${GEMINI_API_KEY:-}
   GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
   SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@readly.local}
@@ -54,7 +57,9 @@ services:
   worker:
     build: .
     command: npm run worker
-    environment: *app-env
+    environment:
+      <<: *app-env
+      SERVICE_ROLE: worker
     depends_on:
       migrate:
         condition: service_completed_successfully

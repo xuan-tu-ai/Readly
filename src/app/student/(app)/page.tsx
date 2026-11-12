@@ -156,7 +156,7 @@ async function StudentHome() {
               />
             </div>
           </Link>
-          <div className="flex items-center gap-3 rounded-xl bg-[#fff1e8] px-3 py-2.5">
+          <div className="flex items-center gap-3 rounded-xl bg-[#fff1e8] dark:bg-[#3a2416] px-3 py-2.5">
             <StreakFlame lit={player.streak.today} size={36} />
             <p className="text-sm">
               <span className="font-extrabold">{player.streak.current} ngày streak</span>
@@ -185,7 +185,7 @@ async function StudentHome() {
                   <span className="w-5 text-center font-extrabold text-muted-foreground tabular-nums">{row.rank}</span>
                   <CatAvatar avatar={row.avatar} size={28} label="" />
                   <span className="min-w-0 flex-1 truncate font-semibold">{row.me ? "Bạn" : row.name}</span>
-                  <span className="font-extrabold text-[#c48508] tabular-nums">{row.points}</span>
+                  <span className="font-extrabold text-[#c48508] dark:text-[#f2c14e] tabular-nums">{row.points}</span>
                 </li>
               ))}
             </ol>
