@@ -58,9 +58,12 @@ const SegmentText = memo(function SegmentText({
 export function Reader({
   data,
   startAt,
+  focus,
 }: {
   data: ReaderData;
   startAt?: string;
+  /** A passage to mark (a quote opened from the discussion). */
+  focus?: { segmentId: string; start: number; end: number };
 }) {
   const { work, segments } = data;
   const headerRef = useRef<HTMLElement>(null);
@@ -107,6 +110,21 @@ export function Reader({
   }, [getPosition, jumpTo]);
   const { page, pageCount, turn } = usePager(pagesRef, paged, relayout);
 
+  // A quote opened from the discussion: bring its segment into view, also when
+  // this page is shown again from the router cache (effects re-run then).
+  const focusSegment = focus?.segmentId;
+  useEffect(() => {
+    if (!focusSegment) return;
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => jumpTo({ segmentId: focusSegment, fraction: 0 }));
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
+  }, [focusSegment, jumpTo]);
+
   // ── Questions ──
   const { pre, post, bySegment, owedSegments, completion, submit } =
     useQuestions(data, readIds.size);
@@ -115,6 +133,7 @@ export function Reader({
   const [highlights, setHighlights] = useState<OwnHighlight[]>(data.highlights);
   const { pending, activeId, setActiveId, setPending, clear } = useHighlighter({
     rootRef: articleRef,
+    focus,
     highlights,
   });
   const [busy, startTransition] = useTransition();
@@ -165,6 +184,10 @@ export function Reader({
       clear();
     });
   };
+
+  /** "Thảo luận đoạn này": open the class discussion with the passage quoted. */
+  const discussHref = (span: { segmentId: string; start: number; end: number }) =>
+    `/student/works/${work.slug}/discussion?seg=${span.segmentId}&start=${span.start}&end=${span.end}`;
 
   const jumpToSegment = useCallback(
     (segmentId: string) => jumpTo({ segmentId, fraction: 0 }),
@@ -447,6 +470,7 @@ export function Reader({
           onCancel={clear}
           busy={busy}
           error={error}
+          discussHref={discussHref(pending)}
         />
       ) : active ? (
         <ActiveToolbar
@@ -457,6 +481,7 @@ export function Reader({
           onClose={clear}
           busy={busy}
           error={error}
+          discussHref={discussHref(active)}
         />
       ) : null}
     </div>

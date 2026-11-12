@@ -44,9 +44,12 @@ export function highlightsSupported() {
 export function useHighlighter({
   rootRef,
   highlights,
+  focus,
 }: {
   rootRef: RefObject<HTMLElement | null>;
   highlights: PaintableHighlight[];
+  /** Passage to outline, e.g. a discussion quote opened in the reader. */
+  focus?: PendingSelection;
 }) {
   const [pending, setPending] = useState<PendingSelection | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -89,12 +92,14 @@ export function useHighlighter({
     CSS.highlights.set("hl-active", new Highlight(...active));
     const pendingRange = pending ? modelFor(pending.segmentId)?.toRange(pending.start, pending.end) : null;
     CSS.highlights.set("hl-pending", new Highlight(...(pendingRange ? [pendingRange] : [])));
-  }, [highlights, pending, activeId, modelFor]);
+    const focusRange = focus ? modelFor(focus.segmentId)?.toRange(focus.start, focus.end) : null;
+    CSS.highlights.set("hl-focus", new Highlight(...(focusRange ? [focusRange] : [])));
+  }, [highlights, pending, activeId, focus, modelFor]);
 
   useEffect(() => {
     return () => {
       if (!highlightsSupported()) return;
-      for (const name of [...Object.values(COLOR_REGISTRY), "hl-pending", "hl-active"]) CSS.highlights.delete(name);
+      for (const name of [...Object.values(COLOR_REGISTRY), "hl-pending", "hl-active", "hl-focus"]) CSS.highlights.delete(name);
     };
   }, []);
 

@@ -71,7 +71,7 @@ export function AssignedWorks({ items, earlyBonus }: { items: StudentAssignment[
                       <p className="flex items-start gap-2 rounded-xl bg-brand-orange/10 px-3 py-2 text-sm">
                         <BellRing className="mt-0.5 size-4 shrink-0 text-brand-orange" aria-hidden />
                         <span>
-                          <span className="font-bold">{a.reminder.from ?? "Giáo viên"} nhắc:</span> {a.reminder.body}
+                          <span className="font-bold">{a.reminder.from ?? "Mướp"} nhắc:</span> {a.reminder.body}
                         </span>
                       </p>
                     ) : null}

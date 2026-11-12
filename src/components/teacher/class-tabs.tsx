@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
-import { BarChart3, Highlighter, MessageSquareText, Settings, Users, type LucideIcon } from "lucide-react";
+import { BarChart3, Highlighter, MessageSquareText, MessagesSquare, Settings, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS: { path: string; label: string; icon: LucideIcon }[] = [
@@ -11,6 +11,7 @@ const TABS: { path: string; label: string; icon: LucideIcon }[] = [
   { path: "/students", label: "Học sinh", icon: Users },
   { path: "/answers", label: "Câu trả lời", icon: MessageSquareText },
   { path: "/highlights", label: "Highlight", icon: Highlighter },
+  { path: "/discussions", label: "Thảo luận", icon: MessagesSquare },
   { path: "/settings", label: "Cài đặt lớp", icon: Settings },
 ];
 

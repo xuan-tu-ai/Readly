@@ -7,9 +7,12 @@
 import "dotenv/config";
 import { effectiveLevel, isPassing } from "../src/lib/questions/rules";
 import { db } from "../src/server/db";
+import { setJobSender } from "../src/server/queue";
 import { evaluateBadges, recalculateUser, recordActivity } from "../src/server/services/gamification";
 
 async function main() {
+  // Backfilled badges are old news: keep them in the bell, but send no pushes.
+  setJobSender(async () => {});
   const students = await db.user.findMany({ where: { role: "STUDENT" }, select: { id: true, email: true } });
   for (const student of students) {
     await recalculateUser(student.id);

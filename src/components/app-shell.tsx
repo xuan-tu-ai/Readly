@@ -6,6 +6,7 @@ import { logoutAction } from "@/app/actions/auth";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerChips, PlayerChipsSkeleton } from "./gamification/player-chips";
+import { NotificationBell, NotificationBellSkeleton } from "./notifications/bell";
 import { Brand } from "./brand";
 import { BottomNav, SideNav, type NavItem } from "./nav-links";
 
@@ -53,12 +54,22 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
               <PlayerChips compact />
             </Suspense>
           ) : null}
-          <LogoutButton compact />
+          <div className="flex items-center">
+            {role === "STUDENT" ? (
+              <Suspense fallback={<NotificationBellSkeleton />}>
+                <NotificationBell />
+              </Suspense>
+            ) : null}
+            <LogoutButton compact />
+          </div>
         </header>
         {role === "STUDENT" ? (
-          <div className="sticky top-0 z-10 hidden justify-end border-b-2 bg-background/90 px-10 py-2 backdrop-blur md:flex">
+          <div className="sticky top-0 z-10 hidden items-center justify-end gap-3 border-b-2 bg-background/90 px-10 py-2 backdrop-blur md:flex">
             <Suspense fallback={<PlayerChipsSkeleton />}>
               <PlayerChips />
+            </Suspense>
+            <Suspense fallback={<NotificationBellSkeleton />}>
+              <NotificationBell />
             </Suspense>
           </div>
         ) : null}

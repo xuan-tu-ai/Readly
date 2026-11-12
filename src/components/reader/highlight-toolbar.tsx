@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Lock, Trash2, X } from "lucide-react";
+import Link from "next/link";
+import { Check, Lock, MessageCircleQuestion, Trash2, X } from "lucide-react";
 import type { HighlightColor } from "@/generated/prisma/enums";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
@@ -65,16 +66,26 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function DiscussLink({ href }: { href: string }) {
+  return (
+    <Link href={href} className={buttonVariants({ variant: "outline", size: "sm", className: "w-fit" })}>
+      <MessageCircleQuestion aria-hidden /> Thảo luận đoạn này
+    </Link>
+  );
+}
+
 export function PendingToolbar({
   onPick,
   onCancel,
   busy,
   error,
+  discussHref,
 }: {
   onPick: (color: HighlightColor) => void;
   onCancel: () => void;
   busy: boolean;
   error: string | null;
+  discussHref?: string;
 }) {
   return (
     <Shell>
@@ -85,6 +96,7 @@ export function PendingToolbar({
         </Button>
       </div>
       <ColorPicker onPick={onPick} disabled={busy} />
+      {discussHref ? <DiscussLink href={discussHref} /> : null}
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </Shell>
   );
@@ -97,6 +109,7 @@ export function ActiveToolbar({
   onClose,
   busy,
   error,
+  discussHref,
 }: {
   highlight: ToolbarHighlight;
   onUpdate: (patch: Partial<Pick<ToolbarHighlight, "color" | "note" | "isPrivate">>) => void;
@@ -104,6 +117,7 @@ export function ActiveToolbar({
   onClose: () => void;
   busy: boolean;
   error: string | null;
+  discussHref?: string;
 }) {
   const [note, setNote] = useState(highlight.note ?? "");
   const noteChanged = note.trim() !== (highlight.note ?? "");
@@ -150,6 +164,7 @@ export function ActiveToolbar({
           <Trash2 /> Xóa
         </Button>
       </div>
+      {discussHref ? <DiscussLink href={discussHref} /> : null}
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </Shell>
   );

@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { getAiProvider } from "@/lib/ai";
 import { QUEUES } from "@/server/queue";
+import { pushNotificationsJob } from "@/server/push";
+import { sendDeadlineReminders } from "@/server/services/notifications";
 import { comparePredictionJob, gradeAnswerJob, markGradingFailedJob } from "@/server/services/questions";
 
 /**
@@ -14,6 +16,8 @@ export type JobDefinition<T> = {
   retryLimit?: number;
   /** Queue that receives the job once retries are exhausted. */
   deadLetter?: string;
+  /** Cron expression (Vietnam time) for jobs the worker schedules itself. */
+  cron?: string;
 };
 
 /** Smoke-test job: proves the worker, the queue and the AI provider are wired up. */
@@ -59,7 +63,31 @@ export const comparePrediction: JobDefinition<z.infer<typeof answerPayload>> = {
   handler: ({ answerId }) => comparePredictionJob(answerId),
 };
 
+/** Sends web pushes for freshly stored notifications (no-op without VAPID keys). */
+export const pushNotifications: JobDefinition<{ ids: string[] }> = {
+  name: QUEUES.pushNotifications,
+  schema: z.object({ ids: z.array(z.string().min(1)).min(1) }),
+  retryLimit: 3,
+  handler: ({ ids }) => pushNotificationsJob(ids),
+};
+
+/** Hourly: "còn 2 ngày / còn 1 ngày" reminders for unfinished assigned works. */
+export const deadlineReminders: JobDefinition<object> = {
+  name: QUEUES.deadlineReminders,
+  schema: z.object({}),
+  retryLimit: 2,
+  cron: "5 * * * *",
+  handler: () => sendDeadlineReminders(),
+};
+
 /** Dead-letter targets first: a queue's deadLetter must exist before the queue. */
 // Heterogeneous list: each job validates its own payload with `schema` before `handler` runs.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const jobs: JobDefinition<any>[] = [pingJob, gradeAnswerFailed, gradeAnswer, comparePrediction];
+export const jobs: JobDefinition<any>[] = [
+  pingJob,
+  gradeAnswerFailed,
+  gradeAnswer,
+  comparePrediction,
+  pushNotifications,
+  deadlineReminders,
+];

@@ -8,6 +8,9 @@ x-app-env: &app-env
   SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@readly.local}
   SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
   SEED_DEMO: ${SEED_DEMO:-true}
+  WEB_PUSH_PUBLIC_KEY: ${WEB_PUSH_PUBLIC_KEY:-}
+  WEB_PUSH_PRIVATE_KEY: ${WEB_PUSH_PRIVATE_KEY:-}
+  WEB_PUSH_SUBJECT: ${WEB_PUSH_SUBJECT:-mailto:admin@readly.local}
 
 services:
   postgres:
