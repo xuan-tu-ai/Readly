@@ -14,7 +14,10 @@ const NAV: Record<Role, NavItem[]> = {
     { href: "/student/class", label: "Lớp học", icon: "users" },
   ],
   TEACHER: [{ href: "/teacher", label: "Lớp học", icon: "users" }],
-  ADMIN: [{ href: "/admin", label: "Giáo viên", icon: "shield" }],
+  ADMIN: [
+    { href: "/admin", label: "Giáo viên", icon: "shield" },
+    { href: "/admin/assets", label: "Hình ảnh", icon: "image" },
+  ],
 };
 
 /**
