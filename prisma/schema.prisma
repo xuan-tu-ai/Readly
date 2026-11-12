@@ -302,20 +302,23 @@ enum HighlightColor {
 /// Offsets index into the segment's plain-text model (see src/lib/reading/text-model.ts).
 /// quote/prefix/suffix let us re-anchor the highlight if the text is edited later.
 model Highlight {
-  id        String         @id @default(cuid())
-  userId    String
-  workId    String
-  segmentId String
-  start     Int
-  end       Int
-  quote     String
-  prefix    String
-  suffix    String
-  color     HighlightColor @default(YELLOW)
-  note      String?
-  isPrivate Boolean        @default(false)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id         String         @id @default(cuid())
+  userId     String
+  workId     String
+  segmentId  String
+  start      Int
+  end        Int
+  quote      String
+  prefix     String
+  suffix     String
+  color      HighlightColor @default(YELLOW)
+  note       String?
+  isPrivate  Boolean        @default(false)
+  /// Set when the text was edited and the quote could not be found again
+  /// ("không còn trong văn bản"): kept in the profile, not painted in the reader.
+  orphanedAt DateTime?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   work    Work    @relation(fields: [workId], references: [id], onDelete: Cascade)

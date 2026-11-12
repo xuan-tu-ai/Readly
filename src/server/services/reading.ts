@@ -325,9 +325,10 @@ const highlightSelect = {
 
 export type OwnHighlight = Awaited<ReturnType<typeof listOwnHighlights>>[number];
 
+/** Highlights painted in the reader: orphaned ones (text edited away) are left out. */
 export function listOwnHighlights(userId: string, workId: string) {
   return db.highlight.findMany({
-    where: { userId, workId },
+    where: { userId, workId, orphanedAt: null, segment: { archivedAt: null } },
     orderBy: [{ segment: { order: "asc" } }, { start: "asc" }],
     select: highlightSelect,
   });

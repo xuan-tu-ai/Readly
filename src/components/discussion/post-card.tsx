@@ -59,7 +59,7 @@ export function PostCard({ post, slug, mode }: { post: PostView; slug: string; m
         </div>
       </header>
 
-      {post.quote ? <QuoteBlock quote={post.quote} slug={slug} linked={!teacher} /> : null}
+      {post.quote ? <QuoteBlock quote={post.quote} slug={slug} linked={!teacher && post.quote.segmentId !== null} /> : null}
       <p className="leading-relaxed whitespace-pre-line">{post.body}</p>
 
       <div className="flex flex-wrap items-center gap-2">
