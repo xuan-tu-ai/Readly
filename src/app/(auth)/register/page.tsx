@@ -14,14 +14,14 @@ export default function RegisterPage() {
         <RedirectIfSignedIn />
       </Suspense>
       <CardHeader>
-        <CardTitle>Đăng ký học sinh</CardTitle>
+        <CardTitle className="font-heading text-2xl font-semibold">Đăng ký học sinh</CardTitle>
         <CardDescription>Bạn cần mã lớp do giáo viên cung cấp.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <RegisterForm />
         <p className="text-center text-sm text-muted-foreground">
           Đã có tài khoản?{" "}
-          <Link href="/login" className="font-medium text-primary underline-offset-4 hover:underline">
+          <Link href="/login" className="font-bold text-primary underline-offset-4 hover:underline">
             Đăng nhập
           </Link>
         </p>

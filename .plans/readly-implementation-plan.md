@@ -14,7 +14,8 @@
 | 2 | Mô hình nội dung + seed 45 tác phẩm + thư viện + test sở thích | 1 tuần | 1 | §3.1, §3.5, §4 |
 | 3 | Trang đọc: phân đoạn, tuỳ chỉnh, vị trí, theo dõi đọc, tô sáng | 1,5 tuần | 2 | §5 |
 | 4 | Câu hỏi & AI: trắc nghiệm, tự luận, hàng đợi chấm, hoàn thành | 1,5 tuần | 3 | §6, §9 |
-| 5 | Game hóa: điểm, cấp độ, streak, huy hiệu, BXH, mini game | 1 tuần | 4 | §8 |
+| 4.5 | Giao diện: design system, linh vật Mướp, onboarding, lộ trình phân đoạn, nền đọc & lật trang | 1 tuần | 4 | §4, §5, §12 |
+| 5 | Game hóa: điểm, cấp độ, streak, huy hiệu, BXH, mini game | 1 tuần | 4.5 | §8 |
 | 6 | Giáo viên: giao bài, dashboard, can thiệp AI, xuất .xlsx | 1,5 tuần | 4, 5 | §6.5, §10 |
 | 7 | Thảo luận + thông báo (in-app, web push, cron nhắc hạn) | 1 tuần | 6 | §7, §11 |
 | 8 | Admin: CRUD, import .docx, chia phân đoạn, AI soạn nháp, sửa & neo lại highlight | 1,5 tuần | 4 | §3.2–3.4, §5.2, §13 |
@@ -84,6 +85,19 @@ Task:
 
 **Xong khi:** unit test giới hạn lượt, điều kiện hoàn thành, parse JSON lỗi → retry; tắt mạng/Gemini → câu pending rồi được chấm khi bật lại; chạy thật với Gemini cho 1 tác phẩm seed.
 **Cắt nếu trễ:** phản hồi AI cho dự đoán (chỉ hiển thị lại dự đoán).
+
+## Giai đoạn 4.5 – Giao diện (thêm sau khi duyệt cảm hứng Waka / Duolingo / Brilliant)
+Cảm hứng: nền sáng, vui và có linh vật kiểu Duolingo/Brilliant cho học sinh; thư viện và trình đọc mượn kiểu Waka (kệ bìa sách, tuỳ chỉnh nền đọc).
+
+Task:
+- Design system: bảng màu ấm (xanh lá chính, cam linh vật), tiêu đề serif, nút "3D" có viền đáy, thẻ bo tròn viền dày; giáo viên/admin dùng chung nhưng tiết chế.
+- Linh vật mèo **Mướp**: SVG tự vẽ tách bộ phận, animate bằng CSS (chào, nghĩ, cổ vũ, buồn, ngủ, đọc), tôn trọng `prefers-reduced-motion`.
+- Khung học sinh: sidebar icon màu (desktop), thanh tab dưới (điện thoại); trang chủ có lời chào, thẻ "đang đọc", thống kê tuần.
+- Thư viện kiểu Waka: hero carousel, kệ cuộn ngang theo thể loại; trang tác phẩm có **lộ trình phân đoạn** (chỉ hiển thị, không khóa).
+- Onboarding từng bước kiểu Brilliant cho bài test sở thích; đăng ký xong vào thẳng onboarding.
+- Trình đọc toàn màn hình: ảnh nền, chọn kiểu chữ, chế độ **lật trang** (tuỳ chọn, mặc định cuộn) giữ đúng theo dõi đọc & tô sáng.
+
+**Xong khi:** lint/typecheck/test/build sạch; kiểm tra trên trình duyệt desktop + điện thoại cho các màn học sinh, trình đọc ở cả hai chế độ.
 
 ## Giai đoạn 5 – Game hóa
 Task:

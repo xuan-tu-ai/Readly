@@ -3,10 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
-import { Home, Library, Shield, Users, type LucideIcon } from "lucide-react";
+import { BookOpenText, Home, Shield, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const ICONS = { home: Home, library: Library, users: Users, shield: Shield } satisfies Record<string, LucideIcon>;
+const ICONS = {
+  home: { icon: Home, tone: "bg-brand-orange text-white" },
+  library: { icon: BookOpenText, tone: "bg-primary text-white" },
+  users: { icon: Users, tone: "bg-brand-blue text-white" },
+  shield: { icon: Shield, tone: "bg-brand-purple text-white" },
+} satisfies Record<string, { icon: LucideIcon; tone: string }>;
 
 export type NavItem = { href: string; label: string; icon: keyof typeof ICONS };
 
@@ -53,12 +58,12 @@ function NavView({ items, variant, isActive }: { items: NavItem[]; variant: Vari
       aria-label="Điều hướng chính"
       className={
         side
-          ? "mt-6 grid gap-1"
-          : "fixed inset-x-0 bottom-0 z-20 flex border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden"
+          ? "mt-8 grid gap-2"
+          : "fixed inset-x-0 bottom-0 z-20 flex justify-around border-t-2 bg-card px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] md:hidden"
       }
     >
       {items.map((item) => {
-        const Icon = ICONS[item.icon];
+        const { icon: Icon, tone } = ICONS[item.icon];
         const active = isActive(item.href);
         return (
           <Link
@@ -66,16 +71,19 @@ function NavView({ items, variant, isActive }: { items: NavItem[]; variant: Vari
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
+              "border-2 border-transparent transition-colors",
               side
-                ? "flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors hover:bg-sidebar-accent"
-                : "flex flex-1 flex-col items-center gap-1 py-2 text-xs text-muted-foreground",
+                ? "flex items-center gap-4 rounded-xl px-3 py-2.5 text-sm font-bold tracking-wide text-sidebar-foreground uppercase hover:bg-muted"
+                : "flex flex-col items-center gap-0.5 rounded-xl px-4 py-1 text-[0.7rem] font-bold text-muted-foreground",
               active &&
                 (side
-                  ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-                  : "font-medium text-primary"),
+                  ? "border-sidebar-accent-foreground/40 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent"
+                  : "border-sidebar-accent-foreground/30 bg-sidebar-accent text-sidebar-accent-foreground"),
             )}
           >
-            <Icon className={side ? "size-4" : "size-5"} aria-hidden />
+            <span className={cn("grid size-8 place-items-center rounded-lg", tone, !active && !side && "opacity-80")}>
+              <Icon className="size-[18px]" aria-hidden strokeWidth={2.5} />
+            </span>
             {item.label}
           </Link>
         );

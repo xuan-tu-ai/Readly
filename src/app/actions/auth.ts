@@ -35,7 +35,7 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
     return toFormError(error, formData);
   }
   await signIn(userId);
-  redirect("/student");
+  redirect("/student/quiz?welcome=1");
 }
 
 export async function logoutAction(): Promise<void> {
