@@ -1,5 +1,6 @@
 import { GeminiProvider } from "./gemini";
 import { MockProvider } from "./mock";
+import { mockComparePrediction, mockGrade } from "./mock-responders";
 import { AiConfigError, type AiProvider } from "./types";
 
 export * from "./types";
@@ -8,6 +9,8 @@ export { GeminiProvider, MockProvider };
 /** Mock responders shared by tests and demo mode. Later phases register their tasks here. */
 export const defaultMockResponders: ConstructorParameters<typeof MockProvider>[0] = {
   ping: () => ({ ok: true }),
+  "grade-answer": mockGrade,
+  "compare-prediction": mockComparePrediction,
 };
 
 export function createAiProvider(env: Record<string, string | undefined> = process.env): AiProvider {

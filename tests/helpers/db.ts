@@ -6,7 +6,7 @@ import type { Actor } from "@/lib/roles";
 /** Empties every table between tests (keeps the schema and pg-boss tables). */
 export async function resetDatabase() {
   await db.$executeRawUnsafe(
-    `TRUNCATE "Highlight", "ReadingTime", "SegmentRead", "ReadingProgress", "QuizResult", "Segment", "WorkTag", "Tag", "Work", "Session", "ClassMembership", "UserSettings", "Class", "User" RESTART IDENTITY CASCADE`,
+    `TRUNCATE "WorkCompletion", "Answer", "Question", "Highlight", "ReadingTime", "SegmentRead", "ReadingProgress", "QuizResult", "Segment", "WorkTag", "Tag", "Work", "Session", "ClassMembership", "UserSettings", "Class", "User" RESTART IDENTITY CASCADE`,
   );
 }
 

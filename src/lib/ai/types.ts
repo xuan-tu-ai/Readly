@@ -14,6 +14,8 @@ export type StructuredRequest<T> = {
   system: string;
   prompt: string;
   schema: z.ZodType<T>;
+  /** Structured inputs for the offline MockProvider only; never sent to a real model. */
+  mockHint?: unknown;
 };
 
 export interface AiProvider {

@@ -9,7 +9,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
-import type { PrismaClient } from "../src/generated/prisma/client";
+import type { Prisma, PrismaClient } from "../src/generated/prisma/client";
 import { GENRES, workSearchText } from "../src/lib/catalog";
 import { sanitizeSegmentHtml } from "../src/lib/reading/sanitize";
 
@@ -89,6 +89,7 @@ export async function seedContent(db: PrismaClient) {
   const tagIds = new Map((await db.tag.findMany({ select: { id: true, slug: true } })).map((t) => [t.slug, t.id]));
 
   let segmentsCreated = 0;
+  let questionsCreated = 0;
   for (const { tags: workTags, ...work } of works) {
     const data = { ...work, coverUrl: work.coverUrl ?? null, searchText: workSearchText(work) };
     const saved = await db.work.upsert({ where: { slug: work.slug }, update: data, create: data });
@@ -101,6 +102,110 @@ export async function seedContent(db: PrismaClient) {
       await db.segment.createMany({ data: segments.map((s) => ({ ...s, workId: saved.id })) });
       segmentsCreated += segments.length;
     }
+    if (work.status === "PUBLISHED" && (await db.question.count({ where: { workId: saved.id } })) === 0) {
+      questionsCreated += await seedPlaceholderQuestions(db, saved.id, work);
+    }
   }
-  return { tags: tags.length, works: works.length, segmentsCreated };
+  return { tags: tags.length, works: works.length, segmentsCreated, questionsCreated };
+}
+
+const KEY_POINTS: Record<string, string[]> = {
+  THO: ["gió qua hàng tre", "nắng vàng trên đê"],
+  KICH: ["lời thoại của nhân vật", "chỉ dẫn sân khấu ánh đèn"],
+  default: ["bố cục trang đọc", "cỡ chữ và khoảng cách dòng"],
+};
+
+const GENERIC_RUBRIC = {
+  chuaDat: "Trả lời chung chung, chưa dựa vào văn bản.",
+  dat: "Nêu được ít nhất một ý đúng, có dẫn chứng từ văn bản.",
+  sauSac: "Nêu đủ các ý chính, dẫn chứng cụ thể và có cảm nhận riêng.",
+};
+
+/** Clearly-marked placeholder questions so the reading flow can be tried end to end. */
+export async function seedPlaceholderQuestions(db: PrismaClient, workId: string, work: Pick<SeedWork, "title" | "genre">) {
+  const segments = await db.segment.findMany({ where: { workId, archivedAt: null }, orderBy: { order: "asc" } });
+  const keyPoints = KEY_POINTS[work.genre] ?? KEY_POINTS.default;
+
+  await db.work.update({
+    where: { id: workId },
+    data: {
+      background: sanitizeSegmentHtml(
+        `<p><em>[Thẻ kiến thức nền giữ chỗ]</em></p><p>Tác giả và hoàn cảnh sáng tác của “${work.title}” sẽ được giới thiệu ở đây khi có nội dung thật.</p>`,
+      ),
+    },
+  });
+
+  const data: Prisma.QuestionCreateManyInput[] = [
+    {
+      workId,
+      stage: "PRE",
+      type: "PREDICTION",
+      order: 1,
+      required: false,
+      prompt: `[Câu hỏi mẫu] Đọc nhan đề “${work.title}”, bạn đoán tác phẩm sẽ nói về điều gì?`,
+    },
+  ];
+
+  segments.forEach((segment, i) => {
+    const n = segment.order;
+    if (i % 2 === 0) {
+      data.push({
+        workId,
+        segmentId: segment.id,
+        stage: "DURING",
+        type: "MCQ",
+        order: 1,
+        prompt: `[Câu hỏi mẫu] Bạn vừa đọc phân đoạn thứ mấy của tác phẩm?`,
+        options: [
+          { id: "a", text: `Phân đoạn ${n + 1}` },
+          { id: "b", text: `Phân đoạn ${n}` },
+          { id: "c", text: `Phân đoạn ${n + 2}` },
+        ],
+        correctOptionId: "b",
+        explanation: `Tiêu đề phân đoạn ghi rõ đây là phần ${n}.`,
+      });
+    } else {
+      data.push({
+        workId,
+        segmentId: segment.id,
+        stage: "DURING",
+        type: "SHORT",
+        order: 1,
+        prompt: `[Câu hỏi mẫu] Chi tiết nào trong phân đoạn ${n} gây ấn tượng với bạn? Vì sao?`,
+        rubric: GENERIC_RUBRIC,
+        keyPoints,
+      });
+    }
+  });
+
+  data.push(
+    {
+      workId,
+      stage: "POST",
+      type: "SHORT",
+      order: 1,
+      prompt: "[Câu hỏi mẫu] Tác phẩm muốn gửi gắm điều gì? Trả lời trong 2–3 câu.",
+      rubric: GENERIC_RUBRIC,
+      keyPoints,
+    },
+    {
+      workId,
+      stage: "POST",
+      type: "ESSAY",
+      order: 2,
+      prompt: `[Đề mẫu] Viết đoạn văn 150–300 chữ nêu cảm nhận của em về “${work.title}”.`,
+      outline: [
+        "Mở đoạn: giới thiệu tác phẩm và ấn tượng chung.",
+        "Thân đoạn: phân tích 1–2 chi tiết tiêu biểu, có dẫn chứng.",
+        "Kết đoạn: điều em rút ra.",
+      ].join("\n"),
+      rubric: GENERIC_RUBRIC,
+      keyPoints,
+      minWords: 150,
+      maxWords: 300,
+    },
+  );
+
+  const { count } = await db.question.createMany({ data });
+  return count;
 }

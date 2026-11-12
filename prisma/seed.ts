@@ -60,7 +60,7 @@ async function main() {
 
     const content = await seedContent(db);
     console.log(
-      `✔ Nội dung mẫu: ${content.works} tác phẩm, ${content.tags} tag, ${content.segmentsCreated} phân đoạn mới`,
+      `✔ Nội dung mẫu: ${content.works} tác phẩm, ${content.tags} tag, ${content.segmentsCreated} phân đoạn mới, ${content.questionsCreated} câu hỏi mới`,
     );
   } finally {
     await db.$disconnect();

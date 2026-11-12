@@ -15,7 +15,13 @@ async function main() {
   await boss.start();
 
   for (const job of jobs) {
-    await boss.createQueue(job.name, { retryLimit: job.retryLimit ?? 3, retryBackoff: true });
+    const options = {
+      retryLimit: job.retryLimit ?? 3,
+      retryBackoff: true,
+      ...(job.deadLetter ? { deadLetter: job.deadLetter } : {}),
+    };
+    if (await boss.getQueue(job.name)) await boss.updateQueue(job.name, options);
+    else await boss.createQueue(job.name, options);
     await boss.work(job.name, async ([incoming]) => {
       const data = job.schema.parse(incoming.data);
       const result = await job.handler(data);
