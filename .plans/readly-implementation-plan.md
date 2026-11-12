@@ -175,6 +175,12 @@ Task:
 - AI soạn nháp: bộ câu hỏi 3 giai đoạn, rubric + ý chính cho một câu, mini game (chỉ dùng văn bản đến phân đoạn mở khóa). Có câu trả lời mẫu cho `AI_PROVIDER=mock`.
 - Câu hỏi / mini game đã có học sinh dùng thì không xóa được (giữ điểm), chỉ bỏ bắt buộc / bỏ xuất bản; huy hiệu đã trao thì khóa điều kiện. Đổi bảng điểm sẽ tính lại sổ cái của mọi học sinh.
 
+## Giai đoạn 8.5 – Chạy thật các tính năng AI (Token Harbor)
+- Thêm `AI_PROVIDER=openai`: gọi `/chat/completions` của máy chủ tương thích OpenAI bằng `fetch` (không thêm thư viện), gửi JSON Schema qua `response_format` và cả trong system prompt, kiểm tra bằng zod. 429/5xx/quá thời gian/JSON sai → thử lại; 400/401/403/404 → lỗi cấu hình, không thử lại.
+- `npm run ai:smoke`: chạy mọi tác vụ AI với bộ mẫu cố định ("Câu cá mùa thu" + đoạn văn xuôi tự viết, bài làm mẫu tốt/trung bình/kém/chèn lệnh), báo độ khớp mức chấm và các lỗi định dạng. Không chạy trong CI.
+- Kết quả với `deepseek-v4.1-flash:free`: chấm khớp mức mong đợi 14/14 (kể cả bài chèn lệnh), 0 lỗi sau khi sửa. Ba model miễn phí khác cũng chấm 14/14 nhưng soạn bộ câu hỏi hay quá thời gian.
+- Sửa sau khi chạy thật: model đôi khi chép lại lược đồ (bỏ khóa `$schema`, dặn không chép); prompt câu MCQ yêu cầu phương án sai hợp lý, độ dài tương đương, không gọi phương án bằng chữ cái; câu tự luận AI soạn thiếu rubric thì soạn bù rubric riêng (trước đây làm hỏng cả lần thêm).
+
 ## Giai đoạn 9 – Hoàn thiện & bàn giao
 Task:
 - Trang chủ HS (tiếp tục đọc, bài giao + hạn, gợi ý, huy hiệu mới, streak, cấp độ); hồ sơ đọc (highlight lọc màu/tác phẩm, huy hiệu, lịch sử, điểm).
@@ -190,7 +196,7 @@ Task:
 ## Rủi ro & cách xử lý
 | Rủi ro | Xử lý |
 |---|---|
-| Quota/độ trễ Gemini khi demo | `AI_PROVIDER=mock`; hàng đợi chấm sau |
+| Quota/độ trễ AI khi demo | `AI_PROVIDER=mock`; hàng đợi chấm sau; model miễn phí có thể chậm (soạn bộ câu hỏi 30–60 giây) |
 | Chọn văn bản trên mobile (word-snap, iOS Safari) khó | Làm sớm ở giai đoạn 3, test trên máy thật; dự phòng chạm-theo-câu |
 | Soạn nội dung 3–5 tác phẩm tốn thời gian | Bắt đầu chọn tác phẩm + soạn câu hỏi từ giai đoạn 2, dùng AI soạn nháp |
 | Web push trên iOS cần PWA đã cài | Ghi rõ trong README; in-app là kênh chính |

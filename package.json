@@ -17,7 +17,8 @@
     "db:generate": "prisma generate",
     "postinstall": "prisma generate",
     "icons": "node scripts/generate-app-icons.mjs",
-    "gamification:backfill": "tsx scripts/backfill-gamification.ts"
+    "gamification:backfill": "tsx scripts/backfill-gamification.ts",
+    "ai:smoke": "tsx scripts/ai-smoke/run.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

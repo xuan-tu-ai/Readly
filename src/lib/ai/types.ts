@@ -19,7 +19,7 @@ export type StructuredRequest<T> = {
 };
 
 export interface AiProvider {
-  readonly name: "gemini" | "mock";
+  readonly name: "gemini" | "openai" | "mock";
   generateStructured<T>(request: StructuredRequest<T>): Promise<T>;
 }
 

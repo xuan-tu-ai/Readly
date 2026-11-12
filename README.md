@@ -8,7 +8,7 @@ Web đọc 45 tác phẩm văn học lớp 12 với hướng dẫn đọc bằng
 
 ## Công nghệ
 
-Next.js 16 (App Router, Cache Components) · TypeScript · PostgreSQL + Prisma 7 · pg-boss (hàng đợi trên Postgres) · Google Gemini (có chế độ mock) · Tailwind CSS 4 + shadcn/ui · Vitest.
+Next.js 16 (App Router, Cache Components) · TypeScript · PostgreSQL + Prisma 7 · pg-boss (hàng đợi trên Postgres) · AI qua giao thức tương thích OpenAI (Token Harbor…) hoặc Google Gemini, có chế độ mock · Tailwind CSS 4 + shadcn/ui · Vitest.
 
 ## Chạy local
 
@@ -60,7 +60,8 @@ src/server/auth/     phiên đăng nhập lưu DB, cookie, mật khẩu (argon2)
 src/server/authz.ts  quy tắc phân quyền (GV chỉ thấy HS đang ở lớp mình)
 src/server/services/ nghiệp vụ: tài khoản, lớp học
 src/server/jobs/     định nghĩa job chạy nền
-src/lib/ai/          lớp AI: GeminiProvider, MockProvider
+src/lib/ai/          lớp AI: OpenAiCompatibleProvider, GeminiProvider, MockProvider
+scripts/ai-smoke/    chạy thử mọi tác vụ AI với model thật (npm run ai:smoke)
 worker/              tiến trình pg-boss
 tests/               unit + integration (Vitest)
 ```
@@ -71,7 +72,9 @@ tests/               unit + integration (Vitest)
 |---|---|
 | `DATABASE_URL` | Postgres của app |
 | `TEST_DATABASE_URL` | Postgres cho integration test |
-| `AI_PROVIDER` | `mock` (mặc định, không cần mạng) hoặc `gemini` |
+| `AI_PROVIDER` | `mock` (mặc định, không cần mạng), `openai` (máy chủ tương thích OpenAI) hoặc `gemini` |
+| `OPENAI_BASE_URL`, `OPENAI_API_KEY`, `OPENAI_MODEL` | dùng khi `AI_PROVIDER=openai`, ví dụ Token Harbor: `https://tokenharbor.ai/v1`, `deepseek-v4.1-flash:free` |
+| `OPENAI_JSON_MODE`, `OPENAI_TIMEOUT_MS` | tùy chọn: `json_object` cho máy chủ không hỗ trợ structured outputs; thời gian chờ (mặc định 120000) |
 | `GEMINI_API_KEY`, `GEMINI_MODEL` | dùng khi `AI_PROVIDER=gemini` |
 | `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` | tài khoản admin do seed tạo |
 | `SEED_DEMO` | `true` để seed giáo viên + lớp demo |

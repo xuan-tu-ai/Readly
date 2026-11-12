@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import * as ai from "@/lib/ai";
+import { defaultMockResponders, MockProvider } from "@/lib/ai";
 import type { Actor } from "@/lib/roles";
 import { buildSegments } from "@/lib/content/segmenter";
 import { questionInputSchema } from "@/lib/content/schemas";
@@ -55,6 +57,8 @@ async function importedPoem(actor: Actor) {
   const segments = await db.segment.findMany({ where: { workId: id, archivedAt: null }, orderBy: { order: "asc" } });
   return { id, slug: (await db.work.findUniqueOrThrow({ where: { id } })).slug, segments };
 }
+
+afterEach(() => vi.restoreAllMocks());
 
 describe("works", () => {
   it("creates a draft with a slug from the title and refuses to publish without text", async () => {
@@ -181,6 +185,23 @@ describe("questions", () => {
     const inputs = drafts.map((d) => questionInputSchema.parse(draftToInput(d, bySegment)));
     expect(await addDraftQuestions(a.actor, poem.id, inputs)).toBe(drafts.length);
     expect(await db.question.count({ where: { workId: poem.id, stage: "DURING", segmentId: poem.segments[1].id } })).toBeGreaterThan(0);
+  });
+
+  it("fills in the rubric when the model drafts an open question without one", async () => {
+    const a = await admin();
+    const poem = await importedPoem(a.actor);
+    const essay = {
+      stage: "POST", segment: null, type: "ESSAY", prompt: "Cảm nhận của em về bài thơ?",
+      options: null, correctIndex: null, explanation: null, rubric: null, keyPoints: null, outline: "Mở – thân – kết",
+    };
+    vi.spyOn(ai, "getAiProvider").mockReturnValue(
+      new MockProvider({ ...defaultMockResponders, "draft-questions": () => ({ questions: [essay] }) }),
+    );
+    const [draft] = await draftQuestions(a.actor, poem.id);
+    expect(draft.rubric?.dat).toBeTruthy();
+    expect(draft.keyPoints?.length).toBeGreaterThan(0);
+    const input = questionInputSchema.parse(draftToInput(draft, new Map()));
+    expect(await addDraftQuestions(a.actor, poem.id, [input])).toBe(1);
   });
 });
 
