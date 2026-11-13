@@ -16,7 +16,12 @@ Web đọc văn học lớp 12 có hướng dẫn đọc bằng AI: học sinh �
 | 20 học sinh mẫu trong lớp | `hs01@demo.readly.local` … `hs20@demo.readly.local` | `readly-hs-123` |
 | Admin | `admin@readly.local` | giá trị `SEED_ADMIN_PASSWORD` (không công khai) |
 
-Học sinh mới có thể tự đăng ký ở `/register`, nhập mã lớp `DEMO12` để vào lớp demo.
+Học sinh mới có thể tự đăng ký ở `/register`, nhập mã lớp `DEMO12` để vào lớp demo. Giáo viên còn có **mã QR của lớp** ở trang Cài đặt lớp: học sinh quét là mở trang đăng ký với mã lớp điền sẵn.
+
+**Cài như ứng dụng:** trang chủ có nút **Cài ứng dụng** (trong app thì nằm cạnh nút Giao diện):
+- Android, máy tính (Chrome/Edge): bấm là hiện hộp cài một chạm.
+- iPhone/iPad: hiện hướng dẫn Chia sẻ → Thêm vào MH chính.
+- Trên máy tính, trang chủ có mã QR để mở Readly trên điện thoại.
 
 **Gợi ý demo:**
 1. Đăng nhập học sinh → trang chủ (đang đọc, bài được giao, streak, xếp hạng) → **Hồ sơ** (lịch sử đọc, highlight lọc theo màu/tác phẩm).
@@ -117,7 +122,8 @@ content/works/       tác phẩm có toàn văn (JSON: văn bản, câu hỏi, m
 content/             tags.json, works.sample.json (tác phẩm giữ chỗ)
 docker/              start.sh (entrypoint), init DB cho Postgres local
 prisma/              schema, migrations, seed (nội dung, huy hiệu, lớp demo)
-src/app/             route theo vai: (auth) /login /register, /student, /teacher, /admin
+src/app/             trang chủ (landing), route theo vai: (auth) /login /register, /student, /teacher, /admin
+src/components/landing/  minh họa động của trang chủ (ảnh tách lớp trong art/, chuyển động bằng CSS)
 src/app/actions/     server actions (luôn kiểm tra phiên + quyền trước khi gọi service)
 src/server/auth/     phiên đăng nhập lưu DB, cookie, mật khẩu (argon2), DAL
 src/server/authz.ts  quy tắc phân quyền (GV chỉ thấy HS đang ở lớp mình)

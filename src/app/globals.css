@@ -220,6 +220,38 @@
 @keyframes m-read { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 @keyframes m-float { 0%, 100% { transform: translateY(0); opacity: 0.9; } 50% { transform: translateY(-6px); opacity: 1; } }
 
+/* ───────────── Landing hero (two scenes of layered art) ─────────────
+ * Every layer runs on the same 12 s cycle: scene A pops in, idles, pops out;
+ * then scene B does the same. `scale` (pop) and `translate`/`rotate` (bob) are
+ * separate properties, so the two animations never fight over `transform`. */
+
+.hero-layer {
+  position: absolute;
+  scale: 0;
+  transform-origin: 50% 85%;
+  animation:
+    var(--pop) 12s var(--d, 0s) infinite both,
+    hero-bob var(--bob, 3.4s) ease-in-out var(--d, 0s) infinite alternate;
+}
+.hero-a { --pop: hero-pop-a; }
+.hero-b { --pop: hero-pop-b; }
+@keyframes hero-pop-a {
+  0% { scale: 0; animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+  6% { scale: 1; }
+  44% { scale: 1; animation-timing-function: ease-in; }
+  48%, 100% { scale: 0; }
+}
+@keyframes hero-pop-b {
+  0%, 50% { scale: 0; animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+  56% { scale: 1; }
+  94% { scale: 1; animation-timing-function: ease-in; }
+  98%, 100% { scale: 0; }
+}
+@keyframes hero-bob {
+  from { translate: 0 0; rotate: var(--r0, -2deg); }
+  to { translate: 0 var(--dy, -4%); rotate: var(--r1, 2deg); }
+}
+
 /* ───────────── Celebration (confetti, sunburst) ───────────── */
 
 .confetti-piece {
@@ -244,6 +276,8 @@
   .sunburst { animation: none; }
   .mascot, .mascot * { animation: none !important; }
   .animate-rise-in, .animate-pop-in, .animate-pulse-ring { animation: none; }
+  .hero-layer { animation: none; }
+  .hero-a { scale: 1; }
 }
 /* ───────────── Reader ───────────── */
 

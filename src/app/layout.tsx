@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, Lora, Noto_Serif } from "next/font/google";
+import { INSTALL_SCRIPT } from "@/lib/install";
 import { THEME_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
@@ -42,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     // The theme script adds "dark" to <html> before hydration; React must not undo it.
     <html lang="vi" className={`${sans.variable} ${reading.variable} ${lora.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: `${THEME_SCRIPT};${INSTALL_SCRIPT}` }} />
       </head>
       <body className="min-h-full bg-background font-sans text-foreground">{children}</body>
     </html>

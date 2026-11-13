@@ -1,10 +1,12 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { PageSkeleton } from "@/components/app-shell";
+import { QrCode } from "@/components/qr-code";
 import { ClassCodeControls } from "@/components/teacher/class-controls";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { setLeaderboardAction } from "@/app/actions/gamification";
+import { requestOrigin } from "@/server/qr";
 import { loadClass } from "../load";
 
 export const metadata: Metadata = { title: "Cài đặt lớp" };
@@ -20,21 +22,38 @@ export default function ClassSettingsPage({ params }: PageProps<"/teacher/classe
 async function ClassSettings({ params }: Pick<PageProps<"/teacher/classes/[classId]/settings">, "params">) {
   const { classId } = await params;
   const { cls } = await loadClass(classId);
+  const joinUrl = `${await requestOrigin()}/register?code=${encodeURIComponent(cls.code)}`;
   return (
     <div className="grid max-w-2xl gap-6">
       <Card>
-        <CardHeader>
-          <CardDescription>Mã lớp</CardDescription>
-          <CardTitle className="font-mono text-3xl tracking-[0.3em]">{cls.code}</CardTitle>
-          <CardDescription>
-            {cls.codeActive
-              ? "Học sinh dùng mã này để đăng ký hoặc chuyển vào lớp."
-              : "Mã đang bị khóa – không ai đăng ký thêm được."}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ClassCodeControls classId={cls.id} codeActive={cls.codeActive} />
-        </CardContent>
+        <div className="grid gap-(--card-spacing) sm:grid-cols-[1fr_auto] sm:items-start">
+          <div className="grid gap-(--card-spacing)">
+            <CardHeader>
+              <CardDescription>Mã lớp</CardDescription>
+              <CardTitle className="font-mono text-3xl tracking-[0.3em]">{cls.code}</CardTitle>
+              <CardDescription>
+                {cls.codeActive
+                  ? "Học sinh dùng mã này để đăng ký hoặc chuyển vào lớp."
+                  : "Mã đang bị khóa – không ai đăng ký thêm được."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ClassCodeControls classId={cls.id} codeActive={cls.codeActive} />
+            </CardContent>
+          </div>
+          {cls.codeActive ? (
+            <figure className="mx-(--card-spacing) grid justify-items-center gap-2 sm:ml-0">
+              <QrCode
+                value={joinUrl}
+                label={`Mã QR đăng ký vào lớp ${cls.name}`}
+                className="w-44 border-2 border-border sm:w-36"
+              />
+              <figcaption className="max-w-44 text-center text-xs text-muted-foreground sm:max-w-36">
+                Học sinh quét để đăng ký, mã lớp được điền sẵn.
+              </figcaption>
+            </figure>
+          ) : null}
+        </div>
       </Card>
 
       <Card>
