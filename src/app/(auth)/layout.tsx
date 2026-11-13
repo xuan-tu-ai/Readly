@@ -19,7 +19,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             Câu hỏi gợi mở, nhận xét từ AI và người bạn mèo Mướp luôn đọc cùng bạn.
           </p>
         </div>
-        <p className="relative text-sm opacity-75">Readly · đồ án kỹ thuật</p>
       </aside>
       <main className="flex flex-col items-center justify-center gap-6 px-4 py-10">
         <div className="flex flex-col items-center gap-2 lg:hidden">
