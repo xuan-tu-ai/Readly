@@ -5,23 +5,21 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { THEME_KEY, type ThemeMode } from "@/lib/theme";
 
-const ORDER: ThemeMode[] = ["system", "light", "dark"];
-const LABEL: Record<ThemeMode, string> = { system: "Theo máy", light: "Sáng", dark: "Tối" };
-const ICON = { system: Monitor, light: Sun, dark: Moon } satisfies Record<ThemeMode, unknown>;
+const ORDER: ThemeMode[] = ["light", "dark"];
+const LABEL: Record<ThemeMode, string> = {light: "Sáng", dark: "Tối" };
+const ICON = { light: Sun, dark: Moon } satisfies Record<ThemeMode, unknown>;
 const CHANGE = "readly-theme-change";
 
 function read(): ThemeMode {
   try {
-    const value = localStorage.getItem(THEME_KEY);
-    return value === "light" || value === "dark" ? value : "system";
+    return localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark";
   } catch {
-    return "system";
+    return "dark";
   }
 }
 
 function apply(mode: ThemeMode) {
-  const dark = mode === "dark" || (mode === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.classList.toggle("dark", dark);
+  document.documentElement.classList.toggle("dark", mode === "dark");
 }
 
 function subscribe(onChange: () => void) {
@@ -33,26 +31,19 @@ function subscribe(onChange: () => void) {
   };
 }
 
-/** Cycles Theo máy → Sáng → Tối. The choice lives in localStorage (per device). */
+/** Toggles between Tối and Sáng. The choice lives in localStorage (per device). */
 export function ThemeToggle({ withLabel = false }: { withLabel?: boolean }) {
-  const mode = useSyncExternalStore(subscribe, read, () => "system" as ThemeMode);
+  const mode = useSyncExternalStore(subscribe, read, () => "dark" as ThemeMode);
 
-  // Follow the system setting live while in "Theo máy".
   useEffect(() => {
     apply(mode);
-    if (mode !== "system") return;
-    const media = matchMedia("(prefers-color-scheme: dark)");
-    const onChange = () => apply("system");
-    media.addEventListener("change", onChange);
-    return () => media.removeEventListener("change", onChange);
   }, [mode]);
 
-  const next = ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length];
+  const next: ThemeMode = mode === "dark" ? "light" : "dark";
   const Icon = ICON[mode];
   const choose = () => {
     try {
-      if (next === "system") localStorage.removeItem(THEME_KEY);
-      else localStorage.setItem(THEME_KEY, next);
+      localStorage.setItem(THEME_KEY, next);
     } catch {
       // Storage blocked: the change still applies to this page.
     }
