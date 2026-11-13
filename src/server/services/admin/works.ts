@@ -121,7 +121,6 @@ export async function updateWork(actor: Actor, id: string, input: WorkInput) {
         difficulty: input.difficulty,
         estMinutes: input.estMinutes,
         status: input.status,
-        coverUrl: input.coverUrl,
         background: input.background ? sanitizeSegmentHtml(input.background) : null,
         searchText: workSearchText(input),
       },

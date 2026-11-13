@@ -18,7 +18,6 @@ type WorkValues = {
   difficulty: number;
   estMinutes: number;
   status: WorkStatus;
-  coverUrl: string | null;
   background: string | null;
   tags: string[];
 };
@@ -90,13 +89,6 @@ export function WorkInfoForm({
       >
         <textarea id="w-background" name="background" rows={4} className={`${areaClass} font-mono text-xs`} defaultValue={v("background")} />
       </Labeled>
-      <Field
-        label="Ảnh bìa (đường dẫn, không bắt buộc)"
-        name="coverUrl"
-        placeholder="https://… hoặc /covers/…"
-        defaultValue={v("coverUrl")}
-        error={e.coverUrl}
-      />
       <fieldset className="grid gap-2">
         <legend className="mb-1 text-sm font-medium">Tag (dùng cho bài test sở thích)</legend>
         {(["THEME", "MOOD"] as const).map((kind) => (

@@ -177,6 +177,24 @@ describe("sample content seed", () => {
     }
   });
 
+  it("gives the real works their covers from content/covers, without replacing an admin's choice", async () => {
+    await seedContent(db);
+    const works = await db.work.findMany({
+      where: { slug: { in: loadRealWorks().map((w) => w.slug) } },
+      include: { coverImage: { select: { mime: true } } },
+    });
+    expect(works).toHaveLength(4);
+    for (const work of works) {
+      expect(work.coverUrl).toMatch(new RegExp(`^/api/covers/${work.id}\\?v=\\d+$`));
+      expect(work.coverImage?.mime).toBe("image/webp");
+    }
+
+    const chosen = works[0];
+    await db.work.update({ where: { id: chosen.id }, data: { coverUrl: "https://example.com/bia.jpg" } });
+    await seedContent(db);
+    expect((await db.work.findUniqueOrThrow({ where: { id: chosen.id } })).coverUrl).toBe("https://example.com/bia.jpg");
+  });
+
   it("marks placeholder text clearly", () => {
     const [segment] = placeholderSegments({ title: "Bài thơ mẫu 01", genre: "THO" });
     expect(segment.content).toContain("Văn bản giữ chỗ");

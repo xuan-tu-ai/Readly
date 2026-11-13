@@ -39,12 +39,6 @@ export const workInputSchema = z.object({
   difficulty: int("Độ khó", 1, 3),
   estMinutes: int("Thời lượng", 1, 2000),
   status: z.enum(["DRAFT", "PUBLISHED", "COMING_SOON"]),
-  coverUrl: z
-    .string()
-    .trim()
-    .max(500)
-    .refine((v) => !v || /^(https?:\/\/|\/)/.test(v), { error: "Ảnh bìa phải là đường dẫn http(s) hoặc bắt đầu bằng /." })
-    .transform((v) => v || null),
   /** "Trước khi đọc" card; HTML, sanitised on save. */
   background: optionalText(6000),
   tags: z.array(z.string().min(1)).max(20).default([]),
@@ -188,3 +182,11 @@ export const badgeInputSchema = z
     if (b.rule !== "WORK_COMPLETED" && !b.threshold) ctx.addIssue({ code: "custom", path: ["threshold"], message: "Nhập số N." });
   });
 export type BadgeInput = z.infer<typeof badgeInputSchema>;
+
+/** A linked cover (instead of an uploaded one); empty removes the cover. */
+export const coverLinkSchema = z
+  .string()
+  .trim()
+  .max(500)
+  .refine((v) => !v || /^(https?:\/\/|\/)/.test(v), { error: "Ảnh bìa phải là đường dẫn http(s) hoặc bắt đầu bằng /." })
+  .transform((v) => v || null);

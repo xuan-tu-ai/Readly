@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { PageSkeleton } from "@/components/app-shell";
+import { CoverEditor } from "@/components/admin/cover-editor";
 import { DeleteWorkForm, NewTagForm, WorkInfoForm } from "@/components/admin/work-info-form";
 import { getAdminWork, listTags } from "@/server/services/admin/works";
 import { loadForAdmin } from "./load";
@@ -33,7 +34,6 @@ async function Info({ params }: Pick<PageProps<"/admin/works/[id]">, "params">) 
             difficulty: work.difficulty,
             estMinutes: work.estMinutes,
             status: work.status,
-            coverUrl: work.coverUrl,
             background: work.background,
             tags: work.tags.map((t) => t.slug),
           }}
@@ -42,6 +42,10 @@ async function Info({ params }: Pick<PageProps<"/admin/works/[id]">, "params">) 
         />
       </section>
       <aside className="grid gap-4">
+        <section className="grid gap-3 rounded-2xl border-2 bg-card p-5" aria-label="Ảnh bìa">
+          <h2 className="text-base font-semibold">Ảnh bìa</h2>
+          <CoverEditor work={{ id: work.id, title: work.title, genre: work.genre, coverUrl: work.coverUrl }} />
+        </section>
         <section className="grid gap-2 rounded-2xl border-2 bg-card p-5 text-sm">
           <h2 className="text-base font-semibold">Số liệu</h2>
           <p>{work.segments.length} phân đoạn đang dùng</p>

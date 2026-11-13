@@ -5,7 +5,7 @@
  * hand. Idempotent: metadata is upserted; segments, questions and games are
  * only created for a work that has none yet.
  */
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 import type { Prisma, PrismaClient } from "../src/generated/prisma/client";
@@ -100,6 +100,22 @@ export function loadRealWorks(dir = path.resolve(process.cwd(), "content", "work
     });
 }
 
+/**
+ * content/covers/<slug>.webp (already 600×900 WebP) becomes the work's uploaded
+ * cover, unless the work already has a cover an admin chose.
+ */
+async function seedCover(db: PrismaClient, workId: string, slug: string, coverUrl: string | null) {
+  const file = path.resolve(process.cwd(), "content", "covers", `${slug}.webp`);
+  if (coverUrl || !existsSync(file)) return;
+  const image = await db.workCoverImage.upsert({
+    where: { workId },
+    create: { workId, data: new Uint8Array(readFileSync(file)), mime: "image/webp" },
+    update: { data: new Uint8Array(readFileSync(file)), mime: "image/webp" },
+    select: { updatedAt: true },
+  });
+  await db.work.update({ where: { id: workId }, data: { coverUrl: `/api/covers/${workId}?v=${image.updatedAt.getTime()}` } });
+}
+
 export async function seedRealWorks(db: PrismaClient, tagIds: Map<string, string>) {
   const works = loadRealWorks();
   let created = 0;
@@ -121,6 +137,7 @@ export async function seedRealWorks(db: PrismaClient, tagIds: Map<string, string
     const saved = await db.work.upsert({ where: { slug: w.slug }, update: meta, create: meta });
     await db.workTag.deleteMany({ where: { workId: saved.id } });
     await db.workTag.createMany({ data: w.tags.map((slug) => ({ workId: saved.id, tagId: tagIds.get(slug)! })) });
+    await seedCover(db, saved.id, w.slug, saved.coverUrl);
 
     if ((await db.segment.count({ where: { workId: saved.id } })) === 0) {
       await db.segment.createMany({

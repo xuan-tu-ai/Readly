@@ -164,7 +164,8 @@ model Work {
   status     WorkStatus @default(DRAFT)
   /// "Trước khi đọc" background card (author, context) – sanitised HTML.
   background String?
-  /// Optional cover image; a generated placeholder cover is shown when null.
+  /// Optional cover image (an uploaded one is served from /api/covers/<id>);
+  /// a generated placeholder cover is shown when null.
   coverUrl   String?
   /// Lower-case, diacritic-free "title author" for accent-insensitive search.
   searchText String
@@ -181,8 +182,19 @@ model Work {
   miniGames   MiniGame[]
   assignments Assignment[]
   posts       Post[]
+  coverImage  WorkCoverImage?
 
   @@index([status, genre])
+}
+
+/// Cover uploaded by an admin: stored in Postgres (the Railway disk is wiped on
+/// every deploy), already resized to 600×900 WebP.
+model WorkCoverImage {
+  workId    String   @id
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  data      Bytes
+  mime      String
+  updatedAt DateTime @updatedAt
 }
 
 model Tag {
