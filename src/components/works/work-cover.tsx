@@ -33,7 +33,7 @@ type Props = {
  * gradient, pattern, icon and title) until real covers exist.
  */
 export function WorkCover({ title, genre, coverUrl, className }: Props) {
-  const shape = "relative aspect-[3/4] w-full overflow-hidden rounded-l-md rounded-r-xl shadow-[0_6px_16px_-6px_rgb(0_0_0/0.35)]";
+  const shape = "relative aspect-[2/3] w-full overflow-hidden rounded-l-md rounded-r-xl shadow-[0_6px_16px_-6px_rgb(0_0_0/0.35)]";
   const spine = (
     <span
       aria-hidden
@@ -52,10 +52,10 @@ export function WorkCover({ title, genre, coverUrl, className }: Props) {
   const { bg, icon: Icon } = STYLE[genre];
   return (
     <div aria-hidden className={cn(shape, "@container text-white", className)} style={{ background: bg }}>
-      <svg className="absolute inset-0 size-full opacity-20" preserveAspectRatio="none" viewBox="0 0 100 133">
+      <svg className="absolute inset-0 size-full opacity-20" preserveAspectRatio="none" viewBox="0 0 100 150">
         <circle cx="92" cy="12" r="30" fill="white" />
-        <circle cx="8" cy="120" r="22" fill="white" />
-        <path d="M0 92 Q50 72 100 96" stroke="white" strokeWidth="1.5" fill="none" />
+        <circle cx="8" cy="136" r="22" fill="white" />
+        <path d="M0 104 Q50 82 100 108" stroke="white" strokeWidth="1.5" fill="none" />
       </svg>
       {spine}
       <div className="relative flex h-full flex-col justify-between p-[9%] pl-[13%]">

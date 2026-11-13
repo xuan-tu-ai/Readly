@@ -27,7 +27,7 @@ Học sinh mới có thể tự đăng ký ở `/register`, nhập mã lớp `DE
 1. Đăng nhập học sinh → trang chủ (đang đọc, bài được giao, streak, xếp hạng) → **Hồ sơ** (lịch sử đọc, highlight lọc theo màu/tác phẩm).
 2. Mở "Hai đứa trẻ" → đọc tiếp, tô sáng, trả lời câu tự luận → AI chấm sau vài giây.
 3. Đăng nhập giáo viên → lớp 12A1 → tiến độ bài giao, câu trả lời (duyệt nhận xét AI), bản đồ highlight, thảo luận, xuất báo cáo .xlsx.
-4. Đăng nhập admin → Tác phẩm (sửa văn bản, nhập .docx, AI soạn câu hỏi), Báo cáo AI, Điểm & huy hiệu.
+4. Đăng nhập admin → Tác phẩm (ảnh bìa, sửa văn bản, nhập .docx, AI soạn câu hỏi), Báo cáo AI, Điểm & huy hiệu.
 
 ## Nội dung
 
@@ -36,6 +36,7 @@ Học sinh mới có thể tự đăng ký ở `/register`, nhập mã lớp `DE
   - *Thương vợ* – Trần Tế Xương
   - *Đây thôn Vĩ Dạ* – Hàn Mặc Tử
   - *Hai đứa trẻ* – Thạch Lam
+- **Ảnh bìa:** tỉ lệ 2:3 như bìa sách. Admin tải ảnh JPG/PNG/WebP (tối đa 5 MB) ở trang sửa tác phẩm; server cắt giữa về 600×900 WebP và lưu trong Postgres (ổ đĩa Railway bị xóa mỗi lần deploy). 4 tác phẩm có toàn văn có sẵn bìa vẽ bằng AI trong `content/covers/`, được seed vào DB mới.
 - **45 tác phẩm giữ chỗ** (`content/works.sample.json`): tên và văn bản mẫu để thư viện đủ thể loại; thay bằng nội dung thật qua trang admin (nhập .docx) hoặc sửa file.
 
 ## Kiến trúc

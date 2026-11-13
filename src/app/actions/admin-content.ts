@@ -8,6 +8,7 @@ import type { DraftQuestion } from "@/lib/ai/drafts";
 import { type ImportDraft } from "@/lib/content/segmenter";
 import {
   badgeInputSchema,
+  coverLinkSchema,
   gameInputSchema,
   importSegmentsSchema,
   newWorkSchema,
@@ -19,9 +20,11 @@ import {
   type QuestionInput,
 } from "@/lib/content/schemas";
 import { requireUser } from "@/server/auth/dal";
+import { MAX_COVER_BYTES } from "@/server/content/cover-image";
 import { MAX_DOCX_BYTES, draftFromDocx } from "@/server/content/docx";
 import { DomainError } from "@/server/errors";
 import { createBadge, deleteBadge, resolveAiReport, updateBadge, updatePointTable } from "@/server/services/admin/gamification";
+import { removeWorkCover, setCoverLink, setWorkCover } from "@/server/services/admin/covers";
 import { createGame, deleteGame, draftGame, updateGame } from "@/server/services/admin/games";
 import {
   addDraftQuestions,
@@ -87,6 +90,39 @@ export async function updateWorkAction(_prev: FormState, formData: FormData): Pr
   } catch (error) {
     return toFormError(error, formData);
   }
+}
+
+/** Uploads a cover picture (resized to 600×900 WebP on the server). */
+export async function uploadCoverAction(formData: FormData): Promise<ActionResult<string>> {
+  const user = await requireUser("ADMIN");
+  const file = formData.get("cover");
+  if (!(file instanceof File) || file.size === 0) return { ok: false, error: "Chọn một ảnh bìa." };
+  if (file.size > MAX_COVER_BYTES) return { ok: false, error: "Ảnh bìa tối đa 5 MB." };
+  const result = await run(async () => setWorkCover(user, String(formData.get("id") ?? ""), Buffer.from(await file.arrayBuffer())));
+  if (result.ok) refresh();
+  return result;
+}
+
+export async function setCoverLinkAction(workId: string, url: string): Promise<ActionResult<null>> {
+  const user = await requireUser("ADMIN");
+  const parsed = coverLinkSchema.safeParse(url);
+  if (!parsed.success) return { ok: false, error: firstIssue(parsed.error) };
+  const result = await run(async () => {
+    await setCoverLink(user, workId, parsed.data);
+    return null;
+  });
+  if (result.ok) refresh();
+  return result;
+}
+
+export async function removeCoverAction(workId: string): Promise<ActionResult<null>> {
+  const user = await requireUser("ADMIN");
+  const result = await run(async () => {
+    await removeWorkCover(user, workId);
+    return null;
+  });
+  if (result.ok) refresh();
+  return result;
 }
 
 export async function deleteWorkAction(_prev: FormState, formData: FormData): Promise<FormState> {
