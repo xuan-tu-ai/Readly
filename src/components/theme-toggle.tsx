@@ -11,9 +11,9 @@ const CHANGE = "readly-theme-change";
 
 function read(): ThemeMode {
   try {
-    return localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark";
+    return localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light";
   } catch {
-    return "dark";
+    return "light";
   }
 }
 
@@ -30,9 +30,9 @@ function subscribe(onChange: () => void) {
   };
 }
 
-/** Toggles between Tối and Sáng. The choice lives in localStorage (per device). */
+/** Toggles between Sáng (default) and Tối. The choice lives in localStorage (per device). */
 export function ThemeToggle({ withLabel = false }: { withLabel?: boolean }) {
-  const mode = useSyncExternalStore(subscribe, read, () => "dark" as ThemeMode);
+  const mode = useSyncExternalStore(subscribe, read, () => "light" as ThemeMode);
 
   useEffect(() => {
     apply(mode);
