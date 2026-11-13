@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { THEME_KEY, type ThemeMode } from "@/lib/theme";
 
-const ORDER: ThemeMode[] = ["light", "dark"];
-const LABEL: Record<ThemeMode, string> = {light: "Sáng", dark: "Tối" };
+const LABEL: Record<ThemeMode, string> = { light: "Sáng", dark: "Tối" };
 const ICON = { light: Sun, dark: Moon } satisfies Record<ThemeMode, unknown>;
 const CHANGE = "readly-theme-change";
 

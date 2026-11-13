@@ -109,7 +109,7 @@
 /*
  * Dark mode ("Tối"): deep ink background, the same leafy green and brand
  * colours slightly lifted so they keep their contrast. Set on <html> by the
- * theme script in the root layout (system preference or the user's choice).
+ * theme script in the root layout: dark unless the user picked "Sáng".
  */
 .dark {
   color-scheme: dark;
