@@ -6,7 +6,8 @@ import { Field, FormAlert, SubmitButton } from "@/components/form-fields";
 import { initialFormState } from "@/lib/form-state";
 import { CLASS_CODE_LENGTH, PASSWORD_MIN } from "@/lib/validation";
 
-export function RegisterForm() {
+/** `classCode` comes from a class QR link and is pre-filled. */
+export function RegisterForm({ classCode }: { classCode?: string } = {}) {
   const [state, formAction] = useActionState(registerAction, initialFormState);
   const errors = state.fieldErrors ?? {};
   const values = state.values ?? {};
@@ -20,9 +21,9 @@ export function RegisterForm() {
         maxLength={CLASS_CODE_LENGTH + 2}
         className="[&_input]:uppercase [&_input]:tracking-widest"
         required
-        defaultValue={values.classCode}
+        defaultValue={values.classCode ?? classCode}
         error={errors.classCode}
-        hint={`${CLASS_CODE_LENGTH} ký tự, ví dụ: DEMO12`}
+        hint={classCode ? "Đã điền sẵn từ mã QR của lớp." : `${CLASS_CODE_LENGTH} ký tự, ví dụ: DEMO12`}
       />
       <Field label="Họ và tên" name="name" autoComplete="name" required defaultValue={values.name} error={errors.name} />
       <Field

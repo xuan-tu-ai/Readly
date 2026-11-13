@@ -9,6 +9,7 @@ import { PlayerChips, PlayerChipsSkeleton } from "./gamification/player-chips";
 import { NotificationBell, NotificationBellSkeleton } from "./notifications/bell";
 import { Brand } from "./brand";
 import { BottomNav, SideNav, type NavItem } from "./nav-links";
+import { InstallApp } from "./install-app";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV: Record<Role, NavItem[]> = {
@@ -52,7 +53,7 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-2 border-b-2 bg-background/90 px-3 py-2 backdrop-blur md:hidden">
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-1 min-[400px]:gap-2 border-b-2 bg-background/90 px-3 py-2 backdrop-blur md:hidden">
           <Brand className={role === "STUDENT" ? "[&_span]:hidden min-[420px]:[&_span]:inline [&_span]:text-xl [&_svg]:size-7" : "[&_span]:text-xl [&_svg]:size-7"} />
           {role === "STUDENT" ? (
             <Suspense fallback={<PlayerChipsSkeleton />}>
@@ -65,6 +66,7 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
                 <NotificationBell />
               </Suspense>
             ) : null}
+            <InstallApp variant="icon" />
             <ThemeToggle />
             <LogoutButton compact />
           </div>
@@ -101,6 +103,7 @@ async function UserBlock() {
           <p className="truncate text-xs text-muted-foreground">{user.email}</p>
         </div>
       </div>
+      <InstallApp variant="menu" />
       <ThemeToggle withLabel />
       <LogoutButton />
     </div>
