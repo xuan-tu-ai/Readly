@@ -1,45 +1,47 @@
-# Biến môi trường
+# Configuration
 
-Bản local đọc từ `.env` (sao chép từ `.env.example`). Trên Railway, đặt các biến này cho **cả web và worker**, trừ khi ghi khác.
+<sub>English · [Tiếng Việt](vi/configuration.md)</sub>
 
-## Cơ sở dữ liệu
+Locally, settings come from `.env` (copy `.env.example`). On Railway, set them on **both web and worker** unless noted otherwise.
 
-| Biến | Ý nghĩa |
+## Database
+
+| Variable | Meaning |
 |---|---|
-| `DATABASE_URL` | Postgres của app. Trên Railway: `${{Postgres.DATABASE_URL}}`. |
-| `TEST_DATABASE_URL` | Postgres cho integration test (chỉ cần ở máy dev và CI). |
+| `DATABASE_URL` | The app's Postgres. On Railway: `${{Postgres.DATABASE_URL}}`. |
+| `TEST_DATABASE_URL` | Postgres for integration tests (only on dev machines and in CI). |
 
 ## AI
 
-| Biến | Ý nghĩa |
+| Variable | Meaning |
 |---|---|
-| `AI_PROVIDER` | `mock` (mặc định, không cần mạng), `openai` (máy chủ tương thích OpenAI) hoặc `gemini`. |
-| `OPENAI_BASE_URL`, `OPENAI_API_KEY`, `OPENAI_MODEL` | Dùng khi `AI_PROVIDER=openai`. Ví dụ Token Harbor: `https://tokenharbor.ai/v1`, model `deepseek-v4.1-flash-1017-fast`. |
-| `OPENAI_JSON_MODE` | Tùy chọn: `json_object` cho máy chủ không hỗ trợ structured outputs. |
-| `OPENAI_TIMEOUT_MS` | Thời gian chờ mỗi lần gọi, mặc định `120000`. |
-| `GEMINI_API_KEY`, `GEMINI_MODEL` | Dùng khi `AI_PROVIDER=gemini`. |
+| `AI_PROVIDER` | `mock` (default, offline), `openai` (any OpenAI-compatible server) or `gemini`. |
+| `OPENAI_BASE_URL`, `OPENAI_API_KEY`, `OPENAI_MODEL` | Used when `AI_PROVIDER=openai`. Example for Token Harbor: `https://tokenharbor.ai/v1`, model `deepseek-v4.1-flash-1017-fast`. |
+| `OPENAI_JSON_MODE` | Optional: `json_object` for servers without structured outputs. |
+| `OPENAI_TIMEOUT_MS` | Timeout per call, default `120000`. |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | Used when `AI_PROVIDER=gemini`. |
 
-Đổi model chỉ cần đổi `OPENAI_MODEL` rồi khởi động lại web và worker. Trước khi đổi, nên chạy `npm run ai:smoke -- --model=<tên-model>` để thử mọi tác vụ AI với model mới (xem [Phát triển](development.md#thử-ai-với-model-thật)).
+Switching models only means changing `OPENAI_MODEL` and restarting web and worker. Before switching, run `npm run ai:smoke -- --model=<model>` to try every AI task with the new model (see [Development](development.md#trying-ai-with-a-real-model)).
 
 ## Seed
 
-| Biến | Ý nghĩa |
+| Variable | Meaning |
 |---|---|
-| `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` | Tài khoản admin do seed tạo. Bắt buộc khi deploy. |
-| `SEED_DEMO` | `true` để seed giáo viên, lớp demo `DEMO12` và 20 học sinh mẫu. |
-| `SEED_ONLY_IF_EMPTY` | Do `docker/start.sh` đặt: bỏ qua seed khi database đã có người dùng. |
+| `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` | The admin account the seed creates. Required for a deploy. |
+| `SEED_DEMO` | `true` to seed a teacher, the `DEMO12` demo class and 20 sample students. |
+| `SEED_ONLY_IF_EMPTY` | Set by `docker/start.sh`: skip the seed when the database already has users. |
 
-## Thông báo đẩy
+## Push notifications
 
-| Biến | Ý nghĩa |
+| Variable | Meaning |
 |---|---|
-| `WEB_PUSH_PUBLIC_KEY`, `WEB_PUSH_PRIVATE_KEY` | Khóa VAPID. Tạo mới bằng `npx web-push generate-vapid-keys`. Bỏ trống thì chỉ có chuông thông báo trong app. |
-| `WEB_PUSH_SUBJECT` | `mailto:` hoặc URL liên hệ gửi kèm thông báo. |
+| `WEB_PUSH_PUBLIC_KEY`, `WEB_PUSH_PRIVATE_KEY` | VAPID keys. Generate a new pair with `npx web-push generate-vapid-keys`. Leave empty to keep only the in-app notification bell. |
+| `WEB_PUSH_SUBJECT` | A `mailto:` or URL contact sent with notifications. |
 
-## Khác
+## Other
 
-| Biến | Ý nghĩa |
+| Variable | Meaning |
 |---|---|
-| `SERVICE_ROLE` | Trong container: `web` (mặc định) hoặc `worker`. Chỉ đặt `worker` cho service worker. |
-| `COOKIE_SECURE` | Đặt `false` nếu chạy production qua HTTP thường (không HTTPS). |
-| `APP_PORT`, `POSTGRES_PORT` | Cổng khi chạy bằng Docker Compose (mặc định `3000`, `5433`). |
+| `SERVICE_ROLE` | In the container: `web` (default) or `worker`. Set `worker` only on the worker service. |
+| `COOKIE_SECURE` | Set to `false` when running production over plain HTTP (no HTTPS). |
+| `APP_PORT`, `POSTGRES_PORT` | Ports for Docker Compose (defaults `3000`, `5433`). |

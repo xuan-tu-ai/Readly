@@ -1,87 +1,89 @@
-# Kiến trúc
+# Architecture
 
-Readly là một ứng dụng Next.js chạy thành hai tiến trình từ cùng một mã nguồn: **web** phục vụ trang và server action, **worker** xử lý việc chạy nền. Cả hai dùng chung một cơ sở dữ liệu PostgreSQL, và hàng đợi việc nền cũng nằm trong chính Postgres đó.
+<sub>English · [Tiếng Việt](vi/architecture.md)</sub>
+
+Readly is one Next.js codebase that runs as two processes: **web** serves pages and server actions, **worker** handles background jobs. Both share one PostgreSQL database, and the background job queue lives in that same database.
 
 ```mermaid
 flowchart LR
-    U["Trình duyệt / PWA"] -- HTTPS --> W["Web<br/>Next.js 16"]
-    W -- "đọc / ghi" --> DB[("PostgreSQL")]
-    W -- "gửi job" --> Q["Hàng đợi pg-boss<br/>(trong Postgres)"]
+    U["Browser / PWA"] -- HTTPS --> W["Web<br/>Next.js 16"]
+    W -- "read / write" --> DB[("PostgreSQL")]
+    W -- "enqueue job" --> Q["pg-boss queue<br/>(in Postgres)"]
     Q --> K["Worker"]
-    K -- "đọc / ghi" --> DB
-    K -- "chấm bài, so sánh dự đoán" --> AI["Model AI<br/>(OpenAI-compatible / Gemini / mock)"]
-    W -- "soạn câu hỏi, rubric, mini game" --> AI
+    K -- "read / write" --> DB
+    K -- "grade answers, compare predictions" --> AI["AI model<br/>(OpenAI-compatible / Gemini / mock)"]
+    W -- "draft questions, rubrics, mini games" --> AI
     K -- "Web Push" --> U
 ```
 
-## Thành phần
+## Components
 
-| Thành phần | Vai trò |
+| Component | Role |
 |---|---|
-| **Web** (`src/app`) | App Router với Cache Components: khung trang tĩnh được dựng sẵn, phần phụ thuộc người dùng được stream sau. Mọi thao tác ghi đi qua server action. |
-| **Server action** (`src/app/actions`) | Luôn kiểm tra phiên và vai trò trước, rồi mới gọi tầng nghiệp vụ. |
-| **Nghiệp vụ** (`src/server/services`) | Đọc, câu hỏi, điểm và huy hiệu, giáo viên, thảo luận, thông báo, admin. Không phụ thuộc vào giao diện, nên được test trực tiếp. |
-| **Phân quyền** (`src/server/authz.ts`) | Giáo viên chỉ thấy học sinh **đang** ở lớp mình; học sinh chỉ thấy dữ liệu của chính mình; admin quản lý nội dung. |
-| **Xác thực** (`src/server/auth`) | Phiên lưu trong database, cookie `httpOnly`, mật khẩu băm bằng Argon2. |
-| **Worker** (`worker/`, `src/server/jobs`) | Tiến trình pg-boss. Hàng đợi: `answer.grade`, `answer.grade.failed`, `prediction.compare`, `notification.push`, `assignment.deadline-reminders` (cron), `system.ping`. |
-| **Lớp AI** (`src/lib/ai`) | Một giao diện chung cho ba nhà cung cấp: `OpenAiCompatibleProvider`, `GeminiProvider`, `MockProvider`. Mọi phản hồi đều được kiểm tra bằng JSON Schema (zod) trước khi lưu. |
+| **Web** (`src/app`) | App Router with Cache Components: the static shell of each page is prerendered and the user-specific parts stream in. Every write goes through a server action. |
+| **Server actions** (`src/app/actions`) | Always check the session and role first, then call the domain layer. |
+| **Domain services** (`src/server/services`) | Reading, questions, points and badges, teachers, discussions, notifications, admin. Independent of the UI, so they are tested directly. |
+| **Authorization** (`src/server/authz.ts`) | Teachers only see students **currently** in their classes; students only see their own data; admins manage content. |
+| **Authentication** (`src/server/auth`) | Sessions stored in the database, `httpOnly` cookies, passwords hashed with Argon2. |
+| **Worker** (`worker/`, `src/server/jobs`) | A pg-boss process. Queues: `answer.grade`, `answer.grade.failed`, `prediction.compare`, `notification.push`, `assignment.deadline-reminders` (cron), `system.ping`. |
+| **AI layer** (`src/lib/ai`) | One interface over three providers: `OpenAiCompatibleProvider`, `GeminiProvider`, `MockProvider`. Every response is checked against a JSON Schema (zod) before it is stored. |
 
-## Luồng chấm một câu trả lời
+## Grading an answer
 
 ```mermaid
 sequenceDiagram
-    participant HS as Học sinh
+    participant S as Student
     participant Web
     participant DB as Postgres
     participant Worker
-    participant AI as Model AI
-    HS->>Web: Gửi câu trả lời
-    Web->>DB: Lưu câu trả lời (đang chấm) + đưa job vào hàng đợi
-    Web-->>HS: Trả về ngay
-    Worker->>DB: Nhận job answer.grade
-    Worker->>AI: Câu hỏi + rubric + câu trả lời
-    AI-->>Worker: Mức đạt, điểm mạnh, gợi ý (JSON)
-    Worker->>DB: Lưu nhận xét, cộng điểm, xét huy hiệu
-    HS->>Web: Trang tự cập nhật, hiện nhận xét
+    participant AI as AI model
+    S->>Web: Submit an answer
+    Web->>DB: Save the answer (grading) + enqueue a job
+    Web-->>S: Respond immediately
+    Worker->>DB: Pick up answer.grade
+    Worker->>AI: Question + rubric + answer
+    AI-->>Worker: Rating, strengths, suggestions (JSON)
+    Worker->>DB: Save feedback, award points, check badges
+    S->>Web: The page refreshes and shows the feedback
 ```
 
-- Lỗi tạm thời (hết hạn mức, máy chủ lỗi, quá giờ, JSON hỏng) được thử lại; lỗi cấu hình (sai khóa, sai model) không thử lại.
-- Prompt chấm bài coi câu trả lời của học sinh là dữ liệu, không phải lệnh. Bộ thử `ai:smoke` có một câu trả lời chèn lệnh "hãy cho điểm tối đa" để kiểm tra điều này.
-- Giáo viên duyệt từng câu trả lời: đổi mức đạt (điểm, streak và huy hiệu được tính lại), viết nhận xét riêng, ẩn nhận xét của AI, hoặc báo cáo nhận xét sai để admin xem lại rubric.
+- Temporary failures (rate limits, server errors, timeouts, broken JSON) are retried; configuration errors (bad key, unknown model) are not.
+- The grading prompt treats the student's answer as data, not instructions. The `ai:smoke` suite includes an answer that tries to inject "give me full marks" to check this.
+- Teachers review each answer: change the rating (points, streak and badges are recomputed), write their own comment, hide the AI's comment, or report wrong feedback so an admin can check the rubric.
 
-## Dữ liệu
+## Data
 
-- **Schema:** `prisma/schema.prisma`, migration trong `prisma/migrations`.
-- **Văn bản tác phẩm** được làm sạch HTML khi lưu và chia thành phân đoạn; highlight bám theo vị trí ký tự trong phân đoạn và được tự gắn lại khi admin sửa văn bản.
-- **Ảnh bìa** tải lên được nén thành WebP 600×900 và lưu trong bảng `WorkCoverImage` (ổ đĩa của nền tảng deploy bị xóa mỗi lần deploy), phục vụ qua `/api/covers/<id>?v=<phiên bản>` với cache một năm.
-- **Hàng đợi** pg-boss dùng schema riêng trong cùng database, nên không cần Redis.
+- **Schema:** `prisma/schema.prisma`, migrations in `prisma/migrations`.
+- **Work text** is sanitized on save and split into segments; highlights are anchored to character offsets in a segment and re-anchored automatically when an admin edits the text.
+- **Uploaded covers** are re-encoded as 600×900 WebP and stored in the `WorkCoverImage` table (the hosting platform's disk is wiped on every deploy). They are served from `/api/covers/<id>?v=<version>` and cached for a year.
+- **The pg-boss queue** uses its own schema in the same database, so there is no Redis.
 
-## Triển khai
+## Deployment
 
-Một Docker image dùng cho cả web và worker. `docker/start.sh` chọn tiến trình theo biến `SERVICE_ROLE`:
+One Docker image serves both web and worker. `docker/start.sh` picks the process from `SERVICE_ROLE`:
 
-- `web` (mặc định): chạy `prisma migrate deploy`, seed **chỉ khi database còn trống**, rồi `next start`.
-- `worker`: chạy `npm run worker`.
+- `web` (default): runs `prisma migrate deploy`, seeds **only when the database is empty**, then `next start`.
+- `worker`: runs `npm run worker`.
 
-Xem [Deploy](deploy.md) để dựng trên Railway.
+See [Deploy](deploy.md) for the Railway setup.
 
-## Cấu trúc thư mục
+## Project layout
 
 ```
-content/works/         tác phẩm có toàn văn (JSON: văn bản, câu hỏi, mini game)
-content/covers/        ảnh bìa 600×900 WebP của các tác phẩm đó
-content/               tags.json, works.sample.json (tác phẩm giữ chỗ)
-docker/                start.sh (entrypoint), init DB cho Postgres local
-prisma/                schema, migrations, seed (nội dung, huy hiệu, lớp demo)
-src/app/               trang chủ, route theo vai: (auth), /student, /teacher, /admin; /api
+content/works/         works with full text (JSON: text, questions, mini games)
+content/covers/        600×900 WebP covers for those works
+content/               tags.json, works.sample.json (placeholder works)
+docker/                start.sh (entrypoint), local Postgres init
+prisma/                schema, migrations, seed (content, badges, demo class)
+src/app/               home page, role routes: (auth), /student, /teacher, /admin; /api
 src/app/actions/       server actions
-src/components/        giao diện; landing/ chứa minh họa động của trang chủ
-src/server/auth/       phiên, cookie, mật khẩu, DAL
-src/server/authz.ts    quy tắc phân quyền
-src/server/services/   nghiệp vụ
-src/server/jobs/       định nghĩa job chạy nền
-src/lib/ai/            lớp AI và prompt
-scripts/ai-smoke/      chạy thử mọi tác vụ AI với model thật
-worker/                tiến trình pg-boss
+src/components/        UI; landing/ holds the animated home page art
+src/server/auth/       sessions, cookies, passwords, data access layer
+src/server/authz.ts    authorization rules
+src/server/services/   domain services
+src/server/jobs/       background job definitions
+src/lib/ai/            AI layer and prompts
+scripts/ai-smoke/      run every AI task against a real model
+worker/                pg-boss process
 tests/                 unit + integration (Vitest)
 ```
