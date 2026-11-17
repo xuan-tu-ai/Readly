@@ -1,48 +1,50 @@
-# Deploy lên Railway
+# Deploying to Railway
 
-Bản online của Readly chạy trên [Railway](https://railway.com) với ba service trong một project:
+<sub>English · [Tiếng Việt](vi/deploy.md)</sub>
 
-| Service | Nguồn | Ghi chú |
+The live demo runs on [Railway](https://railway.com) as three services in one project:
+
+| Service | Source | Notes |
 |---|---|---|
-| **Postgres** | Plugin Postgres của Railway | Database duy nhất, chứa cả hàng đợi pg-boss và ảnh bìa. |
-| **Readly** (web) | Repo này, nhánh `main` | Railway tự build bằng `Dockerfile`; có tên miền công khai. |
-| **worker** | Repo này, nhánh `main` | Cùng image, biến `SERVICE_ROLE=worker`; không cần tên miền. |
+| **Postgres** | Railway's Postgres plugin | The only database; it also holds the pg-boss queue and uploaded covers. |
+| **Readly** (web) | This repo, branch `main` | Railway builds the `Dockerfile`; has a public domain. |
+| **worker** | This repo, branch `main` | Same image with `SERVICE_ROLE=worker`; no domain needed. |
 
-## Dựng lần đầu
+## First setup
 
-1. **Tạo project** và thêm **Postgres** (New → Database → PostgreSQL).
-2. **Tạo service web** từ repo GitHub (New → GitHub Repo), nhánh `main`.
-3. **Tạo service worker** từ cùng repo, cùng nhánh.
-4. **Đặt biến môi trường** cho cả hai service (xem [Biến môi trường](configuration.md)):
+1. **Create a project** and add **Postgres** (New → Database → PostgreSQL).
+2. **Create the web service** from the GitHub repo (New → GitHub Repo), branch `main`.
+3. **Create the worker service** from the same repo and branch.
+4. **Set variables** on both services (see [Configuration](configuration.md)):
    - `DATABASE_URL=${{Postgres.DATABASE_URL}}`
-   - các biến AI (`AI_PROVIDER`, `OPENAI_*`…)
-   - `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, và `SEED_DEMO=true` nếu muốn có lớp demo
-   - `WEB_PUSH_*` (tạo khóa mới cho bản online)
-   - riêng worker: `SERVICE_ROLE=worker`
-5. **Tạo tên miền** cho web: Settings → Networking → Generate Domain, cổng `3000`.
-6. **Deploy.** Lần đầu web chạy migration rồi seed; log có dòng seed thành công. Worker in `[worker] sẵn sàng` kèm danh sách hàng đợi.
+   - the AI variables (`AI_PROVIDER`, `OPENAI_*`, …)
+   - `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, and `SEED_DEMO=true` for the demo class
+   - `WEB_PUSH_*` (generate fresh keys for production)
+   - on the worker only: `SERVICE_ROLE=worker`
+5. **Generate a domain** for web: Settings → Networking → Generate Domain, port `3000`.
+6. **Deploy.** On the first run, web applies migrations and seeds; the log shows the seed summary. The worker prints `[worker] sẵn sàng` with its queues.
 
-Các lần deploy sau, migration mới vẫn được áp tự động, còn seed được bỏ qua (log: "Cơ sở dữ liệu đã có dữ liệu, bỏ qua seed"), nên dữ liệu admin đã sửa không bị ghi đè.
+Later deploys still apply new migrations automatically but skip the seed (log: "Cơ sở dữ liệu đã có dữ liệu, bỏ qua seed"), so changes made by admins are never overwritten.
 
-## Tự deploy khi merge vào `main`
+## Deploy on merge to `main`
 
-Railway chỉ tự deploy khi ứng dụng Railway trên GitHub có quyền đọc repo:
+Railway deploys automatically only when its GitHub app can read the repo:
 
-1. Repo thuộc tổ chức nên ứng dụng phải được cài cho **tổ chức**: `https://github.com/organizations/<tổ-chức>/settings/installations` → Railway → Configure → cho phép repo này. Nếu chưa cài, vào Railway → Account Settings → Integrations → GitHub.
-2. Trên từng service: Settings → Source → **Connect Repo**, chọn repo và nhánh `main`. Tắt **Wait for CI** nếu không muốn chờ GitHub Actions.
+1. The repo belongs to an organization, so the app must be installed for the **organization**: `https://github.com/organizations/<org>/settings/installations` → Railway → Configure → allow this repo. If it is not installed, go to Railway → Account Settings → Integrations → GitHub.
+2. On each service: Settings → Source → **Connect Repo**, choose the repo and branch `main`. Turn off **Wait for CI** if you do not want to wait for GitHub Actions.
 
-Merge xong, tab Deployments của cả web và worker sẽ có bản build mới sau vài giây.
+After a merge, both web and worker show a new build under Deployments within seconds.
 
-## Dữ liệu sau khi deploy
+## Data after a deploy
 
-- Seed chỉ chạy trên database trống. Nội dung thêm vào seed sau này (ví dụ ảnh bìa trong `content/covers/`) không tự xuất hiện trên database đã có dữ liệu; hãy thêm qua trang admin.
-- Đổi model AI: sửa `OPENAI_MODEL` trên cả web và worker; Railway khởi động lại service.
-- Một tab trình duyệt đang mở bản cũ trong lúc deploy có thể làm log báo `Failed to find Server Action`; tải lại trang là hết.
+- The seed only runs on an empty database. Content added to the seed later (for example covers in `content/covers/`) does not appear in a database that already has data; add it through the admin pages.
+- To change the AI model, edit `OPENAI_MODEL` on both web and worker; Railway restarts the services.
+- A browser tab still showing the previous build during a deploy can make the log report `Failed to find Server Action`; reloading the page fixes it.
 
-## Chạy bằng Docker ở nơi khác
+## Running the image elsewhere
 
 ```bash
 docker compose --profile app up -d --build   # postgres + migrate/seed + app + worker
 ```
 
-Image không phụ thuộc Railway: nền tảng nào chạy được Docker và có Postgres đều dùng được. Nhớ đặt `COOKIE_SECURE=false` nếu không có HTTPS.
+The image does not depend on Railway: any platform that runs Docker and provides Postgres works. Set `COOKIE_SECURE=false` if there is no HTTPS.
