@@ -16,6 +16,7 @@ import {
   moderateReply,
   reportContent,
   toggleLike,
+  toggleReplyLike,
 } from "@/server/services/discussions";
 import {
   countUnread,
@@ -151,6 +152,71 @@ describe("writing", () => {
       [second.id, false],
     ]);
     expect(await toggleLike(binh.actor, first.id)).toEqual({ liked: false, likes: 0 });
+  });
+});
+
+describe("hearts on replies", () => {
+  const likesOf = async (actor: Actor, slug: string, replyId: string) => {
+    const view = await getStudentDiscussion(actor, slug);
+    const reply = view.state === "ok" ? view.posts.flatMap((p) => p.replies).find((r) => r.id === replyId) : undefined;
+    return reply && { likes: reply.likes, likedByMe: reply.likedByMe };
+  };
+
+  it("students of the class and its teacher can heart a reply, their own included; others cannot", async () => {
+    const { an, binh, chi, teacherA, teacherB, work } = await setup();
+    const { id: postId } = await post(an.actor, work.slug);
+    const reply = await createReply(binh.actor, { postId, body: "Hàng tre gợi làng quê." });
+
+    expect(await toggleReplyLike(an.actor, reply.id)).toEqual({ liked: true, likes: 1 });
+    expect(await toggleReplyLike(binh.actor, reply.id)).toEqual({ liked: true, likes: 2 });
+    expect(await toggleReplyLike(teacherA.actor, reply.id)).toEqual({ liked: true, likes: 3 });
+    expect(await likesOf(an.actor, work.slug, reply.id)).toEqual({ likes: 3, likedByMe: true });
+
+    const teacherView = await getTeacherDiscussion(teacherA.actor, (await db.post.findUniqueOrThrow({ where: { id: postId } })).classId, work.id);
+    expect(teacherView.posts[0].replies[0]).toMatchObject({ likes: 3, likedByMe: true });
+
+    await expect(toggleReplyLike(chi.actor, reply.id)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(toggleReplyLike(teacherB.actor, reply.id)).rejects.toMatchObject({ code: "FORBIDDEN" });
+
+    expect(await toggleReplyLike(an.actor, reply.id)).toEqual({ liked: false, likes: 2 });
+    expect(await likesOf(an.actor, work.slug, reply.id)).toEqual({ likes: 2, likedByMe: false });
+  });
+
+  it("a hidden reply cannot be hearted", async () => {
+    const { an, binh, teacherA, work } = await setup();
+    const { id: postId } = await post(an.actor, work.slug);
+    const reply = await createReply(binh.actor, { postId, body: "Một câu trả lời." });
+    await moderateReply(teacherA.actor, reply.id, true);
+    await expect(toggleReplyLike(binh.actor, reply.id)).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("notifies the author once per liker (bell + push), never for their own heart", async () => {
+    const { an, binh, teacherA, work } = await setup();
+    const { id: postId } = await post(an.actor, work.slug);
+    const reply = await createReply(binh.actor, { postId, body: "Hàng tre gợi làng quê." });
+    jobs = [];
+
+    await toggleReplyLike(binh.actor, reply.id); // own heart: nothing
+    await toggleReplyLike(an.actor, reply.id);
+    await toggleReplyLike(an.actor, reply.id); // unlike
+    await toggleReplyLike(an.actor, reply.id); // like again: no second notice
+    await toggleReplyLike(teacherA.actor, reply.id);
+
+    const notes = await db.notification.findMany({ where: { userId: binh.id, kind: "LIKE" }, orderBy: { createdAt: "asc" } });
+    expect(notes.map((n) => n.title)).toEqual([
+      "Trần Minh An đã thích câu trả lời của bạn",
+      "Giáo viên đã thích câu trả lời của bạn",
+    ]);
+    expect(notes[0].href).toBe(`/student/works/${work.slug}/discussion#post-${postId}`);
+    expect(jobs.filter((j) => j.queue === QUEUES.pushNotifications)).toHaveLength(2);
+  });
+
+  it("does not notify a teacher whose reply is hearted (teachers have no notification bell)", async () => {
+    const { an, teacherA, work } = await setup();
+    const { id: postId } = await post(an.actor, work.slug);
+    const reply = await createReply(teacherA.actor, { postId, body: "Câu hỏi hay." });
+    await toggleReplyLike(an.actor, reply.id);
+    expect(await db.notification.count({ where: { userId: teacherA.id, kind: "LIKE" } })).toBe(0);
   });
 });
 

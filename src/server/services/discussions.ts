@@ -147,7 +147,15 @@ function postSelect(viewerId: string) {
     segment: { select: { title: true, order: true } },
     replies: {
       orderBy: { createdAt: "asc" },
-      select: { id: true, body: true, hidden: true, createdAt: true, author: { select: authorSelect } },
+      select: {
+        id: true,
+        body: true,
+        hidden: true,
+        createdAt: true,
+        author: { select: authorSelect },
+        likes: { where: { userId: viewerId }, select: { userId: true } },
+        _count: { select: { likes: true } },
+      },
     },
     likes: { where: { userId: viewerId }, select: { userId: true } },
     reports: { where: { resolvedAt: null }, select: { replyId: true, reporterId: true } },
@@ -168,6 +176,8 @@ function toPostView(p: PostRow, viewer: Actor) {
       createdAt: r.createdAt,
       author: toAuthor(r.author),
       mine: r.author.id === viewer.id,
+      likes: r._count.likes,
+      likedByMe: r.likes.length > 0,
       reportedByMe: p.reports.some((x) => x.replyId === r.id && x.reporterId === viewer.id),
       openReports: teacher ? p.reports.filter((x) => x.replyId === r.id).length : 0,
     }));
@@ -295,6 +305,41 @@ export async function toggleLike(actor: Actor, postId: string) {
   if (existing) await db.postLike.delete({ where: key });
   else await db.postLike.create({ data: { postId: post.id, userId: actor.id } });
   return { liked: !existing, likes: await db.postLike.count({ where: { postId: post.id } }) };
+}
+
+/**
+ * Hearts a reply, or takes the heart back. Students of the class and its
+ * teacher can like any visible reply, their own included. The author hears
+ * about it once per liker (bell + push), never for their own heart.
+ */
+export async function toggleReplyLike(actor: Actor, replyId: string) {
+  const reply = await db.reply.findUnique({ where: { id: replyId }, select: { id: true, postId: true, authorId: true, hidden: true, body: true } });
+  if (!reply) notFound("Không tìm thấy câu trả lời.");
+  const post = await postFor(actor, reply.postId);
+  if (reply.hidden || post.hidden) throw new DomainError("FORBIDDEN", "Câu trả lời này đã bị ẩn.");
+  const key = { replyId_userId: { replyId: reply.id, userId: actor.id } };
+  const existing = await db.replyLike.findUnique({ where: key, select: { replyId: true } });
+  if (existing) await db.replyLike.delete({ where: key });
+  else await db.replyLike.create({ data: { replyId: reply.id, userId: actor.id } });
+
+  const author = await db.user.findUnique({ where: { id: reply.authorId }, select: { role: true } });
+  if (!existing && reply.authorId !== actor.id && author?.role === "STUDENT") {
+    const liker = await db.user.findUniqueOrThrow({ where: { id: actor.id }, select: { name: true, role: true } });
+    await notify([
+      {
+        userId: reply.authorId,
+        kind: "LIKE",
+        title: `${liker.role === "TEACHER" ? "Giáo viên" : liker.name} đã thích câu trả lời của bạn`,
+        body: reply.body.length > 120 ? `${reply.body.slice(0, 120)}…` : reply.body,
+        href: `/student/works/${post.work.slug}/discussion#post-${post.id}`,
+        senderId: actor.id,
+        workId: post.work.id,
+        // Like, unlike, like again: still one notification.
+        dedupeKey: `reply-like:${reply.id}:${actor.id}`,
+      },
+    ]);
+  }
+  return { liked: !existing, likes: await db.replyLike.count({ where: { replyId: reply.id } }) };
 }
 
 /** A student flags a post or reply for the teacher. One open report per student and target. */
