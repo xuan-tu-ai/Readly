@@ -139,7 +139,7 @@ function LikeButton({
   toggle: () => Promise<ActionResult<{ liked: boolean; likes: number }>>;
   disabled?: boolean;
   size?: "sm" | "xs";
-  /** Grey until liked, to sit quietly next to "Báo cáo" under a reply. */
+  /** Grey until liked, to sit quietly before "Báo cáo" under a reply. */
   muted?: boolean;
 }) {
   const [state, setState] = useState({ liked, likes });
@@ -229,10 +229,11 @@ function ReplyItem({ reply, postId, mode }: { reply: ReplyView; postId: string; 
         </p>
         <p className="text-sm leading-relaxed whitespace-pre-line">{reply.body}</p>
         <div className="mt-1 flex flex-wrap items-center gap-1">
-          {!teacher && !reply.mine && !reply.hidden ? <ReportButton postId={postId} replyId={reply.id} done={reply.reportedByMe} /> : null}
           {teacher ? null : <ReplyLike reply={reply} size="sm" />}
+          {!teacher && !reply.mine && !reply.hidden ? <ReportButton postId={postId} replyId={reply.id} done={reply.reportedByMe} /> : null}
           {teacher ? (
             <>
+              <ReplyLike reply={reply} size="xs" />
               <form action={moderateReplyAction}>
                 <input type="hidden" name="replyId" value={reply.id} />
                 <input type="hidden" name="hidden" value={String(!reply.hidden)} />
@@ -249,7 +250,6 @@ function ReplyItem({ reply, postId, mode }: { reply: ReplyView; postId: string; 
                   </Button>
                 </form>
               ) : null}
-              <ReplyLike reply={reply} size="xs" />
             </>
           ) : null}
         </div>
