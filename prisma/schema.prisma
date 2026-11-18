@@ -75,6 +75,7 @@ model User {
   posts             Post[]
   replies           Reply[]
   postLikes         PostLike[]
+  replyLikes        ReplyLike[]
   postReports       PostReport[]
   pushSubscriptions PushSubscription[]
 }
@@ -669,6 +670,7 @@ enum NotificationKind {
   TEACHER_REVIEW
   BADGE
   REPLY
+  LIKE
   LEVEL_UP
   STREAK
 }
@@ -765,8 +767,22 @@ model Reply {
   post    Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
   author  User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
   reports PostReport[]
+  likes   ReplyLike[]
 
   @@index([postId, createdAt])
+}
+
+/// A heart on a reply, from a student of the class or its teacher.
+model ReplyLike {
+  replyId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  reply Reply @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([replyId, userId])
+  @@index([userId])
 }
 
 model PostLike {

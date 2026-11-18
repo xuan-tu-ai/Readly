@@ -9,6 +9,7 @@ import {
   Flag,
   Flame,
   GraduationCap,
+  Heart,
   MessageCircleReply,
   Pin,
   Sparkles,
@@ -31,6 +32,7 @@ const NOTIFICATION_TILES: Record<NotificationKind, Tile> = {
   "teacher-review": { icon: GraduationCap, tone: "bg-brand-purple" },
   badge: { icon: Award, tone: "bg-[#f7b72a]" },
   reply: { icon: MessageCircleReply, tone: "bg-brand-pink" },
+  like: { icon: Heart, tone: "bg-[#f0517a]" },
   "level-up": { icon: ChevronsUp, tone: "bg-[#35c2b8]" },
   streak: { icon: Flame, tone: "bg-[#ff7a3d]" },
 };

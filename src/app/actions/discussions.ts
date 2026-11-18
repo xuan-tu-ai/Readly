@@ -15,6 +15,7 @@ import {
   moderateReply,
   reportContent,
   toggleLike,
+  toggleReplyLike,
 } from "@/server/services/discussions";
 import { markAllNotificationsRead, markNotificationRead } from "@/server/services/notifications";
 import type { ActionResult } from "./reading";
@@ -91,6 +92,12 @@ export async function replyAction(_prev: FormState, formData: FormData): Promise
 export async function toggleLikeAction(postId: string): Promise<ActionResult<{ liked: boolean; likes: number }>> {
   const user = await requireUser("STUDENT");
   return run(() => toggleLike(user, postId));
+}
+
+/** Students of the class and its teacher heart a reply. */
+export async function toggleReplyLikeAction(replyId: string): Promise<ActionResult<{ liked: boolean; likes: number }>> {
+  const user = await requireUser("STUDENT", "TEACHER");
+  return run(() => toggleReplyLike(user, replyId));
 }
 
 export async function reportAction(_prev: FormState, formData: FormData): Promise<FormState> {

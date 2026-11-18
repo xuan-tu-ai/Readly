@@ -25,6 +25,7 @@ const ART_KIND: Record<DbKind, NotificationKind> = {
   TEACHER_REVIEW: "teacher-review",
   BADGE: "badge",
   REPLY: "reply",
+  LIKE: "like",
   LEVEL_UP: "level-up",
   STREAK: "streak",
 };

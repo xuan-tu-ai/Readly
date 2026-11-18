@@ -10,6 +10,7 @@ import {
   reportAction,
   replyAction,
   toggleLikeAction,
+  toggleReplyLikeAction,
 } from "@/app/actions/discussions";
 import { CatAvatar } from "@/components/art/avatars";
 import { DiscussionIcon } from "@/components/art/notification-icons";
@@ -21,6 +22,7 @@ import { initialFormState } from "@/lib/form-state";
 import { cn } from "@/lib/utils";
 import { formatTimeDayMonth } from "@/lib/vn-date";
 import type { PostView, ReplyView } from "@/server/services/discussions";
+import type { ActionResult } from "@/app/actions/reading";
 
 type Mode = "student" | "teacher";
 
@@ -68,7 +70,7 @@ export function PostCard({ post, slug, mode }: { post: PostView; slug: string; m
             <Heart className="size-4" aria-hidden /> {post.likes}
           </span>
         ) : (
-          <LikeButton postId={post.id} liked={post.likedByMe} likes={post.likes} disabled={post.hidden} />
+          <LikeButton liked={post.likedByMe} likes={post.likes} toggle={() => toggleLikeAction(post.id)} disabled={post.hidden} />
         )}
         <Button variant="ghost" size="sm" onClick={() => setShowReplies((v) => !v)} aria-expanded={showReplies}>
           <MessageCircle aria-hidden /> {post.replies.length > 0 ? `${post.replies.length} trả lời` : "Trả lời"}
@@ -123,26 +125,42 @@ function QuoteBlock({ quote, slug, linked }: { quote: NonNullable<PostView["quot
   );
 }
 
-function LikeButton({ postId, liked, likes, disabled }: { postId: string; liked: boolean; likes: number; disabled?: boolean }) {
+/** Heart with a count, updated optimistically; `toggle` is the server action for a post or a reply. */
+function LikeButton({
+  liked,
+  likes,
+  toggle,
+  disabled,
+  size = "sm",
+  muted = false,
+}: {
+  liked: boolean;
+  likes: number;
+  toggle: () => Promise<ActionResult<{ liked: boolean; likes: number }>>;
+  disabled?: boolean;
+  size?: "sm" | "xs";
+  /** Grey until liked, to sit quietly before "Báo cáo" under a reply. */
+  muted?: boolean;
+}) {
   const [state, setState] = useState({ liked, likes });
   const [pending, startTransition] = useTransition();
-  const toggle = () => {
+  const onClick = () => {
     const before = state;
     setState({ liked: !before.liked, likes: before.likes + (before.liked ? -1 : 1) });
     startTransition(async () => {
-      const result = await toggleLikeAction(postId);
+      const result = await toggle();
       setState(result.ok ? result.data : before);
     });
   };
   return (
     <Button
       variant="ghost"
-      size="sm"
-      onClick={toggle}
+      size={size}
+      onClick={onClick}
       disabled={pending || disabled}
       aria-pressed={state.liked}
       aria-label={state.liked ? `Bỏ thích (${state.likes})` : `Thích (${state.likes})`}
-      className={cn(state.liked && "text-brand-pink")}
+      className={cn(state.liked ? "text-brand-pink" : muted && "text-muted-foreground")}
     >
       <Heart aria-hidden className={cn(state.liked && "fill-current")} /> {state.likes}
     </Button>
@@ -210,10 +228,12 @@ function ReplyItem({ reply, postId, mode }: { reply: ReplyView; postId: string; 
           ) : null}
         </p>
         <p className="text-sm leading-relaxed whitespace-pre-line">{reply.body}</p>
-        <div className="mt-1 flex flex-wrap gap-1">
+        <div className="mt-1 flex flex-wrap items-center gap-1">
+          {teacher ? null : <ReplyLike reply={reply} size="sm" />}
           {!teacher && !reply.mine && !reply.hidden ? <ReportButton postId={postId} replyId={reply.id} done={reply.reportedByMe} /> : null}
           {teacher ? (
             <>
+              <ReplyLike reply={reply} size="xs" />
               <form action={moderateReplyAction}>
                 <input type="hidden" name="replyId" value={reply.id} />
                 <input type="hidden" name="hidden" value={String(!reply.hidden)} />
@@ -235,6 +255,19 @@ function ReplyItem({ reply, postId, mode }: { reply: ReplyView; postId: string; 
         </div>
       </div>
     </div>
+  );
+}
+
+function ReplyLike({ reply, size }: { reply: ReplyView; size: "sm" | "xs" }) {
+  return (
+    <LikeButton
+      liked={reply.likedByMe}
+      likes={reply.likes}
+      toggle={() => toggleReplyLikeAction(reply.id)}
+      disabled={reply.hidden}
+      size={size}
+      muted
+    />
   );
 }
 

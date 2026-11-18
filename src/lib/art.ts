@@ -74,6 +74,7 @@ export const NOTIFICATION_KINDS = [
   { key: "teacher-review", label: "Giáo viên sửa mức" },
   { key: "badge", label: "Huy hiệu mới" },
   { key: "reply", label: "Có trả lời thảo luận" },
+  { key: "like", label: "Có người thích câu trả lời" },
   { key: "level-up", label: "Lên cấp" },
   { key: "streak", label: "Giữ streak" },
 ] as const;
